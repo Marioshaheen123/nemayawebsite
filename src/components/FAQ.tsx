@@ -93,12 +93,12 @@ export default function FAQ() {
   const h = heading[lang];
 
   return (
-    <section className="py-[80px] px-[52px]">
+    <section className="py-[60px] px-4 md:py-[80px] md:px-[52px]">
       <div className="max-w-[1335px] mx-auto">
         {/* Header */}
-        <div className="text-center mb-[40px]">
+        <div className="text-center mb-[24px] md:mb-[40px]">
           <SectionBadge label="FAQ" labelAr="الأسئلة الشائعة" />
-          <h2 className="text-[40px] leading-[48px] text-[#0e314c] mt-[10px] max-w-[664px] mx-auto">
+          <h2 className="text-[25px] leading-[32.5px] md:text-[40px] md:leading-[48px] text-[#0e314c] mt-[10px] max-w-[664px] mx-auto">
             {h.before}
             <span className="font-bold">{h.bold}</span>
           </h2>
@@ -106,13 +106,13 @@ export default function FAQ() {
 
         {/* FAQ Grid */}
         <div
-          className="p-[30px] rounded-[25px]"
+          className="p-4 md:p-[30px] rounded-[25px]"
           style={{
             backgroundImage:
               "linear-gradient(181deg, rgba(18, 149, 61, 0) 38%, rgb(248, 248, 248) 80%)",
           }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {/* Left column */}
             <div className="flex flex-col gap-6">
               {leftFaqs.map((faq, i) => (

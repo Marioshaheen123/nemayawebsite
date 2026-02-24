@@ -71,12 +71,12 @@ export default function Benefits() {
   const h = heading[lang];
 
   return (
-    <section className="py-[120px] px-[52px]">
+    <section className="py-[60px] px-3 md:py-[120px] md:px-[52px]">
       <div className="max-w-[1335px] mx-auto">
         {/* Header */}
-        <div className="text-center mb-[40px]">
+        <div className="text-center mb-[24px] md:mb-[40px]">
           <SectionBadge label="Benefits" labelAr="الفوائد" />
-          <h2 className="text-[40px] leading-[48px] text-[#0e314c] mt-[10px] max-w-[690px] mx-auto">
+          <h2 className="text-[25px] leading-[30px] md:text-[40px] md:leading-[48px] text-[#0e314c] mt-[10px] max-w-[690px] mx-auto">
             {h.before}
             <span className="font-bold">{h.bold}</span>
           </h2>
@@ -84,37 +84,37 @@ export default function Benefits() {
 
         {/* Content Grid */}
         <div
-          className={`flex flex-col lg:flex-row items-center mb-[40px] gap-[24px] ${
+          className={`flex flex-col lg:flex-row items-center mb-[24px] md:mb-[40px] gap-[24px] ${
             isAr ? "lg:flex-row-reverse" : ""
           }`}
         >
           {/* Phone mockup */}
           <div className="w-full lg:w-[445px] px-3 pb-6 shrink-0">
-            <div className="bg-[#12953d] rounded-[25px] w-[421px] h-[423px] relative mx-auto lg:mx-0">
+            <div className="bg-[#12953d] rounded-[25px] w-full max-w-[421px] h-[283px] md:h-[423px] relative mx-auto lg:mx-0 overflow-hidden">
               <Image
                 src="/images/Phonesection2.png"
                 alt="Namaya app"
                 width={510}
                 height={884}
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[380px] h-auto"
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[280px] md:w-[380px] h-auto"
               />
             </div>
           </div>
 
-          {/* Feature cards grid */}
-          <div className="flex-1 relative">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-[12px]">
+          {/* Feature cards */}
+          <div className="flex-1 relative w-full">
+            <div className="flex flex-col md:grid md:grid-cols-2 gap-2 md:gap-[12px]">
               {items.map((feature, i) => (
                 <div key={i}>
                   <div
-                    className={`bg-[#f9f9f9] border border-[#cacceb] rounded-[25px] p-[31px] h-full ${
+                    className={`bg-[#f9f9f9] border border-[#cacceb] rounded-[16px] md:rounded-[25px] px-[31px] py-[17px] md:p-[31px] h-full ${
                       isAr ? "text-right" : ""
                     }`}
                   >
-                    <h3 className="text-[#0e314c] text-[20px] font-semibold leading-[24px] mb-[9px]">
+                    <h3 className="text-[#0e314c] text-[20px] font-semibold leading-[24px]">
                       {feature.title}
                     </h3>
-                    <p className="text-[#6084a4] text-[16px] leading-[1.4]">
+                    <p className="hidden md:block text-[#6084a4] text-[16px] leading-[1.4] mt-[9px]">
                       {feature.description}
                     </p>
                   </div>
@@ -138,7 +138,7 @@ export default function Benefits() {
         <div className="text-center">
           <a
             href="#"
-            className="cta-glass-solid"
+            className="cta-glass-solid w-full md:w-auto justify-center"
           >
             {ctaText[lang]}
             <span className="cta-arrow">→</span>

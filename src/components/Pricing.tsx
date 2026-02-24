@@ -1,6 +1,7 @@
 "use client";
 
 import SectionBadge from "./SectionBadge";
+import { useState, useRef } from "react";
 import { useLang } from "@/context/LanguageContext";
 
 const features = {
@@ -114,6 +115,9 @@ const heading = {
   },
 };
 
+// Rotation classes with md: prefix so they only apply on desktop
+const rotationClasses = ["md:rotate-2", "", "md:-rotate-2"];
+
 export default function Pricing() {
   const { lang } = useLang();
   const isAr = lang === "ar";
@@ -121,114 +125,184 @@ export default function Pricing() {
   const featureItems = features[lang];
   const h = heading[lang];
 
+  // Mobile carousel state
+  const [mobileSlide, setMobileSlide] = useState(0);
+  const touchStartX = useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    const threshold = 50;
+    if (isAr) {
+      if (diff < -threshold && mobileSlide < planItems.length - 1)
+        setMobileSlide((s) => s + 1);
+      else if (diff > threshold && mobileSlide > 0)
+        setMobileSlide((s) => s - 1);
+    } else {
+      if (diff > threshold && mobileSlide < planItems.length - 1)
+        setMobileSlide((s) => s + 1);
+      else if (diff < -threshold && mobileSlide > 0)
+        setMobileSlide((s) => s - 1);
+    }
+  };
+
+  const renderCard = (
+    plan: (typeof planItems)[0],
+    i: number,
+    isMobile: boolean
+  ) => (
+    <div
+      className={`${isMobile ? "" : rotationClasses[i]} ${plan.bg} rounded-[25px] border border-[#cacceb] p-[30px] flex flex-col gap-[25px] ${
+        isAr ? "text-right" : ""
+      } ${plan.gradient ? "py-[45px]" : ""}`}
+      style={
+        plan.gradient
+          ? {
+              backgroundImage:
+                "linear-gradient(180deg, rgba(18, 149, 61, 0.08) 0%, rgba(255, 255, 255, 1) 60%)",
+            }
+          : undefined
+      }
+    >
+      {/* Price section */}
+      <div className={isMobile ? "" : "h-[191px]"}>
+        <h3 className="text-[#0e314c] text-[24px] font-bold leading-[28.8px] mb-[15px]">
+          {plan.name}
+        </h3>
+        <div className="flex items-end gap-0 mb-[15px]">
+          {isAr ? (
+            <>
+              <span className="text-[#6084a4] text-[14px] leading-[14px] pb-[5px]">
+                {plan.period}
+              </span>
+              <span
+                className={`text-[#0e314c] font-bold mx-1 ${
+                  isMobile
+                    ? "text-[40px] leading-[48px]"
+                    : "text-[80px] leading-[80px]"
+                }`}
+              >
+                {plan.price}
+              </span>
+              <span className="text-[#6084a4] text-[14px] leading-[14px] pb-[5px]">
+                ابتدا من
+              </span>
+            </>
+          ) : (
+            <>
+              <span
+                className={`text-[#0e314c] font-bold ${
+                  isMobile
+                    ? "text-[40px] leading-[48px]"
+                    : "text-[80px] leading-[80px]"
+                }`}
+              >
+                {plan.price}
+              </span>
+              <span className="text-[#6084a4] text-[14px] leading-[14px] pb-[5px]">
+                /{plan.period}
+              </span>
+            </>
+          )}
+        </div>
+        <p className="text-[#6084a4] text-[16px] leading-[1.4]">
+          {plan.description}
+        </p>
+      </div>
+
+      {/* Features */}
+      <div className="flex flex-col gap-[9px]">
+        <h4 className="text-[#0e314c] text-[16px] font-bold leading-[1.4] mb-[9px]">
+          {plan.featuresLabel}
+        </h4>
+        {featureItems.map((feature, j) => (
+          <div key={j} className="flex items-center gap-[10px]">
+            <div className="w-[22px] h-[22px] rounded-full bg-[rgba(18,149,61,0.1)] flex items-center justify-center shrink-0">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path
+                  d="M2.5 6L5 8.5L9.5 3.5"
+                  stroke="#12953d"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+            <span className="text-[#6084a4] text-[16px] leading-[24px]">
+              {feature}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <div className={isAr ? "text-right" : ""}>
+        <a
+          href="#"
+          className={`inline-block border rounded-[5px] px-[36px] py-[18px] text-[14px] font-semibold leading-[21px] hover:opacity-90 transition-opacity ${
+            isMobile ? "w-full text-center" : "w-fit"
+          } ${plan.ctaStyle}`}
+        >
+          {plan.cta}
+        </a>
+      </div>
+    </div>
+  );
+
   return (
-    <section className="py-[120px] px-[52px]">
+    <section className="py-[60px] px-4 md:py-[120px] md:px-[52px]">
       <div className="max-w-[1335px] mx-auto">
         {/* Header */}
-        <div className="text-center mb-[40px]">
+        <div className="text-center mb-[24px] md:mb-[40px]">
           <SectionBadge label="PRICING PLANS" labelAr="خطط الأسعار" />
-          <h2 className="text-[40px] leading-[48px] text-[#0e314c] mt-[10px] max-w-[664px] mx-auto">
+          <h2 className="text-[25px] leading-[32.5px] md:text-[40px] md:leading-[48px] text-[#0e314c] mt-[10px] max-w-[664px] mx-auto">
             {h.before}
             <span className="font-bold">{h.bold}</span>
           </h2>
         </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 items-center">
+        {/* Mobile carousel */}
+        <div
+          className="md:hidden overflow-hidden"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div
+            className="flex transition-transform duration-300 ease-in-out"
+            style={{
+              transform: isAr
+                ? `translateX(${mobileSlide * 100}%)`
+                : `translateX(-${mobileSlide * 100}%)`,
+            }}
+          >
+            {planItems.map((plan, i) => (
+              <div key={i} className="w-full shrink-0 px-2">
+                {renderCard(plan, i, true)}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop grid */}
+        <div className="hidden md:grid grid-cols-3 gap-0 items-center">
           {planItems.map((plan, i) => (
             <div key={i} className="px-3 pb-8">
-              <div
-                className={`${plan.rotate} ${plan.bg} rounded-[25px] border border-[#cacceb] p-[30px] flex flex-col gap-[25px] ${
-                  isAr ? "text-right" : ""
-                } ${plan.gradient ? "py-[45px]" : ""}`}
-                style={
-                  plan.gradient
-                    ? {
-                        backgroundImage:
-                          "linear-gradient(180deg, rgba(18, 149, 61, 0.08) 0%, rgba(255, 255, 255, 1) 60%)",
-                      }
-                    : undefined
-                }
-              >
-                {/* Price section */}
-                <div className="h-[191px]">
-                  <h3 className="text-[#0e314c] text-[24px] font-bold leading-[28.8px] mb-[15px]">
-                    {plan.name}
-                  </h3>
-                  <div
-                    className="flex items-end gap-0 mb-[15px]"
-                  >
-                    {isAr ? (
-                      <>
-                        <span className="text-[#6084a4] text-[14px] leading-[14px] pb-[5px]">
-                          {plan.period}
-                        </span>
-                        <span className="text-[#0e314c] text-[80px] font-bold leading-[80px] mx-1">
-                          {plan.price}
-                        </span>
-                        <span className="text-[#6084a4] text-[14px] leading-[14px] pb-[5px]">
-                          ابتدا من
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <span className="text-[#0e314c] text-[80px] font-bold leading-[80px]">
-                          {plan.price}
-                        </span>
-                        <span className="text-[#6084a4] text-[14px] leading-[14px] pb-[5px]">
-                          /{plan.period}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                  <p className="text-[#6084a4] text-[16px] leading-[1.4]">
-                    {plan.description}
-                  </p>
-                </div>
-
-                {/* Features */}
-                <div className="flex flex-col gap-[9px]">
-                  <h4 className="text-[#0e314c] text-[16px] font-bold leading-[1.4] mb-[9px]">
-                    {plan.featuresLabel}
-                  </h4>
-                  {featureItems.map((feature, j) => (
-                    <div
-                      key={j}
-                      className="flex items-center gap-[10px]"
-                    >
-                      <div className="w-[22px] h-[22px] rounded-full bg-[rgba(18,149,61,0.1)] flex items-center justify-center shrink-0">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                          <path d="M2.5 6L5 8.5L9.5 3.5" stroke="#12953d" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </div>
-                      <span className="text-[#6084a4] text-[16px] leading-[24px]">
-                        {feature}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* CTA */}
-                <div className={isAr ? "text-right" : ""}>
-                  <a
-                    href="#"
-                    className={`inline-block border rounded-[5px] px-[36px] py-[18px] text-[14px] font-semibold leading-[21px] hover:opacity-90 transition-opacity w-fit ${plan.ctaStyle}`}
-                  >
-                    {plan.cta}
-                  </a>
-                </div>
-              </div>
+              {renderCard(plan, i, false)}
             </div>
           ))}
         </div>
 
         {/* Dots */}
         <div className="flex justify-center gap-2 mt-4">
-          {[0, 1, 2, 3].map((i) => (
-            <div
+          {planItems.map((_, i) => (
+            <button
               key={i}
-              className={`w-3 h-3 rounded-full ${
-                i === 0 ? "bg-[#12953d]" : "bg-[#cacceb]"
+              onClick={() => setMobileSlide(i)}
+              className={`w-3 h-3 rounded-full transition-colors md:pointer-events-none ${
+                i === mobileSlide ? "bg-[#12953d]" : "bg-[#cacceb]"
               }`}
             />
           ))}

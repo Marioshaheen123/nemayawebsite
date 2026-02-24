@@ -30,7 +30,7 @@ export default function Hero() {
   const isAr = lang === "ar";
 
   return (
-    <section className="relative w-full h-[792px] overflow-hidden">
+    <section className="relative w-full h-[750px] md:h-[792px] overflow-hidden">
       {/* Background */}
       <Image
         src="/images/hero-bg.jpg"
@@ -42,7 +42,7 @@ export default function Hero() {
 
       {/* Person image */}
       <div
-        className={`absolute bottom-0 w-[927px] h-[666px] max-w-[64%] ${
+        className={`absolute bottom-0 w-full md:w-[927px] h-[268px] md:h-[666px] md:max-w-[64%] ${
           isAr ? "left-0" : "right-0"
         }`}
       >
@@ -57,12 +57,12 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 h-full px-[52px] pt-[220px] pb-[100px]">
+      <div className="relative z-10 h-full px-3 md:px-[52px] pt-[119px] md:pt-[220px] pb-[60px] md:pb-[100px]">
         <div
-          className={`max-w-[795px] ${isAr ? "text-right ml-auto mr-0" : ""}`}
+          className={`max-w-full md:max-w-[795px] ${isAr ? "text-right ml-auto mr-0" : ""}`}
         >
           {/* Headline */}
-          <h1 className="text-[90px] leading-[99px] text-white mb-5 whitespace-pre-line">
+          <h1 className="text-[35px] leading-[38.5px] md:text-[90px] md:leading-[99px] text-white mb-5 whitespace-pre-line">
             {t.headlineBefore}
             <span className="font-extrabold text-[#12953d]">
               {t.headlineHighlight}
@@ -70,22 +70,21 @@ export default function Hero() {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-white text-[24px] leading-[36px] max-w-[653px] mb-5">
+          <p className="text-white text-[16px] leading-[24px] md:text-[24px] md:leading-[36px] max-w-[653px] mb-5">
             {t.subtitle}
           </p>
 
           {/* CTA */}
-          <div className="pt-[15px] mb-5">
-            <a href="#" className="cta-glass">
+          <div className="pt-[5px] md:pt-[15px] mb-5">
+            <a href="#" className="cta-glass text-[12px] px-[21px] py-[13px] md:text-[14px] md:px-[36px] md:py-[16px]">
               {t.cta}
-              <span className="cta-arrow">→</span>
             </a>
           </div>
 
           {/* Trust badges */}
           <div
-            className={`flex flex-wrap items-center gap-[50px] pt-[10px] ${
-              isAr ? "flex-row-reverse" : ""
+            className={`flex flex-col md:flex-row md:flex-wrap items-end md:items-center gap-[15px] md:gap-[50px] pt-[10px] ${
+              isAr ? "md:flex-row-reverse" : ""
             }`}
           >
             <div

@@ -81,10 +81,10 @@ export default function Footer() {
         className="object-cover object-top"
       />
 
-      <div className="relative z-10 max-w-[1440px] mx-auto px-[52px]">
+      <div className="relative z-10 max-w-[1440px] mx-auto px-4 md:px-[52px]">
         {/* Main footer content */}
         <div
-          className="grid grid-cols-1 md:grid-cols-4 gap-8 pt-[80px] pb-[80px]"
+          className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 pt-[50px] md:pt-[80px] pb-[50px] md:pb-[80px]"
         >
           {/* Brand */}
           <div>
@@ -103,18 +103,19 @@ export default function Footer() {
             <p className="text-[#c5c5c5] text-[16px] leading-[1.4] mb-[25px]">
               {t.brandDesc}
             </p>
-            <div className="flex gap-[10px]">
+            <div className="flex justify-between md:justify-start gap-[10px] pt-[6px]">
               {socialIcons.map((icon, i) => (
                 <a
                   key={i}
                   href="#"
-                  className="w-[35px] h-[35px] rounded-full bg-[rgba(18,149,61,0.4)] flex items-center justify-center hover:bg-[rgba(18,149,61,0.7)] transition-colors"
+                  className="w-[52px] h-[52px] md:w-[35px] md:h-[35px] rounded-full bg-[rgba(18,149,61,0.4)] flex items-center justify-center hover:bg-[rgba(18,149,61,0.7)] transition-colors"
                 >
                   <Image
                     src={icon.src}
                     alt={icon.alt}
                     width={16}
                     height={16}
+                    className="w-[24px] h-[24px] md:w-[16px] md:h-[16px]"
                   />
                 </a>
               ))}

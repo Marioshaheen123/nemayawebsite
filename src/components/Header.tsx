@@ -34,10 +34,10 @@ export default function Header() {
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50">
-      <nav className="bg-[#001005] w-full px-[50px] flex items-center h-[100px]">
+      <nav className="bg-[#001005] w-full px-4 md:px-[50px] flex items-center h-[69px] md:h-[100px]">
         {/* Logo */}
         <a href="#" className="flex items-center gap-[7px] shrink-0">
-          <Image src="/images/nemayalogo.png" alt="Namaya for Investment" width={225} height={52} className="brightness-0 invert" />
+          <Image src="/images/nemayalogo.png" alt="Namaya for Investment" width={225} height={52} className="brightness-0 invert w-[130px] md:w-[225px] h-auto" />
         </a>
 
         <div className="flex-1" />
@@ -82,15 +82,23 @@ export default function Header() {
           </a>
         </div>
 
-        {/* Mobile menu button */}
-        <button
-          className="lg:hidden text-white p-2"
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+        {/* Mobile CTA + Menu */}
+        <div className="flex lg:hidden items-center gap-3">
+          <a
+            href="#"
+            className="bg-[#12953d] rounded-[5px] px-3 py-[6px] text-white text-[10px] font-semibold leading-[15px] capitalize"
+          >
+            {buttons.login}
+          </a>
+          <button
+            className="flex flex-col gap-[5px] p-2"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            <span className="block w-[35px] h-[4px] bg-white rounded-[3px]" />
+            <span className="block w-[35px] h-[4px] bg-white rounded-[3px]" />
+            <span className="block w-[35px] h-[4px] bg-white rounded-[3px]" />
+          </button>
+        </div>
       </nav>
 
       {/* Mobile menu */}
