@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --font-poppins: "Poppins", sans-serif;
+  --color-primary: #12953d;
+  --color-dark-green: #001005;
+  --color-bg-green: #00470d;
+  --color-lime: #b0f127;
+  --color-navy: #0e314c;
+  --color-text-secondary: #6084a4;
+  --color-card-bg: #f9f9f9;
+  --color-card-bg-alt: #f8f8f8;
+  --color-border: #cacceb;
+}
+
+.cta-glass {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 36px;
+  border-radius: 12px;
+  border: 1px solid rgba(18, 149, 61, 0.5);
+  background: rgba(18, 149, 61, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  transition: all 0.3s ease;
+}
+
+.cta-glass:hover {
+  background: rgba(18, 149, 61, 0.35);
+  border-color: rgba(176, 241, 39, 0.6);
+  box-shadow: 0 0 24px rgba(18, 149, 61, 0.3), 0 0 48px rgba(18, 149, 61, 0.1);
+}
+
+.cta-glass .cta-arrow {
+  transition: transform 0.3s ease;
+}
+
+.cta-glass:hover .cta-arrow {
+  transform: translateX(4px);
+}
+
+[dir="rtl"] .cta-glass:hover .cta-arrow {
+  transform: translateX(-4px);
+}
+
+.cta-glass-solid {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 36px;
+  border-radius: 12px;
+  border: 1px solid rgba(18, 149, 61, 0.5);
+  background: rgba(18, 149, 61, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  transition: all 0.3s ease;
+}
+
+.cta-glass-solid:hover {
+  background: rgba(18, 149, 61, 1);
+  border-color: rgba(176, 241, 39, 0.6);
+  box-shadow: 0 0 24px rgba(18, 149, 61, 0.3), 0 0 48px rgba(18, 149, 61, 0.1);
+}
+
+.cta-glass-solid .cta-arrow {
+  transition: transform 0.3s ease;
+}
+
+.cta-glass-solid:hover .cta-arrow {
+  transform: translateX(4px);
+}
+
+[dir="rtl"] .cta-glass-solid:hover .cta-arrow {
+  transform: translateX(-4px);
+}
