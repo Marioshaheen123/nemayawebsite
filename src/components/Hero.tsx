@@ -53,7 +53,7 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 h-full flex items-start md:items-center px-3 md:px-[52px] xl:px-[80px] 2xl:px-[120px] pt-[100px] md:pt-[100px] xl:pt-[110px]">
+      <div className="relative z-10 h-full flex items-end pb-[280px] sm:pb-[330px] md:items-center md:pb-0 px-3 md:px-[52px] xl:px-[80px] 2xl:px-[120px] md:pt-[100px] xl:pt-[110px]">
         <div
           className={`max-w-full md:max-w-[795px] xl:max-w-[900px] ${isAr ? "text-right ml-auto mr-0" : ""}`}
         >
