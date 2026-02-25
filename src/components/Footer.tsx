@@ -81,7 +81,7 @@ export default function Footer() {
         className="object-cover object-top"
       />
 
-      <div className="relative z-10 max-w-[1440px] mx-auto px-4 md:px-[52px]">
+      <div className="relative z-10 max-w-[1440px] 2xl:max-w-[1640px] mx-auto px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
         {/* Main footer content */}
         <div
           className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 pt-[50px] md:pt-[80px] pb-[50px] md:pb-[80px]"
@@ -100,7 +100,7 @@ export default function Footer() {
                 className="brightness-0 invert"
               />
             </a>
-            <p className="text-[#c5c5c5] text-[16px] leading-[1.4] mb-[25px]">
+            <p className="text-[#c5c5c5] text-[16px] xl:text-[18px] leading-[1.4] mb-[25px]">
               {t.brandDesc}
             </p>
             <div className="flex justify-between md:justify-start gap-[10px] pt-[6px]">
@@ -124,7 +124,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-white text-[24px] leading-[28.8px] mb-[30px]">
+            <h3 className="text-white text-[24px] xl:text-[28px] leading-[28.8px] mb-[30px]">
               {t.quickLinks}
             </h3>
             <ul className="flex flex-col gap-[10px]">
@@ -132,7 +132,7 @@ export default function Footer() {
                 <li key={link}>
                   <a
                     href="#"
-                    className="text-[#c5c5c5] text-[16px] leading-[1.4] hover:text-white transition-colors"
+                    className="text-[#c5c5c5] text-[16px] xl:text-[18px] leading-[1.4] hover:text-white transition-colors"
                   >
                     {link}
                   </a>
@@ -143,7 +143,7 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h3 className="text-white text-[24px] leading-[28.8px] mb-[30px]">
+            <h3 className="text-white text-[24px] xl:text-[28px] leading-[28.8px] mb-[30px]">
               {t.support}
             </h3>
             <ul className="flex flex-col gap-[10px]">
@@ -151,7 +151,7 @@ export default function Footer() {
                 <li key={link}>
                   <a
                     href="#"
-                    className="text-[#c5c5c5] text-[16px] leading-[1.4] hover:text-white transition-colors"
+                    className="text-[#c5c5c5] text-[16px] xl:text-[18px] leading-[1.4] hover:text-white transition-colors"
                   >
                     {link}
                   </a>
@@ -162,7 +162,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-white text-[24px] leading-[28.8px] mb-[30px]">
+            <h3 className="text-white text-[24px] xl:text-[28px] leading-[28.8px] mb-[30px]">
               {t.contact}
             </h3>
             <div className="flex flex-col gap-[15px] mb-[20px]">

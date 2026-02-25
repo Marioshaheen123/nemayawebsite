@@ -129,12 +129,12 @@ export default function BenefitsCarousel() {
   };
 
   return (
-    <section className="py-[60px] md:py-[80px] overflow-hidden">
+    <section className="min-h-screen flex flex-col justify-center py-[60px] md:py-[80px] overflow-hidden">
       {/* Header — stays inside max-width container */}
-      <div className="max-w-[1335px] mx-auto px-3 md:px-[52px]">
+      <div className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto px-3 md:px-[52px] xl:px-[80px]">
         <div className={`mb-[24px] md:mb-[40px] ${isAr ? "text-right" : ""}`}>
           <SectionBadge label="Benefits" labelAr="الفوائد" />
-          <h2 className="text-[25px] leading-[30px] md:text-[40px] md:leading-[48px] text-[#0e314c] mt-[10px]">
+          <h2 className="text-[25px] leading-[30px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px]">
             <span className="font-bold">{h.bold}</span>
             {h.rest}
           </h2>
@@ -142,7 +142,7 @@ export default function BenefitsCarousel() {
       </div>
 
       {/* Carousel — full container width, cards fill edge to edge */}
-      <div ref={containerRef} className="max-w-[1535px] mx-auto px-3 md:px-[52px]">
+      <div ref={containerRef} className="max-w-[1535px] 2xl:max-w-[1735px] mx-auto px-3 md:px-[52px] xl:px-[80px]">
         <div
           ref={trackRef}
           className="flex transition-transform duration-500 ease-in-out"
@@ -159,7 +159,7 @@ export default function BenefitsCarousel() {
             <div
               key={i}
               className="bg-[#f8f8f8] rounded-[25px] p-[25px] shrink-0 flex flex-col
-                w-full md:w-[calc(50%-11px)] lg:w-[calc((100%-44px)/3)] h-[500px] md:h-[630px]"
+                w-full md:w-[calc(50%-11px)] lg:w-[calc((100%-44px)/3)] h-[500px] md:h-[calc(100vh-320px)] md:max-h-[700px]"
             >
               <div className="flex-1 rounded-[16px] overflow-hidden relative min-h-0">
                 <Image
@@ -170,10 +170,10 @@ export default function BenefitsCarousel() {
                 />
               </div>
               <div className={`mt-4 px-3 ${isAr ? "text-right" : ""}`}>
-                <h3 className="text-[#0e314c] text-[16px] font-bold leading-[1.4] mb-[9px]">
+                <h3 className="text-[#0e314c] text-[16px] xl:text-[18px] font-bold leading-[1.4] mb-[9px]">
                   {card.title}
                 </h3>
-                <p className="text-[#6084a4] text-[16px] leading-[1.4]">
+                <p className="text-[#6084a4] text-[16px] xl:text-[18px] leading-[1.4]">
                   {card.description}
                 </p>
               </div>

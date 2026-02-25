@@ -34,10 +34,10 @@ export default function Header() {
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50">
-      <nav className="bg-[#001005] w-full px-4 md:px-[50px] flex items-center h-[69px] md:h-[100px]">
+      <nav className="bg-[#001005] w-full px-4 md:px-[50px] xl:px-[80px] 2xl:px-[120px] flex items-center h-[69px] md:h-[100px] xl:h-[110px]">
         {/* Logo */}
         <a href="#" className="flex items-center gap-[7px] shrink-0">
-          <Image src="/images/nemayalogo.png" alt="Namaya for Investment" width={225} height={52} className="brightness-0 invert w-[130px] md:w-[225px] h-auto" />
+          <Image src="/images/nemayalogo.png" alt="Namaya for Investment" width={260} height={60} className="brightness-0 invert w-[130px] md:w-[225px] xl:w-[260px] h-auto" />
         </a>
 
         <div className="flex-1" />
@@ -48,7 +48,7 @@ export default function Header() {
             <li key={item.label} className="px-[14px]">
               <a
                 href="#"
-                className="flex items-center gap-1 text-white text-[15px] font-medium leading-[22.5px] py-[38px] hover:text-[#b0f127] transition-colors"
+                className="flex items-center gap-1 text-white text-[15px] xl:text-[16px] font-medium leading-[22.5px] py-[38px] hover:text-[#b0f127] transition-colors"
               >
                 {item.label}
                 {item.hasDropdown && (

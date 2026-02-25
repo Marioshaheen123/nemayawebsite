@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Benefits from "@/components/Benefits";
 import BenefitsCarousel from "@/components/BenefitsCarousel";
+import HowItWorks from "@/components/HowItWorks";
 import Pricing from "@/components/Pricing";
 import Blog from "@/components/Blog";
 import FAQ from "@/components/FAQ";
@@ -14,6 +15,7 @@ export default function Home() {
       <Hero />
       <Benefits />
       <BenefitsCarousel />
+      <HowItWorks />
       <Pricing />
       <Blog />
       <FAQ />

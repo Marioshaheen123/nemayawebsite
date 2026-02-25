@@ -155,7 +155,7 @@ export default function Pricing() {
     isMobile: boolean
   ) => (
     <div
-      className={`${isMobile ? "" : rotationClasses[i]} ${plan.bg} rounded-[25px] border border-[#cacceb] p-[30px] flex flex-col gap-[25px] ${
+      className={`${isMobile ? "" : rotationClasses[i]} ${plan.bg} rounded-[25px] border border-[#cacceb] p-[30px] xl:p-[40px] flex flex-col gap-[25px] ${
         isAr ? "text-right" : ""
       } ${plan.gradient ? "py-[45px]" : ""}`}
       style={
@@ -169,7 +169,7 @@ export default function Pricing() {
     >
       {/* Price section */}
       <div className={isMobile ? "" : "h-[191px]"}>
-        <h3 className="text-[#0e314c] text-[24px] font-bold leading-[28.8px] mb-[15px]">
+        <h3 className="text-[#0e314c] text-[24px] xl:text-[28px] font-bold leading-[28.8px] xl:leading-[34px] mb-[15px]">
           {plan.name}
         </h3>
         <div className="flex items-end gap-0 mb-[15px]">
@@ -182,12 +182,12 @@ export default function Pricing() {
                 className={`text-[#0e314c] font-bold mx-1 ${
                   isMobile
                     ? "text-[40px] leading-[48px]"
-                    : "text-[80px] leading-[80px]"
+                    : "text-[80px] leading-[80px] xl:text-[90px] xl:leading-[90px]"
                 }`}
               >
                 {plan.price}
               </span>
-              <span className="text-[#6084a4] text-[14px] leading-[14px] pb-[5px]">
+              <span className="text-[#6084a4] text-[14px] xl:text-[16px] leading-[14px] pb-[5px]">
                 ابتدا من
               </span>
             </>
@@ -197,7 +197,7 @@ export default function Pricing() {
                 className={`text-[#0e314c] font-bold ${
                   isMobile
                     ? "text-[40px] leading-[48px]"
-                    : "text-[80px] leading-[80px]"
+                    : "text-[80px] leading-[80px] xl:text-[90px] xl:leading-[90px]"
                 }`}
               >
                 {plan.price}
@@ -208,7 +208,7 @@ export default function Pricing() {
             </>
           )}
         </div>
-        <p className="text-[#6084a4] text-[16px] leading-[1.4]">
+        <p className="text-[#6084a4] text-[16px] xl:text-[18px] leading-[1.4]">
           {plan.description}
         </p>
       </div>
@@ -231,7 +231,7 @@ export default function Pricing() {
                 />
               </svg>
             </div>
-            <span className="text-[#6084a4] text-[16px] leading-[24px]">
+            <span className="text-[#6084a4] text-[16px] xl:text-[18px] leading-[24px]">
               {feature}
             </span>
           </div>
@@ -253,12 +253,12 @@ export default function Pricing() {
   );
 
   return (
-    <section className="py-[60px] px-4 md:py-[120px] md:px-[52px]">
-      <div className="max-w-[1335px] mx-auto">
+    <section className="min-h-screen flex items-center py-[60px] px-4 md:py-[120px] md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
+      <div className="w-full max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[40px]">
           <SectionBadge label="PRICING PLANS" labelAr="خطط الأسعار" />
-          <h2 className="text-[25px] leading-[32.5px] md:text-[40px] md:leading-[48px] text-[#0e314c] mt-[10px] max-w-[664px] mx-auto">
+          <h2 className="text-[25px] leading-[32.5px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px] max-w-[664px] xl:max-w-[750px] mx-auto">
             {h.before}
             <span className="font-bold">{h.bold}</span>
           </h2>
