@@ -132,7 +132,7 @@ export default function BenefitsCarousel() {
     <section className="min-h-screen-safe flex flex-col justify-center py-[60px] md:py-[80px] overflow-hidden">
       {/* Header — stays inside max-width container */}
       <div className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto px-3 md:px-[52px] xl:px-[80px]">
-        <div className={`mb-[24px] md:mb-[40px] ${isAr ? "text-right" : ""}`}>
+        <div className={`mb-[24px] md:mb-[40px] text-center ${isAr ? "md:text-right" : "md:text-left"}`}>
           <SectionBadge label="Benefits" labelAr="الفوائد" />
           <h2 className="section-heading-mobile text-[25px] leading-[30px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px]">
             <span className="font-bold">{h.bold}</span>
@@ -169,7 +169,7 @@ export default function BenefitsCarousel() {
                   className="object-cover"
                 />
               </div>
-              <div className={`mt-4 px-3 ${isAr ? "text-right" : ""}`}>
+              <div className={`mt-4 px-3 text-center ${isAr ? "md:text-right" : "md:text-left"}`}>
                 <h3 className="text-[#0e314c] text-[16px] xl:text-[18px] font-bold leading-[1.4] mb-[9px]">
                   {card.title}
                 </h3>
