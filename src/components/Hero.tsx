@@ -26,7 +26,7 @@ export default function Hero() {
   const isAr = lang === "ar";
 
   return (
-    <section className="relative w-full h-screen overflow-hidden">
+    <section className="relative w-full h-screen-safe overflow-hidden">
       {/* Background */}
       <Image
         src="/images/hero-bg.jpg"
@@ -38,7 +38,7 @@ export default function Hero() {
 
       {/* Person image */}
       <div
-        className={`absolute bottom-0 w-full md:w-[927px] h-[268px] md:h-[666px] xl:h-[750px] 2xl:h-[850px] md:max-w-[64%] ${
+        className={`absolute bottom-0 w-full md:w-[927px] h-[268px] sm:h-[320px] md:h-[666px] xl:h-[750px] 2xl:h-[850px] md:max-w-[64%] ${
           isAr ? "left-0" : "right-0"
         }`}
       >
@@ -58,7 +58,7 @@ export default function Hero() {
           className={`max-w-full md:max-w-[795px] xl:max-w-[900px] ${isAr ? "text-right ml-auto mr-0" : ""}`}
         >
           {/* Headline */}
-          <h1 className="text-[35px] leading-[38.5px] md:text-[90px] md:leading-[99px] xl:text-[110px] xl:leading-[121px] 2xl:text-[130px] 2xl:leading-[143px] text-white mb-5 whitespace-pre-line">
+          <h1 className="hero-headline text-[35px] leading-[38.5px] md:text-[90px] md:leading-[99px] xl:text-[110px] xl:leading-[121px] 2xl:text-[130px] 2xl:leading-[143px] text-white mb-5 whitespace-pre-line">
             {t.headlineBefore}
             <span className="font-extrabold text-[#12953d]">
               {t.headlineHighlight}
@@ -66,7 +66,7 @@ export default function Hero() {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-white text-[16px] leading-[24px] md:text-[24px] md:leading-[36px] xl:text-[28px] xl:leading-[42px] max-w-[653px] xl:max-w-[750px] mb-5">
+          <p className="hero-subtitle text-white text-[16px] leading-[24px] md:text-[24px] md:leading-[36px] xl:text-[28px] xl:leading-[42px] max-w-[653px] xl:max-w-[750px] mb-5">
             {t.subtitle}
           </p>
 

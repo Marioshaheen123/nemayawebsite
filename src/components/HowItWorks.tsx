@@ -72,7 +72,7 @@ export default function HowItWorks() {
   const t = content[lang];
 
   return (
-    <section className="relative overflow-hidden min-h-screen flex items-center">
+    <section className="relative overflow-hidden min-h-screen-safe flex items-center">
       {/* Dark background image */}
       <Image
         src="/images/hero-bg.jpg"
@@ -152,7 +152,7 @@ export default function HowItWorks() {
             </div>
 
             {/* Heading */}
-            <h2 className="text-white text-[25px] leading-[30px] text-center mb-[24px] max-w-[350px]">
+            <h2 className="section-heading-mobile text-white text-[25px] leading-[30px] text-center mb-[24px] max-w-[350px]">
               {t.heading}
             </h2>
 

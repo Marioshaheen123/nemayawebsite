@@ -96,12 +96,12 @@ export default function Benefits() {
   };
 
   return (
-    <section className="min-h-screen flex items-center py-[60px] px-3 md:py-[120px] md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
+    <section className="min-h-screen-safe flex items-center py-[60px] px-3 md:py-[120px] md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
       <div className="w-full max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[40px]">
           <SectionBadge label="Benefits" labelAr="الفوائد" />
-          <h2 className="text-[25px] leading-[30px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px] max-w-[690px] xl:max-w-[800px] mx-auto">
+          <h2 className="section-heading-mobile text-[25px] leading-[30px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px] max-w-[690px] xl:max-w-[800px] mx-auto">
             {h.before}
             <span className="font-bold">{h.bold}</span>
           </h2>

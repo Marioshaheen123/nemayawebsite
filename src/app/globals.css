@@ -1,5 +1,34 @@
 @import "tailwindcss";
 
+/* Dynamic viewport height — adjusts for mobile browser chrome (address bar) */
+.h-screen-safe {
+  height: 100vh;
+  height: 100dvh;
+}
+
+.min-h-screen-safe {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Large mobile phones (Android 6"+, 400px+ viewport) */
+@custom-media --mobile-lg (min-width: 400px);
+
+@media (--mobile-lg) and (max-width: 767px) {
+  .hero-headline {
+    font-size: 42px !important;
+    line-height: 46px !important;
+  }
+  .hero-subtitle {
+    font-size: 18px !important;
+    line-height: 28px !important;
+  }
+  .section-heading-mobile {
+    font-size: 28px !important;
+    line-height: 34px !important;
+  }
+}
+
 @theme {
   --font-poppins: "Poppins", sans-serif;
   --color-primary: #12953d;

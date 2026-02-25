@@ -253,12 +253,12 @@ export default function Pricing() {
   );
 
   return (
-    <section className="min-h-screen flex items-center py-[60px] px-4 md:py-[50px] md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
+    <section className="min-h-screen-safe flex items-center py-[60px] px-4 md:py-[50px] md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
       <div className="w-full max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[20px] xl:mb-[28px]">
           <SectionBadge label="PRICING PLANS" labelAr="خطط الأسعار" />
-          <h2 className="text-[25px] leading-[32.5px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px] max-w-[664px] xl:max-w-[750px] mx-auto">
+          <h2 className="section-heading-mobile text-[25px] leading-[32.5px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px] max-w-[664px] xl:max-w-[750px] mx-auto">
             {h.before}
             <span className="font-bold">{h.bold}</span>
           </h2>
