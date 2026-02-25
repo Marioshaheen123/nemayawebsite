@@ -7,14 +7,14 @@ import { useLang } from "@/context/LanguageContext";
 const navItems = {
   en: [
     { label: "Home", hasDropdown: false },
-    { label: "Trading Tools Center", hasDropdown: true },
+    { label: "Tools Center", hasDropdown: true },
     { label: "About", hasDropdown: false },
     { label: "Trading Platforms", hasDropdown: true },
     { label: "Blog", hasDropdown: false },
   ],
   ar: [
-    { label: "الصفحة الرئيسية", hasDropdown: false },
-    { label: "مركز أدوات التداول", hasDropdown: true },
+    { label: "الرئيسية", hasDropdown: false },
+    { label: "أدوات التداول", hasDropdown: true },
     { label: "عن نمايا", hasDropdown: false },
     { label: "منصات التداول", hasDropdown: true },
     { label: "مدونة", hasDropdown: false },
@@ -60,23 +60,28 @@ export default function Header() {
         </ul>
 
         {/* CTA Buttons + Lang Toggle */}
-        <div className="hidden lg:flex items-center gap-3 pl-5">
+        <div className="hidden lg:flex items-center gap-2 pl-5">
           {/* Language Toggle */}
           <button
             onClick={toggleLang}
-            className="border border-white/30 rounded-[5px] px-[16px] py-[15.5px] text-white text-[14px] font-semibold leading-[21px] hover:bg-white/10 transition-colors"
+            className="flex items-center gap-[6px] rounded-full px-[14px] py-[9px] text-white/80 text-[13px] font-medium hover:text-white hover:bg-white/10 transition-all"
           >
-            {lang === "en" ? "العربية" : "English"}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M2 12h20" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+            {lang === "en" ? "العربية" : "EN"}
           </button>
           <a
             href="#"
-            className="border border-[#12953d] rounded-[5px] px-[34px] py-[15.5px] text-white text-[14px] font-semibold leading-[21px] capitalize hover:bg-[#12953d] transition-colors"
+            className="rounded-full px-[24px] py-[10px] text-white text-[13px] font-semibold border border-white/20 hover:bg-white/10 transition-all"
           >
             {buttons.signup}
           </a>
           <a
             href="#"
-            className="bg-[#12953d] rounded-[5px] px-[33px] py-[15.5px] text-white text-[14px] font-semibold leading-[21px] capitalize hover:bg-[#0e7a31] transition-colors"
+            className="rounded-full px-[24px] py-[10px] bg-[#12953d] text-white text-[13px] font-semibold hover:bg-[#0e7a31] transition-all"
           >
             {buttons.login}
           </a>
@@ -116,14 +121,19 @@ export default function Header() {
           <div className="flex gap-3 mt-4">
             <button
               onClick={toggleLang}
-              className="border border-white/30 rounded-[5px] px-4 py-3 text-white text-sm font-semibold"
+              className="flex items-center gap-[6px] rounded-full px-4 py-3 text-white/80 text-sm font-medium border border-white/20 hover:bg-white/10 transition-all"
             >
-              {lang === "en" ? "العربية" : "English"}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M2 12h20" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg>
+              {lang === "en" ? "العربية" : "EN"}
             </button>
-            <a href="#" className="border border-[#12953d] rounded-[5px] px-6 py-3 text-white text-sm font-semibold">
+            <a href="#" className="rounded-full px-6 py-3 text-white text-sm font-semibold border border-white/20 hover:bg-white/10 transition-all">
               {buttons.signup}
             </a>
-            <a href="#" className="bg-[#12953d] rounded-[5px] px-6 py-3 text-white text-sm font-semibold">
+            <a href="#" className="rounded-full px-6 py-3 bg-[#12953d] text-white text-sm font-semibold hover:bg-[#0e7a31] transition-all">
               {buttons.login}
             </a>
           </div>
