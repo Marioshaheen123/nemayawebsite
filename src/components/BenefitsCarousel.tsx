@@ -62,7 +62,7 @@ const heading = {
 const GAP = 22;
 
 export default function BenefitsCarousel() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(1);
   const { lang } = useLang();
   const isAr = lang === "ar";
   const items = cards[lang];
@@ -100,9 +100,9 @@ export default function BenefitsCarousel() {
     if (activeIndex > maxIndex) setActiveIndex(maxIndex);
   }, [maxIndex, activeIndex]);
 
-  // Reset to 0 on language change
+  // Reset to middle on language change
   useEffect(() => {
-    setActiveIndex(0);
+    setActiveIndex(1);
   }, [lang]);
 
   const offset = activeIndex * slideOffset;
@@ -129,19 +129,19 @@ export default function BenefitsCarousel() {
   };
 
   return (
-    <section className="min-h-screen-safe flex flex-col justify-center py-[60px] md:py-[80px] overflow-hidden">
-      {/* Header — stays inside max-width container */}
+    <section className="min-h-screen-safe flex flex-col justify-center py-[24px] md:py-[80px] overflow-hidden">
+      {/* Header */}
       <div className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto px-3 md:px-[52px] xl:px-[80px]">
-        <div className={`mb-[24px] md:mb-[40px] text-center ${isAr ? "md:text-right" : "md:text-left"}`}>
+        <div className={`mb-[16px] md:mb-[40px] text-center ${isAr ? "md:text-right" : "md:text-left"}`}>
           <SectionBadge label="Benefits" labelAr="الفوائد" />
-          <h2 className="section-heading-mobile text-[25px] leading-[30px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px]">
+          <h2 className="text-[18px] leading-[24px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[8px] md:mt-[10px]">
             <span className="font-bold">{h.bold}</span>
             {h.rest}
           </h2>
         </div>
       </div>
 
-      {/* Carousel — full container width, cards fill edge to edge */}
+      {/* Carousel */}
       <div ref={containerRef} className="max-w-[1535px] 2xl:max-w-[1735px] mx-auto px-3 md:px-[52px] xl:px-[80px]">
         <div
           ref={trackRef}
@@ -158,10 +158,10 @@ export default function BenefitsCarousel() {
           {items.map((card, i) => (
             <div
               key={i}
-              className="bg-[#f8f8f8] rounded-[25px] p-[25px] shrink-0 flex flex-col
-                w-full md:w-[calc(50%-11px)] lg:w-[calc((100%-44px)/3)] h-[500px] md:h-[calc(100dvh-320px)] md:max-h-[700px]"
+              className="bg-[#f8f8f8] rounded-[25px] p-[16px] md:p-[25px] shrink-0 flex flex-col
+                w-full md:w-[calc(50%-11px)] lg:w-[calc((100%-44px)/3)] md:h-[calc(100dvh-320px)] md:max-h-[700px]"
             >
-              <div className="flex-1 rounded-[16px] overflow-hidden relative min-h-0">
+              <div className="aspect-[4/3] md:flex-1 md:aspect-auto rounded-[16px] overflow-hidden relative">
                 <Image
                   src={card.image}
                   alt={card.title}
@@ -169,11 +169,11 @@ export default function BenefitsCarousel() {
                   className="object-cover"
                 />
               </div>
-              <div className={`mt-4 px-3 text-center ${isAr ? "md:text-right" : "md:text-left"}`}>
-                <h3 className="text-[#0e314c] text-[16px] xl:text-[18px] font-bold leading-[1.4] mb-[9px]">
+              <div className={`mt-[12px] md:mt-4 px-1 md:px-3 text-center ${isAr ? "md:text-right" : "md:text-left"}`}>
+                <h3 className="text-[#0e314c] text-[15px] md:text-[16px] xl:text-[18px] font-bold leading-[1.3] mb-[4px] md:mb-[9px]">
                   {card.title}
                 </h3>
-                <p className="text-[#6084a4] text-[16px] xl:text-[18px] leading-[1.4]">
+                <p className="text-[#6084a4] text-[13px] md:text-[16px] xl:text-[18px] leading-[1.4]">
                   {card.description}
                 </p>
               </div>
@@ -182,9 +182,9 @@ export default function BenefitsCarousel() {
         </div>
       </div>
 
-      {/* Dots — hidden when all cards fit (nothing to slide) */}
+      {/* Dots */}
       {maxIndex > 0 && (
-        <div className="flex justify-center gap-2 mt-[40px]">
+        <div className="flex justify-center gap-2 mt-[16px] md:mt-[40px]">
           {Array.from({ length: maxIndex + 1 }, (_, i) => (
             <button
               key={i}
