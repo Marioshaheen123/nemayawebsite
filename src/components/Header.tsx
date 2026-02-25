@@ -1,23 +1,46 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useLang } from "@/context/LanguageContext";
 
-const navItems = {
+interface NavItem {
+  label: string;
+  hasDropdown: boolean;
+  href: string;
+  children?: { label: string; href: string }[];
+}
+
+const navItems: { en: NavItem[]; ar: NavItem[] } = {
   en: [
-    { label: "Home", hasDropdown: false },
-    { label: "Tools Center", hasDropdown: true },
-    { label: "About", hasDropdown: false },
-    { label: "Trading Platforms", hasDropdown: true },
-    { label: "Blog", hasDropdown: false },
+    { label: "Home", hasDropdown: false, href: "/" },
+    {
+      label: "Tools Center",
+      hasDropdown: true,
+      href: "#",
+      children: [
+        { label: "Videos", href: "/videos" },
+        { label: "Economic Calendar", href: "/economic-calendar" },
+      ],
+    },
+    { label: "About", hasDropdown: false, href: "/about" },
+    { label: "Trading Platforms", hasDropdown: true, href: "/trading-platforms" },
+    { label: "Blog", hasDropdown: false, href: "/blog" },
   ],
   ar: [
-    { label: "الرئيسية", hasDropdown: false },
-    { label: "أدوات التداول", hasDropdown: true },
-    { label: "عن نمايا", hasDropdown: false },
-    { label: "منصات التداول", hasDropdown: true },
-    { label: "مدونة", hasDropdown: false },
+    { label: "الرئيسية", hasDropdown: false, href: "/" },
+    {
+      label: "أدوات التداول",
+      hasDropdown: true,
+      href: "#",
+      children: [
+        { label: "فيديو", href: "/videos" },
+        { label: "التقويم الاقتصادي", href: "/economic-calendar" },
+      ],
+    },
+    { label: "عن نمايا", hasDropdown: false, href: "/about" },
+    { label: "منصات التداول", hasDropdown: true, href: "/trading-platforms" },
+    { label: "مدونة", hasDropdown: false, href: "/blog" },
   ],
 };
 
@@ -28,15 +51,28 @@ const cta = {
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLLIElement | null>(null);
   const { lang, toggleLang } = useLang();
   const items = navItems[lang];
   const buttons = cta[lang];
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpenDropdown(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50">
       <nav className="bg-[#001005] w-full px-4 md:px-[50px] xl:px-[80px] 2xl:px-[120px] flex items-center h-[69px] md:h-[100px] xl:h-[110px]">
         {/* Logo */}
-        <a href="#" className="flex items-center gap-[7px] shrink-0">
+        <a href="/" className="flex items-center gap-[7px] shrink-0">
           <Image src="/images/nemayalogo.png" alt="Namaya for Investment" width={260} height={60} className="brightness-0 invert w-[130px] md:w-[225px] xl:w-[260px] h-auto" />
         </a>
 
@@ -45,16 +81,47 @@ export default function Header() {
         {/* Desktop Nav */}
         <ul className="hidden lg:flex items-center absolute left-1/2 -translate-x-1/2">
           {items.map((item) => (
-            <li key={item.label} className="px-[14px]">
-              <a
-                href="#"
-                className="flex items-center gap-1 text-white text-[15px] xl:text-[16px] font-medium leading-[22.5px] py-[38px] hover:text-[#b0f127] transition-colors"
-              >
-                {item.label}
-                {item.hasDropdown && (
-                  <Image src="/images/nav-arrow.svg" alt="" width={14} height={24} />
-                )}
-              </a>
+            <li
+              key={item.label}
+              className="px-[14px] relative"
+              ref={item.children ? dropdownRef : undefined}
+            >
+              {item.children ? (
+                <>
+                  <button
+                    onClick={() =>
+                      setOpenDropdown(openDropdown === item.label ? null : item.label)
+                    }
+                    className="flex items-center gap-1 text-white text-[15px] xl:text-[16px] font-medium leading-[22.5px] py-[38px] hover:text-[#b0f127] transition-colors cursor-pointer"
+                  >
+                    {item.label}
+                    <Image src="/images/nav-arrow.svg" alt="" width={14} height={24} />
+                  </button>
+                  {openDropdown === item.label && (
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 bg-[#001005] border border-white/10 rounded-[10px] py-[8px] min-w-[180px] shadow-lg">
+                      {item.children.map((child) => (
+                        <a
+                          key={child.href}
+                          href={child.href}
+                          className="block px-[20px] py-[10px] text-white text-[14px] font-medium hover:bg-white/10 hover:text-[#b0f127] transition-colors"
+                        >
+                          {child.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <a
+                  href={item.href}
+                  className="flex items-center gap-1 text-white text-[15px] xl:text-[16px] font-medium leading-[22.5px] py-[38px] hover:text-[#b0f127] transition-colors"
+                >
+                  {item.label}
+                  {item.hasDropdown && (
+                    <Image src="/images/nav-arrow.svg" alt="" width={14} height={24} />
+                  )}
+                </a>
+              )}
             </li>
           ))}
         </ul>
@@ -74,13 +141,13 @@ export default function Header() {
             {lang === "en" ? "العربية" : "EN"}
           </button>
           <a
-            href="#"
+            href="/register"
             className="rounded-full px-[24px] py-[10px] text-white text-[13px] font-semibold border border-white/20 hover:bg-white/10 transition-all"
           >
             {buttons.signup}
           </a>
           <a
-            href="#"
+            href="/login"
             className="rounded-full px-[24px] py-[10px] bg-[#12953d] text-white text-[13px] font-semibold hover:bg-[#0e7a31] transition-all"
           >
             {buttons.login}
@@ -90,7 +157,7 @@ export default function Header() {
         {/* Mobile CTA + Menu */}
         <div className="flex lg:hidden items-center gap-3">
           <a
-            href="#"
+            href="/login"
             className="bg-[#12953d] rounded-[5px] px-3 py-[6px] text-white text-[10px] font-semibold leading-[15px] capitalize"
           >
             {buttons.login}
@@ -110,13 +177,44 @@ export default function Header() {
       {mobileOpen && (
         <div className="lg:hidden bg-[#001005] rounded-b-[10px] mx-0 px-5 pb-5">
           {items.map((item) => (
-            <a
-              key={item.label}
-              href="#"
-              className="block text-white text-[15px] font-medium py-3 border-b border-white/10"
-            >
-              {item.label}
-            </a>
+            <div key={item.label}>
+              <a
+                href={item.children ? undefined : item.href}
+                onClick={
+                  item.children
+                    ? (e) => {
+                        e.preventDefault();
+                        setOpenDropdown(openDropdown === item.label ? null : item.label);
+                      }
+                    : undefined
+                }
+                className="flex items-center justify-between text-white text-[15px] font-medium py-3 border-b border-white/10 cursor-pointer"
+              >
+                {item.label}
+                {item.children && (
+                  <Image
+                    src="/images/nav-arrow.svg"
+                    alt=""
+                    width={14}
+                    height={24}
+                    className={`transition-transform ${openDropdown === item.label ? "rotate-180" : ""}`}
+                  />
+                )}
+              </a>
+              {item.children && openDropdown === item.label && (
+                <div className="pl-4 border-b border-white/10">
+                  {item.children.map((child) => (
+                    <a
+                      key={child.href}
+                      href={child.href}
+                      className="block text-white/80 text-[14px] font-medium py-2.5 hover:text-[#b0f127] transition-colors"
+                    >
+                      {child.label}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
           <div className="flex gap-3 mt-4">
             <button
@@ -130,10 +228,10 @@ export default function Header() {
               </svg>
               {lang === "en" ? "العربية" : "EN"}
             </button>
-            <a href="#" className="rounded-full px-6 py-3 text-white text-sm font-semibold border border-white/20 hover:bg-white/10 transition-all">
+            <a href="/register" className="rounded-full px-6 py-3 text-white text-sm font-semibold border border-white/20 hover:bg-white/10 transition-all">
               {buttons.signup}
             </a>
-            <a href="#" className="rounded-full px-6 py-3 bg-[#12953d] text-white text-sm font-semibold hover:bg-[#0e7a31] transition-all">
+            <a href="/login" className="rounded-full px-6 py-3 bg-[#12953d] text-white text-sm font-semibold hover:bg-[#0e7a31] transition-all">
               {buttons.login}
             </a>
           </div>

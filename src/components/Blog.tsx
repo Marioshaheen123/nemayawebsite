@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import SectionBadge from "./SectionBadge";
 import { useState, useRef } from "react";
 import { useLang } from "@/context/LanguageContext";
@@ -8,60 +9,66 @@ import { useLang } from "@/context/LanguageContext";
 const articles = {
   en: [
     {
-      image: "/images/blog-1.jpg",
+      image: "/images/blog-page-1.jpg",
       day: "10",
       month: "December",
       readTime: "10 min read",
-      title: "5 Tips to optimize your financial operations today",
+      title:
+        "Somalia and Tanzania resume direct flights and strengthen bilateral cooperation",
       excerpt:
-        "Practical advice to streamline workflows and reduce costs using cutting-edge tools.",
+        "Somalia and Tanzania have announced an agreement to resume direct flights between Mogadishu and Dar es Salaam, in a move aimed at strengthening bilateral relations between the two countries.",
     },
     {
-      image: "/images/blog-2.jpg",
+      image: "/images/blog-page-2.jpg",
       day: "09",
       month: "December",
       readTime: "7 min read",
-      title: "The power of AI in financial decision-making",
+      title:
+        "The IMF calls on Nigeria to readjust its budget to lower oil prices",
       excerpt:
-        "Learn how artificial intelligence is transforming financial strategies with real-time insights.",
+        "The International Monetary Fund and Nigeria needs to adjust its 2025 budget to lower oil prices and increase cash transfers, in order to protect the most vulnerable parts of its population who face poverty and food insecurity.",
     },
     {
-      image: "/images/blog-3.jpg",
+      image: "/images/blog-page-3.jpg",
       day: "08",
       month: "December",
       readTime: "15 min read",
-      title: "How fintech is changing the game",
+      title:
+        "The IMF announces it is in contact with Senegal despite previously suspending funding",
       excerpt:
-        "How technologies are reshaping the financial landscape and driving business success.",
+        "The International Monetary Fund said it remains engaged with Senegal, as Prime Minister Ousmane Sonko announced an economic recovery plan and the allocation of billions of dollars to clear debts left by the previous regime.",
     },
   ],
   ar: [
     {
-      image: "/images/blog-1.jpg",
+      image: "/images/blog-page-1.jpg",
       day: "10",
       month: "ديسمبر",
       readTime: "10 دقائق قراءة",
-      title: "5 نصائح لتحسين عملياتك المالية اليوم",
+      title:
+        "تستأنف الصومال وتنزانيا الرحلات الجوية المباشرة وتعززان التعاون الثنائي",
       excerpt:
-        "نصائح عملية لتبسيط سير العمل وتقليل التكاليف باستخدام أدوات متطورة.",
+        "أعلنت الصومال وتنزانيا عن اتفاق لاستئناف الرحلات الجوية المباشرة بين مقديشو ودار السلام، في خطوة تهدف إلى تعزيز العلاقات الثنائية بين البلدين.",
     },
     {
-      image: "/images/blog-2.jpg",
+      image: "/images/blog-page-2.jpg",
       day: "09",
       month: "ديسمبر",
-      readTime: "7 دقائق قراءة",
-      title: "قوة الذكاء الاصطناعي في اتخاذ القرارات المالية",
+      readTime: "15 دقائق قراءة",
+      title:
+        "يعلن صندوق النقد الدولي أنه على اتصال بالسنغال على الرغم من تعليق التمويل سابقًا",
       excerpt:
-        "تعلم كيف يقوم الذكاء الاصطناعي بتحويل الاستراتيجيات المالية من خلال رؤى في الوقت الحقيقي.",
+        "قال صندوق النقد الدولي إنه لا يزال متفاعلًا مع السنغال، حيث أعلن رئيس الوزراء عثمان سونكو عن خطة انتعاش اقتصادي وتخصيص مليارات الدولارات لسداد الديون المتراكمة من النظام السابق.",
     },
     {
-      image: "/images/blog-3.jpg",
+      image: "/images/blog-page-3.jpg",
       day: "08",
       month: "ديسمبر",
-      readTime: "15 دقائق قراءة",
-      title: "كيف تغير التكنولوجيا المالية قواعد اللعبة",
+      readTime: "10 دقائق قراءة",
+      title:
+        "يدعو صندوق النقد الدولي نيجيريا إلى إعادة ضبط ميزانيتها لتخفيض أسعار النفط",
       excerpt:
-        "كيف تعيد التقنيات تشكيل المشهد المالي وتدفع نحو نجاح الأعمال.",
+        "يحتاج صندوق النقد الدولي ونيجيريا إلى تعديل ميزانية 2025 لتخفيض أسعار النفط وزيادة التحويلات النقدية، لحماية أكثر الفئات ضعفًا في السكان الذين يواجهون الفقر وانعدام الأمن الغذائي.",
     },
   ],
 };
@@ -78,6 +85,7 @@ const heading = {
 };
 
 const readMore = { en: "Read More", ar: "اقرأ المزيد" };
+const viewAll = { en: "View All Blogs", ar: "عرض جميع المقالات" };
 
 export default function Blog() {
   const { lang } = useLang();
@@ -109,7 +117,7 @@ export default function Blog() {
     }
   };
 
-  const renderCard = (article: (typeof items)[0]) => (
+  const renderCard = (article: (typeof items)[0], index: number) => (
     <>
       {/* Image */}
       <div
@@ -129,16 +137,14 @@ export default function Blog() {
 
       {/* Content */}
       <div
-        className={`border border-[#cacceb] border-t-0 rounded-b-[25px] relative h-[286px] ${
+        className={`border border-[#cacceb] border-t-0 rounded-b-[25px] flex flex-col px-[30px] pb-[24px] ${
           isAr ? "text-right" : ""
         }`}
       >
         {/* Date badge + read time */}
         <div
-          className={`flex items-end gap-4 absolute top-0 ${
-            isAr
-              ? "right-[30px] left-[30px] flex-row-reverse"
-              : "left-[30px] right-[30px]"
+          className={`flex items-end gap-4 ${
+            isAr ? "flex-row-reverse" : ""
           }`}
         >
           <div className="relative -mt-[62px]">
@@ -161,37 +167,21 @@ export default function Blog() {
         </div>
 
         {/* Title */}
-        <div
-          className={`absolute top-[55px] ${
-            isAr ? "right-[30px] left-[30px]" : "left-[30px] right-[30px]"
-          }`}
-        >
-          <h3 className="text-[#0e314c] text-[24px] xl:text-[28px] leading-[28.8px] xl:leading-[34px]">
-            {article.title}
-          </h3>
-        </div>
+        <h3 className="text-[#0e314c] text-[20px] xl:text-[24px] leading-[26px] xl:leading-[30px] mt-[14px] line-clamp-3">
+          {article.title}
+        </h3>
 
         {/* Excerpt */}
-        <div
-          className={`absolute top-[125px] ${
-            isAr ? "right-[30px] left-[30px]" : "left-[30px] right-[30px]"
-          }`}
-        >
-          <p className="text-[#6084a4] text-[14px] xl:text-[16px] leading-[25.2px]">
-            {article.excerpt}
-          </p>
-        </div>
+        <p className="text-[#6084a4] text-[14px] xl:text-[15px] leading-[22px] xl:leading-[24px] mt-[10px] line-clamp-3">
+          {article.excerpt}
+        </p>
 
         {/* Read More */}
-        <div
-          className={`absolute top-[202px] ${
-            isAr ? "right-[30px]" : "left-[30px]"
-          }`}
-        >
-          <a href="#" className="cta-glass-solid">
+        <div className="mt-auto pt-[16px]">
+          <Link href={`/blog/${index}`} className="cta-glass-solid">
             {readMore[lang]}
             <span className="cta-arrow">→</span>
-          </a>
+          </Link>
         </div>
       </div>
     </>
@@ -225,7 +215,7 @@ export default function Blog() {
           >
             {items.map((article, i) => (
               <div key={i} className="w-full shrink-0 px-2">
-                {renderCard(article)}
+                {renderCard(article, i)}
               </div>
             ))}
           </div>
@@ -235,7 +225,7 @@ export default function Blog() {
         <div className="hidden md:grid grid-cols-3 gap-0">
           {items.map((article, i) => (
             <div key={i} className="px-3">
-              {renderCard(article)}
+              {renderCard(article, i)}
             </div>
           ))}
         </div>
@@ -251,6 +241,17 @@ export default function Blog() {
               }`}
             />
           ))}
+        </div>
+
+        {/* View All Blogs */}
+        <div className="flex justify-center mt-[32px] md:mt-[48px]">
+          <Link
+            href="/blog"
+            className="bg-[#12953d] hover:bg-[#0e7a32] transition-colors rounded-full px-[28px] py-[12px] text-white text-[14px] font-semibold inline-flex items-center gap-2"
+          >
+            {viewAll[lang]}
+            <span className="text-[16px]">→</span>
+          </Link>
         </div>
       </div>
     </section>

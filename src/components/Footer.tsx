@@ -5,37 +5,37 @@ import { useLang } from "@/context/LanguageContext";
 
 const quickLinks = {
   en: [
-    "Financial assets",
-    "Technical analysis",
-    "Trading platforms",
-    "Types of accounts",
-    "Deposit and withdrawal policy",
-    "Complaints",
+    { label: "Financial assets", href: "/financial-assets" },
+    { label: "Technical analysis", href: "#" },
+    { label: "Trading platforms", href: "/trading-platforms" },
+    { label: "Types of accounts", href: "/account-types" },
+    { label: "Deposit and withdrawal policy", href: "#" },
+    { label: "Complaints", href: "#" },
   ],
   ar: [
-    "الأصول المالية",
-    "التحليل الفني",
-    "منصات التداول",
-    "أنواع الحسابات",
-    "سياسة الإيداع والسحب",
-    "الشكاوى",
+    { label: "الأصول المالية", href: "/financial-assets" },
+    { label: "التحليل الفني", href: "#" },
+    { label: "منصات التداول", href: "/trading-platforms" },
+    { label: "أنواع الحسابات", href: "/account-types" },
+    { label: "سياسة الإيداع والسحب", href: "#" },
+    { label: "الشكاوى", href: "#" },
   ],
 };
 
 const supportLinks = {
   en: [
-    "FAQ's",
-    "Privacy Policy",
-    "Terms & Conditions",
-    "FAQ",
-    "Contact Us",
+    { label: "Islamic Legal Rulings", href: "/islamic-legal-rulings" },
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Terms & Conditions", href: "/terms" },
+    { label: "FAQ", href: "/faq" },
+    { label: "Contact Us", href: "/contact" },
   ],
   ar: [
-    "الأسئلة الشائعة",
-    "سياسة الخصوصية",
-    "الشروط والأحكام",
-    "الأسئلة المتكررة",
-    "تواصل معنا",
+    { label: "الأحكام القانونية الإسلامية", href: "/islamic-legal-rulings" },
+    { label: "سياسة الخصوصية", href: "/privacy-policy" },
+    { label: "الشروط والأحكام", href: "/terms" },
+    { label: "الأسئلة المتكررة", href: "/faq" },
+    { label: "تواصل معنا", href: "/contact" },
   ],
 };
 
@@ -129,12 +129,12 @@ export default function Footer() {
             </h3>
             <ul className="flex flex-col gap-[10px]">
               {qLinks.map((link) => (
-                <li key={link}>
+                <li key={link.label}>
                   <a
-                    href="#"
+                    href={link.href}
                     className="text-[#c5c5c5] text-[16px] xl:text-[18px] leading-[1.4] hover:text-white transition-colors"
                   >
-                    {link}
+                    {link.label}
                   </a>
                 </li>
               ))}
@@ -148,12 +148,12 @@ export default function Footer() {
             </h3>
             <ul className="flex flex-col gap-[10px]">
               {sLinks.map((link) => (
-                <li key={link}>
+                <li key={link.label}>
                   <a
-                    href="#"
+                    href={link.href}
                     className="text-[#c5c5c5] text-[16px] xl:text-[18px] leading-[1.4] hover:text-white transition-colors"
                   >
-                    {link}
+                    {link.label}
                   </a>
                 </li>
               ))}

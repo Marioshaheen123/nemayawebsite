@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import SectionBadge from "./SectionBadge";
 import { useState, useRef } from "react";
 import { useLang } from "@/context/LanguageContext";
@@ -114,6 +115,8 @@ const heading = {
     bold: "ميزانيتك وأهدافك",
   },
 };
+
+const viewAll = { en: "View All Account Types", ar: "عرض جميع أنواع الحسابات" };
 
 // Rotation classes with md: prefix so they only apply on desktop
 const rotationClasses = ["md:rotate-2", "", "md:-rotate-2"];
@@ -240,14 +243,14 @@ export default function Pricing() {
 
       {/* CTA */}
       <div className={isAr ? "text-right" : ""}>
-        <a
-          href="#"
+        <Link
+          href="/account-types"
           className={`inline-block border rounded-[5px] px-[36px] py-[12px] md:py-[10px] xl:py-[14px] text-[14px] md:text-[13px] xl:text-[14px] font-semibold leading-[21px] hover:opacity-90 transition-opacity ${
             isMobile ? "w-full text-center" : "w-fit"
           } ${plan.ctaStyle}`}
         >
           {plan.cta}
-        </a>
+        </Link>
       </div>
     </div>
   );
@@ -306,6 +309,17 @@ export default function Pricing() {
               }`}
             />
           ))}
+        </div>
+
+        {/* View All Account Types */}
+        <div className="flex justify-center mt-[32px] md:mt-[48px]">
+          <Link
+            href="/account-types"
+            className="bg-[#12953d] hover:bg-[#0e7a32] transition-colors rounded-full px-[28px] py-[12px] text-white text-[14px] font-semibold inline-flex items-center gap-2"
+          >
+            {viewAll[lang]}
+            <span className="text-[16px]">→</span>
+          </Link>
         </div>
       </div>
     </section>
