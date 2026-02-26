@@ -4,58 +4,23 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useLang } from "@/context/LanguageContext";
 
-interface NavItem {
-  label: string;
-  hasDropdown: boolean;
-  href: string;
-  children?: { label: string; href: string }[];
+interface HeaderProps {
+  headerNavItems: any;
+  headerCta: any;
 }
 
-const navItems: { en: NavItem[]; ar: NavItem[] } = {
-  en: [
-    { label: "Home", hasDropdown: false, href: "/" },
-    {
-      label: "Tools Center",
-      hasDropdown: true,
-      href: "#",
-      children: [
-        { label: "Videos", href: "/videos" },
-        { label: "Economic Calendar", href: "/economic-calendar" },
-      ],
-    },
-    { label: "About", hasDropdown: false, href: "/about" },
-    { label: "Trading Platforms", hasDropdown: true, href: "/trading-platforms" },
-    { label: "Blog", hasDropdown: false, href: "/blog" },
-  ],
-  ar: [
-    { label: "الرئيسية", hasDropdown: false, href: "/" },
-    {
-      label: "أدوات التداول",
-      hasDropdown: true,
-      href: "#",
-      children: [
-        { label: "فيديو", href: "/videos" },
-        { label: "التقويم الاقتصادي", href: "/economic-calendar" },
-      ],
-    },
-    { label: "عن نمايا", hasDropdown: false, href: "/about" },
-    { label: "منصات التداول", hasDropdown: true, href: "/trading-platforms" },
-    { label: "مدونة", hasDropdown: false, href: "/blog" },
-  ],
-};
-
-const cta = {
-  en: { signup: "Sign up", login: "Log in" },
-  ar: { signup: "سجل", login: "تسجيل الدخول" },
-};
-
-export default function Header() {
+export default function Header({ headerNavItems, headerCta }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLLIElement | null>(null);
   const { lang, toggleLang } = useLang();
-  const items = navItems[lang];
-  const buttons = cta[lang];
+  // Filter out items that have children with actual entries, and strip empty children arrays
+  const rawItems = headerNavItems[lang] || [];
+  const items = rawItems.map((item: any) => ({
+    ...item,
+    children: item.children?.length > 0 ? item.children : undefined,
+  }));
+  const buttons = headerCta[lang];
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -80,7 +45,7 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <ul className="hidden lg:flex items-center absolute left-1/2 -translate-x-1/2">
-          {items.map((item) => (
+          {items.map((item: any) => (
             <li
               key={item.label}
               className="px-[14px] relative"
@@ -99,7 +64,7 @@ export default function Header() {
                   </button>
                   {openDropdown === item.label && (
                     <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 bg-[#001005] border border-white/10 rounded-[10px] py-[8px] min-w-[180px] shadow-lg">
-                      {item.children.map((child) => (
+                      {item.children.map((child: any) => (
                         <a
                           key={child.href}
                           href={child.href}
@@ -117,9 +82,6 @@ export default function Header() {
                   className="flex items-center gap-1 text-white text-[15px] xl:text-[16px] font-medium leading-[22.5px] py-[38px] hover:text-[#b0f127] transition-colors"
                 >
                   {item.label}
-                  {item.hasDropdown && (
-                    <Image src="/images/nav-arrow.svg" alt="" width={14} height={24} />
-                  )}
                 </a>
               )}
             </li>
@@ -176,7 +138,7 @@ export default function Header() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="lg:hidden bg-[#001005] rounded-b-[10px] mx-0 px-5 pb-5">
-          {items.map((item) => (
+          {items.map((item: any) => (
             <div key={item.label}>
               <a
                 href={item.children ? undefined : item.href}
@@ -203,7 +165,7 @@ export default function Header() {
               </a>
               {item.children && openDropdown === item.label && (
                 <div className="pl-4 border-b border-white/10">
-                  {item.children.map((child) => (
+                  {item.children.map((child: any) => (
                     <a
                       key={child.href}
                       href={child.href}

@@ -3,33 +3,21 @@
 import Image from "next/image";
 import { useLang } from "@/context/LanguageContext";
 
-const content = {
-  en: {
-    headlineBefore: "Invest now in ",
-    headlineHighlight: "Intelligence",
-    subtitle:
-      "Be smart and invest in your assets with peace of mind. Namaya is your secure Saudi platform for trading in the local and global markets.",
-    cta: "Get Started",
-  },
-  ar: {
-    headlineBefore: "استثمر الآن في\n",
-    headlineHighlight: "الذكاء",
-    subtitle:
-      "كن ذكياً واستثمر في أصولك براحة بال. نامايا هي منصتك الآمنة للتداول في الأسواق المحلية والعالمية.",
-    cta: "ابدأ الآن",
-  },
-};
+interface HeroProps {
+  heroContent: any;
+  heroImages: any;
+}
 
-export default function Hero() {
+export default function Hero({ heroContent, heroImages }: HeroProps) {
   const { lang } = useLang();
-  const t = content[lang];
+  const t = heroContent[lang];
   const isAr = lang === "ar";
 
   return (
     <section className="relative w-full h-screen-safe overflow-hidden">
       {/* Background */}
       <Image
-        src="/images/hero-bg.jpg"
+        src={heroImages.background}
         alt=""
         fill
         className="object-cover"
@@ -43,7 +31,7 @@ export default function Hero() {
         }`}
       >
         <Image
-          src="/images/hero-person.png"
+          src={heroImages.person}
           alt="Saudi investor"
           fill
           className={`object-contain ${

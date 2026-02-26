@@ -5,68 +5,20 @@ import SectionBadge from "./SectionBadge";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useLang } from "@/context/LanguageContext";
 
-const cards = {
-  en: [
-    {
-      image: "/images/carousel-1.jpg",
-      title: "Sharia-compliant investment",
-      description:
-        "We provide you with investment opportunities that comply with the provisions of Islamic Sharia, so that you can invest with confidence and ease through the application, with complete ease and peace of mind.",
-    },
-    {
-      image: "/images/carousel-2.jpg",
-      title: "Daily trading recommendations",
-      description:
-        "Receive the best recommendations and guidance for buying and selling directly via WhatsApp or email – to achieve maximum profits with confidence and professionalism.",
-    },
-    {
-      image: "/images/carousel-3.jpg",
-      title: "A financial expert will personally accompany you",
-      description:
-        "Get daily support from a dedicated trading expert – consultations, guidance, and step-by-step education to begin your trading journey.",
-    },
-  ],
-  ar: [
-    {
-      image: "/images/carousel-1.jpg",
-      title: "استثمار متوافق مع الشريعة",
-      description:
-        "نقدم لك فرص استثمار تتوافق مع أحكام الشريعة الإسلامية، حتى تتمكن من الاستثمار بثقة وسهولة من خلال التطبيق، مع راحة البال التامة.",
-    },
-    {
-      image: "/images/carousel-2.jpg",
-      title: "توصيات تداول يومية",
-      description:
-        "احصل على أفضل التوصيات والإرشادات للشراء والبيع مباشرة عبر واتساب أو البريد الإلكتروني – لتحقيق أقصى قدر من الأرباح بثقة واحترافية.",
-    },
-    {
-      image: "/images/carousel-3.jpg",
-      title: "سيكون خبير مالي مخصص برفقتك شخصياً",
-      description:
-        "احصل على دعم يومي من خبير تداول مخصص – استشارات، إرشادات، وتعليم خطوة بخطوة لبدء رحلتك في التداول.",
-    },
-  ],
-};
-
-const heading = {
-  en: {
-    bold: "Experience confident,",
-    rest: " Sharia-compliant investing with a trusted Saudi platform. Trade securely, get expert guidance, and grow your investments with peace of mind.",
-  },
-  ar: {
-    bold: "اختبر الاستثمار بثقة",
-    rest: " وفقًا للشريعة مع منصة سعودية موثوقة. تداول بأمان، واحصل على إرشادات الخبراء، وزد استثماراتك براحة بال.",
-  },
-};
+interface BenefitsCarouselProps {
+  carouselCards: any;
+  carouselHeading: any;
+  carouselBadge: any;
+}
 
 const GAP = 22;
 
-export default function BenefitsCarousel() {
+export default function BenefitsCarousel({ carouselCards, carouselHeading, carouselBadge }: BenefitsCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(1);
   const { lang } = useLang();
   const isAr = lang === "ar";
-  const items = cards[lang];
-  const h = heading[lang];
+  const items = carouselCards[lang];
+  const h = carouselHeading[lang];
 
   const trackRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -133,7 +85,7 @@ export default function BenefitsCarousel() {
       {/* Header */}
       <div className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto px-3 md:px-[52px] xl:px-[80px]">
         <div className={`mb-[16px] md:mb-[40px] text-center ${isAr ? "md:text-right" : "md:text-left"}`}>
-          <SectionBadge label="Benefits" labelAr="الفوائد" />
+          <SectionBadge label={carouselBadge.label} labelAr={carouselBadge.labelAr} />
           <h2 className="text-[18px] leading-[24px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[8px] md:mt-[10px]">
             <span className="font-bold">{h.bold}</span>
             {h.rest}
@@ -155,7 +107,7 @@ export default function BenefitsCarousel() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {items.map((card, i) => (
+          {items.map((card: any, i: number) => (
             <div
               key={i}
               className="bg-[#f8f8f8] rounded-[25px] p-[16px] md:p-[25px] shrink-0 flex flex-col

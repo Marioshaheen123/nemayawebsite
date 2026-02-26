@@ -4,52 +4,11 @@ import Image from "next/image";
 import SectionBadge from "./SectionBadge";
 import { useLang } from "@/context/LanguageContext";
 
-const content = {
-  en: {
-    heading:
-      "Everything is Saudi — your trading and banking transactions are 100% local.",
-    steps: [
-      {
-        title: "Step 1",
-        bullets: ["Description", "Description"],
-      },
-      {
-        title: "Step 2",
-        bullets: ["Description", "Description"],
-      },
-      {
-        title: "Step 3",
-        bullets: ["Description", "Description"],
-      },
-      {
-        title: "Step 4",
-        bullets: ["Description", "Description"],
-      },
-    ],
-  },
-  ar: {
-    heading:
-      "كل شيء سعودي - معاملاتك في التداول والبنوك محلية 100%.",
-    steps: [
-      {
-        title: "الخطوة 1",
-        bullets: ["الوصف", "الوصف"],
-      },
-      {
-        title: "الخطوة 2",
-        bullets: ["الوصف", "الوصف"],
-      },
-      {
-        title: "الخطوة 3",
-        bullets: ["الوصف", "الوصف"],
-      },
-      {
-        title: "الخطوة 4",
-        bullets: ["الوصف", "الوصف"],
-      },
-    ],
-  },
-};
+interface HowItWorksProps {
+  howItWorksContent: any;
+  howItWorksBadge: any;
+  howItWorksImage: any;
+}
 
 const StarIcon = () => (
   <svg
@@ -66,10 +25,10 @@ const StarIcon = () => (
   </svg>
 );
 
-export default function HowItWorks() {
+export default function HowItWorks({ howItWorksContent, howItWorksBadge, howItWorksImage }: HowItWorksProps) {
   const { lang } = useLang();
   const isAr = lang === "ar";
-  const t = content[lang];
+  const t = howItWorksContent[lang];
 
   return (
     <section className="relative overflow-hidden min-h-screen-safe flex items-center">
@@ -89,7 +48,7 @@ export default function HowItWorks() {
             <div className="shrink-0">
               <div className="w-[500px] h-[500px] xl:w-[580px] xl:h-[580px] rounded-full overflow-hidden border-[4px] border-[#12953d]/30">
                 <Image
-                  src="/images/Howitworks.png"
+                  src={howItWorksImage}
                   alt="How it works"
                   width={580}
                   height={580}
@@ -100,7 +59,7 @@ export default function HowItWorks() {
 
             {/* Content */}
             <div className="flex-1">
-              <SectionBadge label="How It Works" labelAr="كيف يعمل" />
+              <SectionBadge label={howItWorksBadge.label} labelAr={howItWorksBadge.labelAr} />
               <h2
                 className={`text-white text-[40px] leading-[48px] xl:text-[48px] xl:leading-[56px] mt-[16px] mb-[32px] max-w-[600px] xl:max-w-[700px]`}
               >
@@ -109,7 +68,7 @@ export default function HowItWorks() {
 
               {/* Steps */}
               <div className="flex flex-col gap-[24px]">
-                {t.steps.map((step, i) => (
+                {t.steps.map((step: any, i: number) => (
                   <div key={i} className="flex items-start gap-[12px]">
                     <StarIcon />
                     <div>
@@ -117,7 +76,7 @@ export default function HowItWorks() {
                         {step.title}
                       </h3>
                       <div className="flex flex-col gap-[4px]">
-                        {step.bullets.map((bullet, j) => (
+                        {step.bullets.map((bullet: any, j: number) => (
                           <p
                             key={j}
                             className="text-[#a0b4c4] text-[16px] xl:text-[18px] leading-[24px]"
@@ -138,7 +97,7 @@ export default function HowItWorks() {
             {/* Person image */}
             <div className="w-[200px] h-[200px] rounded-full overflow-hidden border-[3px] border-[#12953d]/30 mb-[24px]">
               <Image
-                src="/images/Howitworks.png"
+                src={howItWorksImage}
                 alt="How it works"
                 width={200}
                 height={200}
@@ -148,7 +107,7 @@ export default function HowItWorks() {
 
             {/* Badge */}
             <div className="mb-[12px]">
-              <SectionBadge label="How It Works" labelAr="كيف يعمل" />
+              <SectionBadge label={howItWorksBadge.label} labelAr={howItWorksBadge.labelAr} />
             </div>
 
             {/* Heading */}
@@ -158,7 +117,7 @@ export default function HowItWorks() {
 
             {/* Steps - titles only on mobile */}
             <div className="flex flex-col gap-[16px] w-full">
-              {t.steps.map((step, i) => (
+              {t.steps.map((step: any, i: number) => (
                 <div
                   key={i}
                   className={`flex items-center gap-[10px] ${

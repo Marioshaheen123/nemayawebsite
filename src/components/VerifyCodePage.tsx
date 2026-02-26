@@ -3,31 +3,21 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import { useLang } from "@/context/LanguageContext";
+import type { Bilingual } from "@/data/types";
 
-const t = {
-  en: {
-    title: "Enter Verification Code",
-    description:
-      "We sent a verification code to your mobile. Enter the code from the mobile in the field below.",
-    maskedNumber: "******1234",
-    codeLabel: "Type your 6 digit security code",
-    verifyBtn: "Verify & Continue",
-    didntGet: "Didn't get the code?",
-    resend: "Resend",
-  },
-  ar: {
-    title: "أدخل رمز التحقق",
-    description:
-      "لقد أرسلنا رمز تحقق إلى هاتفك المحمول. أدخل الرمز من الهاتف في الحقل أدناه.",
-    maskedNumber: "******1234",
-    codeLabel: "أدخل رمز الأمان المكون من 6 أرقام",
-    verifyBtn: "تحقق وتابع",
-    didntGet: "لم تحصل على الرمز؟",
-    resend: "إعادة الإرسال",
-  },
-};
+interface VerifyCodePageProps {
+  verifyCodeText: Bilingual<{
+    title: string;
+    description: string;
+    maskedNumber: string;
+    codeLabel: string;
+    verifyBtn: string;
+    didntGet: string;
+    resend: string;
+  }>;
+}
 
-export default function VerifyCodePage() {
+export default function VerifyCodePage({ verifyCodeText: t }: VerifyCodePageProps) {
   const { lang, toggleLang } = useLang();
   const isAr = lang === "ar";
   const content = t[lang];

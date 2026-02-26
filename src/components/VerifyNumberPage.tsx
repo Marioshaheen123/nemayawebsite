@@ -4,27 +4,19 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/context/LanguageContext";
+import type { Bilingual } from "@/data/types";
 
-const t = {
-  en: {
-    title: "Verify Your Number",
-    description:
-      "For security reasons, please verify your mobile number before continuing. We'll send a one-time verification code to this number.",
-    mobileLabel: "Mobile Number",
-    sendBtn: "Send Verification Code",
-    backToLogin: "Back to Login",
-  },
-  ar: {
-    title: "تحقق من رقمك",
-    description:
-      "لأسباب أمنية، يرجى التحقق من رقم هاتفك المحمول قبل المتابعة. سنرسل رمز تحقق لمرة واحدة إلى هذا الرقم.",
-    mobileLabel: "رقم الجوال",
-    sendBtn: "إرسال رمز التحقق",
-    backToLogin: "العودة لتسجيل الدخول",
-  },
-};
+interface VerifyNumberPageProps {
+  verifyNumberText: Bilingual<{
+    title: string;
+    description: string;
+    mobileLabel: string;
+    sendBtn: string;
+    backToLogin: string;
+  }>;
+}
 
-export default function VerifyNumberPage() {
+export default function VerifyNumberPage({ verifyNumberText: t }: VerifyNumberPageProps) {
   const { lang, toggleLang } = useLang();
   const isAr = lang === "ar";
   const content = t[lang];

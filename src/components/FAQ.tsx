@@ -4,100 +4,28 @@ import SectionBadge from "./SectionBadge";
 import { useState } from "react";
 import { useLang } from "@/context/LanguageContext";
 
-const faqs = {
-  en: [
-    {
-      question: "Can I start with a small amount?",
-      answer:
-        "Yes, you can start investing with a small amount. Our Mini Account is designed for individuals who want to begin their trading journey with a minimal initial deposit.",
-    },
-    {
-      question: "Who will follow me after I open the wallet?",
-      answer:
-        "You will have a financial expert who will follow up with you personally on a daily basis, give you recommendations, explain the steps to you, and help you build a plan that suits you.",
-    },
-    {
-      question: "Are my profits guaranteed?",
-      answer:
-        "While we provide expert guidance and market analysis, profits in trading are not guaranteed. However, our team works closely with you to maximize your potential returns through informed decision-making.",
-    },
-    {
-      question: "How much can I earn per month?",
-      answer:
-        "Earnings vary based on market conditions, investment amount, and strategy. Our experts will help you set realistic expectations and work toward your financial goals.",
-    },
-    {
-      question: "Is the company licensed and trustworthy?",
-      answer:
-        "Yes, Namaya is a fully licensed and regulated financial company operating in Saudi Arabia and the Gulf region with over 10 years of experience in global markets.",
-    },
-    {
-      question: "What is the difference between you and the other platforms?",
-      answer:
-        "Namaya offers Sharia-compliant investment options, dedicated personal financial advisors, daily trading recommendations, and local customer support centers in Saudi Arabia and Dubai.",
-    },
-  ],
-  ar: [
-    {
-      question: "هل يمكنني البدء بمبلغ صغير؟",
-      answer:
-        "نعم، يمكنك البدء بالاستثمار بمبلغ صغير. حسابنا المصغر مصمم للأفراد الذين يرغبون في بدء رحلتهم في التداول بإيداع أولي بسيط.",
-    },
-    {
-      question: "من سيتابعني بعد فتح المحفظة؟",
-      answer:
-        "سيكون لديك خبير مالي يتابع معك شخصياً بشكل يومي، يعطيك توصيات، يشرح لك الخطوات، ويساعدك في بناء خطة تناسبك.",
-    },
-    {
-      question: "هل أرباحي مضمونة؟",
-      answer:
-        "بينما نقدم إرشادات الخبراء وتحليل السوق، فإن الأرباح في التداول ليست مضمونة. ومع ذلك، يعمل فريقنا معك عن كثب لتعظيم عوائدك المحتملة من خلال اتخاذ قرارات مدروسة.",
-    },
-    {
-      question: "كم يمكنني أن أربح شهرياً؟",
-      answer:
-        "تختلف الأرباح بناءً على ظروف السوق ومبلغ الاستثمار والاستراتيجية. سيساعدك خبراؤنا في وضع توقعات واقعية والعمل نحو أهدافك المالية.",
-    },
-    {
-      question: "هل الشركة مرخصة وموثوقة؟",
-      answer:
-        "نعم، نمايا شركة مالية مرخصة ومنظمة بالكامل تعمل في المملكة العربية السعودية ومنطقة الخليج مع أكثر من 10 سنوات من الخبرة في الأسواق العالمية.",
-    },
-    {
-      question: "ما الفرق بينكم وبين المنصات الأخرى؟",
-      answer:
-        "تقدم نمايا خيارات استثمار متوافقة مع الشريعة، ومستشارين ماليين شخصيين مخصصين، وتوصيات تداول يومية، ومراكز دعم عملاء محلية في السعودية ودبي.",
-    },
-  ],
-};
+interface FAQProps {
+  homepageFaqItems: any;
+  homepageFaqHeading: any;
+  homepageFaqBadge: any;
+}
 
-const heading = {
-  en: {
-    before: "Want to get started, but have ",
-    bold: "a few questions?",
-  },
-  ar: {
-    before: "هل ترغب في البدء، ولكن لديك ",
-    bold: "بعض الأسئلة؟",
-  },
-};
-
-export default function FAQ() {
+export default function FAQ({ homepageFaqItems, homepageFaqHeading, homepageFaqBadge }: FAQProps) {
   const [openIndex, setOpenIndex] = useState(1);
   const { lang } = useLang();
   const isAr = lang === "ar";
-  const faqItems = faqs[lang];
+  const faqItems = homepageFaqItems[lang];
 
   const leftFaqs = faqItems.slice(0, 3);
   const rightFaqs = faqItems.slice(3, 6);
-  const h = heading[lang];
+  const h = homepageFaqHeading[lang];
 
   return (
     <section className="min-h-screen-safe flex items-center py-[60px] px-4 md:py-[80px] md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
       <div className="w-full max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[40px]">
-          <SectionBadge label="FAQ" labelAr="الأسئلة الشائعة" />
+          <SectionBadge label={homepageFaqBadge.label} labelAr={homepageFaqBadge.labelAr} />
           <h2 className="section-heading-mobile text-[25px] leading-[32.5px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px] max-w-[664px] xl:max-w-[750px] mx-auto">
             {h.before}
             <span className="font-bold">{h.bold}</span>
@@ -115,7 +43,7 @@ export default function FAQ() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {/* Left column */}
             <div className="flex flex-col gap-6">
-              {leftFaqs.map((faq, i) => (
+              {leftFaqs.map((faq: any, i: number) => (
                 <FAQItem
                   key={i}
                   question={faq.question}
@@ -128,7 +56,7 @@ export default function FAQ() {
             </div>
             {/* Right column */}
             <div className="flex flex-col gap-6">
-              {rightFaqs.map((faq, i) => (
+              {rightFaqs.map((faq: any, i: number) => (
                 <FAQItem
                   key={i + 3}
                   question={faq.question}

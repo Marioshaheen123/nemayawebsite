@@ -3,29 +3,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/context/LanguageContext";
+import type { Bilingual } from "@/data/types";
 
-const t = {
-  en: {
-    title: "Verify your email",
-    description: "Account activation link sent to your email address: ",
-    descriptionEnd: " Please follow the link inside to continue.",
-    email: "john.doe@email.com",
-    skipBtn: "Skip For Now",
-    didntGet: "Didn't get the mail?",
-    resend: "Resend",
-  },
-  ar: {
-    title: "تحقق من بريدك الإلكتروني",
-    description: "تم إرسال رابط تفعيل الحساب إلى بريدك الإلكتروني: ",
-    descriptionEnd: " يرجى اتباع الرابط بالداخل للمتابعة.",
-    email: "john.doe@email.com",
-    skipBtn: "تخطي الآن",
-    didntGet: "لم تستلم البريد؟",
-    resend: "إعادة الإرسال",
-  },
-};
+interface VerifyEmailPageProps {
+  verifyEmailText: Bilingual<{
+    title: string;
+    description: string;
+    descriptionEnd: string;
+    email: string;
+    skipBtn: string;
+    didntGet: string;
+    resend: string;
+  }>;
+}
 
-export default function VerifyEmailPage() {
+export default function VerifyEmailPage({ verifyEmailText: t }: VerifyEmailPageProps) {
   const { lang, toggleLang } = useLang();
   const isAr = lang === "ar";
   const content = t[lang];

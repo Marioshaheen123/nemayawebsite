@@ -1,60 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { useLang } from "@/context/LanguageContext";
-
-const i18n = {
-  heroTitle: { en: "Contact Us", ar: "اتصل بنا" },
-  formTitle: { en: "Contact Form", ar: "نموذج الاتصال" },
-  formDesc: {
-    en: "We are here to help you. Please fill out the form below and we will contact you soon.",
-    ar: "نحن هنا لمساعدتك. يرجى ملء النموذج أدناه وسنتواصل معك قريباً.",
-  },
-  steps: {
-    en: ["Personal Information", "Contact Details", "Your Message"],
-    ar: ["المعلومات الشخصية", "تفاصيل الاتصال", "رسالتك"],
-  },
-  fields: {
-    en: {
-      firstName: "First Name",
-      firstNamePlaceholder: "Enter first name",
-      lastName: "Last Name",
-      lastNamePlaceholder: "Enter last name",
-      email: "Email Address",
-      emailPlaceholder: "Enter your email",
-      phone: "Phone Number",
-      phonePlaceholder: "Enter your phone number",
-      subject: "Subject",
-      subjectPlaceholder: "Enter the subject",
-      message: "Message",
-      messagePlaceholder: "Write your message here...",
-    },
-    ar: {
-      firstName: "الاسم الأول",
-      firstNamePlaceholder: "أدخل الاسم الأول",
-      lastName: "اسم العائلة",
-      lastNamePlaceholder: "أدخل اسم العائلة",
-      email: "البريد الإلكتروني",
-      emailPlaceholder: "أدخل بريدك الإلكتروني",
-      phone: "رقم الهاتف",
-      phonePlaceholder: "أدخل رقم هاتفك",
-      subject: "الموضوع",
-      subjectPlaceholder: "أدخل الموضوع",
-      message: "الرسالة",
-      messagePlaceholder: "اكتب رسالتك هنا...",
-    },
-  },
-  previous: { en: "Previous", ar: "السابق" },
-  next: { en: "Next", ar: "التالي" },
-  submit: { en: "Submit", ar: "إرسال" },
-  success: {
-    en: "Thank you! Your message has been sent successfully. We will contact you soon.",
-    ar: "شكراً لك! تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.",
-  },
-};
-
-const TOTAL_STEPS = 3;
+import PageHeroBanner from "@/components/shared/PageHeroBanner";
 
 /**
  * Replace this function body with your actual API call.
@@ -68,7 +16,12 @@ async function submitContactForm(data: Record<string, string>): Promise<void> {
   console.log("Contact form submitted:", data);
 }
 
-export default function ContactPage() {
+interface ContactPageProps {
+  i18n: any;
+  totalSteps: number;
+}
+
+export default function ContactPage({ i18n, totalSteps }: ContactPageProps) {
   const { lang } = useLang();
   const isAr = lang === "ar";
   const fields = i18n.fields[lang];
@@ -88,7 +41,7 @@ export default function ContactPage() {
   const update = (key: string, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
-  const progressPercent = ((step + 1) / TOTAL_STEPS) * 100;
+  const progressPercent = ((step + 1) / totalSteps) * 100;
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -104,25 +57,7 @@ export default function ContactPage() {
 
   return (
     <>
-      {/* Hero Banner */}
-      <section className="relative bg-[#001005] pt-[69px] md:pt-[100px] xl:pt-[110px]">
-        <div className="absolute inset-0 overflow-hidden">
-          <Image
-            src="/images/blog-hero-bg.png"
-            alt=""
-            fill
-            className="object-cover opacity-80"
-          />
-        </div>
-        <div
-          dir={isAr ? "rtl" : undefined}
-          className="relative px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px] py-[30px] md:py-[40px]"
-        >
-          <h1 className="text-white text-[40px] md:text-[55px] xl:text-[65px] font-extrabold leading-[1.3]">
-            {i18n.heroTitle[lang]}
-          </h1>
-        </div>
-      </section>
+      <PageHeroBanner title={i18n.heroTitle[lang]} />
 
       {/* Contact Form */}
       <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px] px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
@@ -283,7 +218,7 @@ export default function ContactPage() {
                       {i18n.previous[lang]}
                     </button>
                   )}
-                  {step < TOTAL_STEPS - 1 ? (
+                  {step < totalSteps - 1 ? (
                     <button
                       onClick={() => setStep((s) => s + 1)}
                       className="flex items-center gap-[8px] bg-[#12953d] border border-[#b0f127] rounded-[5px] px-[36px] py-[15px] text-white text-[14px] font-semibold hover:bg-[#0e7a31] transition-colors cursor-pointer w-[160px] justify-center"

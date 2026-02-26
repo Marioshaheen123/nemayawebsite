@@ -4,120 +4,34 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/context/LanguageContext";
+import type { Bilingual } from "@/data/types";
 
-const t = {
-  en: {
-    mainTitle: "Create a new account",
-    mainSubtitle: "Join us and begin your journey in the world of investment.",
-    steps: [
-      {
-        title: "Account Information",
-        subtitle: "Create your account",
-        fields: [
-          { name: "firstName", label: "First Name", type: "text" },
-          { name: "lastName", label: "Last Name", type: "text" },
-        ],
-      },
-      {
-        title: "Contact Details",
-        subtitle: "Enter your email and phone number",
-        fields: [
-          { name: "mobile", label: "Mobile Number", type: "tel" },
-          { name: "email", label: "Email", type: "email" },
-        ],
-      },
-      {
-        title: "Security Setup",
-        subtitle: "Set a secure password",
-        fields: [
-          { name: "password", label: "Password", type: "password" },
-          { name: "confirmPassword", label: "Confirm Password", type: "password" },
-        ],
-      },
-      {
-        title: "Investment Details",
-        subtitle: "Tell us a bit more before you start",
-        fields: [
-          { name: "age", label: "Age", type: "select" },
-          { name: "country", label: "Country of residence or birth", type: "select" },
-          { name: "callTime", label: "When should we call?", type: "select" },
-        ],
-      },
-    ],
-    previous: "Previous",
-    next: "Next",
-    finish: "Finish",
-    alreadyHave: "Already have an account?",
-    login: "Log in",
-  },
-  ar: {
-    mainTitle: "إنشاء حساب جديد",
-    mainSubtitle: "انضم إلينا وابدأ رحلتك في عالم الاستثمار.",
-    steps: [
-      {
-        title: "معلومات الحساب",
-        subtitle: "أنشئ حسابك",
-        fields: [
-          { name: "firstName", label: "الاسم الأول", type: "text" },
-          { name: "lastName", label: "اسم العائلة", type: "text" },
-        ],
-      },
-      {
-        title: "بيانات الاتصال",
-        subtitle: "أدخل بريدك الإلكتروني ورقم هاتفك",
-        fields: [
-          { name: "mobile", label: "رقم الجوال", type: "tel" },
-          { name: "email", label: "البريد الإلكتروني", type: "email" },
-        ],
-      },
-      {
-        title: "إعداد الأمان",
-        subtitle: "قم بتعيين كلمة مرور آمنة",
-        fields: [
-          { name: "password", label: "كلمة المرور", type: "password" },
-          { name: "confirmPassword", label: "تأكيد كلمة المرور", type: "password" },
-        ],
-      },
-      {
-        title: "تفاصيل الاستثمار",
-        subtitle: "أخبرنا المزيد قبل البدء",
-        fields: [
-          { name: "age", label: "العمر", type: "select" },
-          { name: "country", label: "بلد الإقامة أو الميلاد", type: "select" },
-          { name: "callTime", label: "متى يمكننا الاتصال بك؟", type: "select" },
-        ],
-      },
-    ],
-    previous: "السابق",
-    next: "التالي",
-    finish: "إنهاء",
-    alreadyHave: "لديك حساب بالفعل؟",
-    login: "تسجيل الدخول",
-  },
-};
+interface RegisterPageProps {
+  registerText: Bilingual<{
+    mainTitle: string;
+    mainSubtitle: string;
+    steps: {
+      title: string;
+      subtitle: string;
+      fields: { name: string; label: string; type: string }[];
+    }[];
+    previous: string;
+    next: string;
+    finish: string;
+    alreadyHave: string;
+    login: string;
+  }>;
+  ageOptions: Bilingual<string[]>;
+  countryOptions: Bilingual<string[]>;
+  callTimeOptions: Bilingual<string[]>;
+}
 
-const ageOptions = {
-  en: ["18-24", "25-34", "35-44", "45-54", "55-64", "65+"],
-  ar: ["18-24", "25-34", "35-44", "45-54", "55-64", "+65"],
-};
-
-const countryOptions = {
-  en: [
-    "Saudi Arabia", "United Arab Emirates", "Kuwait", "Bahrain",
-    "Qatar", "Oman", "Jordan", "Egypt", "Iraq", "Lebanon", "Other",
-  ],
-  ar: [
-    "المملكة العربية السعودية", "الإمارات العربية المتحدة", "الكويت", "البحرين",
-    "قطر", "عُمان", "الأردن", "مصر", "العراق", "لبنان", "أخرى",
-  ],
-};
-
-const callTimeOptions = {
-  en: ["Morning (9 AM - 12 PM)", "Afternoon (12 PM - 5 PM)", "Evening (5 PM - 9 PM)"],
-  ar: ["صباحاً (9 ص - 12 م)", "ظهراً (12 م - 5 م)", "مساءً (5 م - 9 م)"],
-};
-
-export default function RegisterPage() {
+export default function RegisterPage({
+  registerText: t,
+  ageOptions,
+  countryOptions,
+  callTimeOptions,
+}: RegisterPageProps) {
   const { lang, toggleLang } = useLang();
   const isAr = lang === "ar";
   const content = t[lang];

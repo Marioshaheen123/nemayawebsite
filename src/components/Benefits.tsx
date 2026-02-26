@@ -5,71 +5,19 @@ import SectionBadge from "./SectionBadge";
 import { useState, useRef } from "react";
 import { useLang } from "@/context/LanguageContext";
 
-const features = {
-  en: [
-    {
-      title: "Access global markets",
-      description:
-        "Trade currencies, commodities, indices, gold, and oil from one secure, Saudi-based platform — anytime, anywhere.",
-    },
-    {
-      title: "Mobile-first experience",
-      description:
-        "Open, manage, and monitor your investments directly from your phone with a simple, intuitive trading flow.",
-    },
-    {
-      title: "Secure & trusted platform",
-      description:
-        "Built with advanced security and compliance standards to ensure safe and reliable trading at every step.",
-    },
-    {
-      title: "Built for growth",
-      description:
-        "Everything you need to move confidently toward your financial goals — designed to scale with your ambitions.",
-    },
-  ],
-  ar: [
-    {
-      title: "الوصول إلى الأسواق العالمية",
-      description:
-        "تداول العملات والسلع والمؤشرات والذهب والنفط من منصة آمنة ومقرها السعودية - في أي وقت ومن أي مكان.",
-    },
-    {
-      title: "تجربة موجهة نحو الهاتف المحمول",
-      description:
-        "افتح وأدر وراقب استثماراتك مباشرة من هاتفك مع تدفق تداول بسيط وبديهي.",
-    },
-    {
-      title: "منصة آمنة وموثوقة",
-      description:
-        "مصممة بمعايير أمان متقدمة والامتثال لضمان تداول آمن وموثوق في كل خطوة.",
-    },
-    {
-      title: "مصممة للنمو",
-      description:
-        "كل ما تحتاجه للتحرك بثقة نحو أهدافك المالية - مصممة لتتوسع مع طموحاتك.",
-    },
-  ],
-};
+interface BenefitsProps {
+  benefitsFeatures: any;
+  benefitsHeading: any;
+  benefitsCtaText: any;
+  benefitsBadge: any;
+  benefitsImages: any;
+}
 
-const heading = {
-  en: {
-    before: "Explore smart solutions to grow your wealth in ",
-    bold: "global markets",
-  },
-  ar: {
-    before: "استكشف الحلول الذكية لزيادة ثروتك في ",
-    bold: "الأسواق العالمية",
-  },
-};
-
-const ctaText = { en: "Get Started", ar: "ابدأ" };
-
-export default function Benefits() {
+export default function Benefits({ benefitsFeatures, benefitsHeading, benefitsCtaText, benefitsBadge, benefitsImages }: BenefitsProps) {
   const { lang } = useLang();
   const isAr = lang === "ar";
-  const items = features[lang];
-  const h = heading[lang];
+  const items = benefitsFeatures[lang];
+  const h = benefitsHeading[lang];
 
   // Mobile carousel state
   const [mobileSlide, setMobileSlide] = useState(0);
@@ -100,7 +48,7 @@ export default function Benefits() {
       <div className="w-full max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[40px]">
-          <SectionBadge label="Benefits" labelAr="الفوائد" />
+          <SectionBadge label={benefitsBadge.label} labelAr={benefitsBadge.labelAr} />
           <h2 className="section-heading-mobile text-[25px] leading-[30px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px] max-w-[690px] xl:max-w-[800px] mx-auto">
             {h.before}
             <span className="font-bold">{h.bold}</span>
@@ -117,7 +65,7 @@ export default function Benefits() {
           <div className="w-full lg:w-[445px] xl:w-[500px] px-3 pb-6 shrink-0">
             <div className="bg-[#12953d] rounded-[25px] w-full max-w-[421px] xl:max-w-[480px] h-[283px] md:h-[423px] xl:h-[500px] relative mx-auto lg:mx-0 overflow-hidden">
               <Image
-                src="/images/Phonesection2.png"
+                src={benefitsImages.phone}
                 alt="Namaya app"
                 width={510}
                 height={884}
@@ -142,7 +90,7 @@ export default function Benefits() {
                     : `translateX(-${mobileSlide * 100}%)`,
                 }}
               >
-                {items.map((feature, i) => (
+                {items.map((feature: any, i: number) => (
                   <div key={i} className="w-full shrink-0 px-1">
                     <div
                       className={`bg-[#f9f9f9] border border-[#cacceb] rounded-[16px] px-[31px] py-[17px] ${
@@ -161,7 +109,7 @@ export default function Benefits() {
               </div>
               {/* Mobile dots */}
               <div className="flex justify-center gap-2 mt-4">
-                {items.map((_, i) => (
+                {items.map((_: any, i: number) => (
                   <button
                     key={i}
                     onClick={() => setMobileSlide(i)}
@@ -175,7 +123,7 @@ export default function Benefits() {
 
             {/* Desktop grid */}
             <div className="hidden md:grid md:grid-cols-2 gap-[12px] xl:gap-[16px]">
-              {items.map((feature, i) => (
+              {items.map((feature: any, i: number) => (
                 <div key={i}>
                   <div
                     className={`bg-[#f9f9f9] border border-[#cacceb] rounded-[25px] p-[31px] xl:p-[40px] h-full ${
@@ -196,7 +144,7 @@ export default function Benefits() {
             {/* Center logo decoration */}
             <div className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100px] h-[100px] xl:w-[120px] xl:h-[120px] rounded-full bg-white border border-[#cacceb] items-center justify-center z-10">
               <Image
-                src="/images/small logo.png"
+                src={benefitsImages.centerLogo}
                 alt=""
                 width={41}
                 height={52}
@@ -211,7 +159,7 @@ export default function Benefits() {
             href="#"
             className="cta-glass-solid w-full md:w-auto justify-center"
           >
-            {ctaText[lang]}
+            {benefitsCtaText[lang]}
             <span className="cta-arrow">→</span>
           </a>
         </div>

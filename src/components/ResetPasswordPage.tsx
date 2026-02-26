@@ -4,29 +4,20 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/context/LanguageContext";
+import type { Bilingual } from "@/data/types";
 
-const t = {
-  en: {
-    title: "Reset Password",
-    description:
-      "Your new password must be different from previously used passwords",
-    passwordLabel: "Password",
-    confirmLabel: "Confirm Password",
-    resetBtn: "Set New Password",
-    backToLogin: "Back to Login",
-  },
-  ar: {
-    title: "إعادة تعيين كلمة المرور",
-    description:
-      "يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمات المرور المستخدمة سابقًا",
-    passwordLabel: "كلمة المرور",
-    confirmLabel: "تأكيد كلمة المرور",
-    resetBtn: "تعيين كلمة المرور الجديدة",
-    backToLogin: "العودة لتسجيل الدخول",
-  },
-};
+interface ResetPasswordPageProps {
+  resetPasswordText: Bilingual<{
+    title: string;
+    description: string;
+    passwordLabel: string;
+    confirmLabel: string;
+    resetBtn: string;
+    backToLogin: string;
+  }>;
+}
 
-export default function ResetPasswordPage() {
+export default function ResetPasswordPage({ resetPasswordText: t }: ResetPasswordPageProps) {
   const { lang, toggleLang } = useLang();
   const isAr = lang === "ar";
   const content = t[lang];

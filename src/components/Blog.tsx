@@ -6,92 +6,16 @@ import SectionBadge from "./SectionBadge";
 import { useState, useRef } from "react";
 import { useLang } from "@/context/LanguageContext";
 
-const articles = {
-  en: [
-    {
-      image: "/images/blog-page-1.jpg",
-      day: "10",
-      month: "December",
-      readTime: "10 min read",
-      title:
-        "Somalia and Tanzania resume direct flights and strengthen bilateral cooperation",
-      excerpt:
-        "Somalia and Tanzania have announced an agreement to resume direct flights between Mogadishu and Dar es Salaam, in a move aimed at strengthening bilateral relations between the two countries.",
-    },
-    {
-      image: "/images/blog-page-2.jpg",
-      day: "09",
-      month: "December",
-      readTime: "7 min read",
-      title:
-        "The IMF calls on Nigeria to readjust its budget to lower oil prices",
-      excerpt:
-        "The International Monetary Fund and Nigeria needs to adjust its 2025 budget to lower oil prices and increase cash transfers, in order to protect the most vulnerable parts of its population who face poverty and food insecurity.",
-    },
-    {
-      image: "/images/blog-page-3.jpg",
-      day: "08",
-      month: "December",
-      readTime: "15 min read",
-      title:
-        "The IMF announces it is in contact with Senegal despite previously suspending funding",
-      excerpt:
-        "The International Monetary Fund said it remains engaged with Senegal, as Prime Minister Ousmane Sonko announced an economic recovery plan and the allocation of billions of dollars to clear debts left by the previous regime.",
-    },
-  ],
-  ar: [
-    {
-      image: "/images/blog-page-1.jpg",
-      day: "10",
-      month: "ديسمبر",
-      readTime: "10 دقائق قراءة",
-      title:
-        "تستأنف الصومال وتنزانيا الرحلات الجوية المباشرة وتعززان التعاون الثنائي",
-      excerpt:
-        "أعلنت الصومال وتنزانيا عن اتفاق لاستئناف الرحلات الجوية المباشرة بين مقديشو ودار السلام، في خطوة تهدف إلى تعزيز العلاقات الثنائية بين البلدين.",
-    },
-    {
-      image: "/images/blog-page-2.jpg",
-      day: "09",
-      month: "ديسمبر",
-      readTime: "15 دقائق قراءة",
-      title:
-        "يعلن صندوق النقد الدولي أنه على اتصال بالسنغال على الرغم من تعليق التمويل سابقًا",
-      excerpt:
-        "قال صندوق النقد الدولي إنه لا يزال متفاعلًا مع السنغال، حيث أعلن رئيس الوزراء عثمان سونكو عن خطة انتعاش اقتصادي وتخصيص مليارات الدولارات لسداد الديون المتراكمة من النظام السابق.",
-    },
-    {
-      image: "/images/blog-page-3.jpg",
-      day: "08",
-      month: "ديسمبر",
-      readTime: "10 دقائق قراءة",
-      title:
-        "يدعو صندوق النقد الدولي نيجيريا إلى إعادة ضبط ميزانيتها لتخفيض أسعار النفط",
-      excerpt:
-        "يحتاج صندوق النقد الدولي ونيجيريا إلى تعديل ميزانية 2025 لتخفيض أسعار النفط وزيادة التحويلات النقدية، لحماية أكثر الفئات ضعفًا في السكان الذين يواجهون الفقر وانعدام الأمن الغذائي.",
-    },
-  ],
-};
+interface BlogProps {
+  blogSectionData: any;
+  blogArticles: any;
+}
 
-const heading = {
-  en: {
-    before: "Read Our Latest ",
-    bold: "News & Blog",
-  },
-  ar: {
-    before: "اقرأ آخر ",
-    bold: "أخبارنا ومدونتنا",
-  },
-};
-
-const readMore = { en: "Read More", ar: "اقرأ المزيد" };
-const viewAll = { en: "View All Blogs", ar: "عرض جميع المقالات" };
-
-export default function Blog() {
+export default function Blog({ blogSectionData, blogArticles }: BlogProps) {
   const { lang } = useLang();
   const isAr = lang === "ar";
-  const items = articles[lang];
-  const h = heading[lang];
+  const items = blogArticles[lang];
+  const h = blogSectionData.heading[lang];
 
   // Mobile carousel state
   const [mobileSlide, setMobileSlide] = useState(0);
@@ -178,8 +102,8 @@ export default function Blog() {
 
         {/* Read More */}
         <div className="mt-auto pt-[16px]">
-          <Link href={`/blog/${index}`} className="cta-glass-solid">
-            {readMore[lang]}
+          <Link href={`/blog/${article.id}`} className="cta-glass-solid">
+            {blogSectionData.readMoreLabel[lang]}
             <span className="cta-arrow">→</span>
           </Link>
         </div>
@@ -192,7 +116,7 @@ export default function Blog() {
       <div className="w-full max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[40px]">
-          <SectionBadge label="Blog and News" labelAr="المدونة والأخبار" />
+          <SectionBadge label={blogSectionData.badge.label} labelAr={blogSectionData.badge.labelAr} />
           <h2 className="section-heading-mobile text-[25px] leading-[32.5px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px]">
             {h.before}
             <span className="font-bold">{h.bold}</span>
@@ -213,7 +137,7 @@ export default function Blog() {
                 : `translateX(-${mobileSlide * 100}%)`,
             }}
           >
-            {items.map((article, i) => (
+            {items.map((article: any, i: number) => (
               <div key={i} className="w-full shrink-0 px-2">
                 {renderCard(article, i)}
               </div>
@@ -223,7 +147,7 @@ export default function Blog() {
 
         {/* Desktop grid */}
         <div className="hidden md:grid grid-cols-3 gap-0">
-          {items.map((article, i) => (
+          {items.map((article: any, i: number) => (
             <div key={i} className="px-3">
               {renderCard(article, i)}
             </div>
@@ -232,7 +156,7 @@ export default function Blog() {
 
         {/* Mobile dots */}
         <div className="flex md:hidden justify-center gap-2 mt-4">
-          {items.map((_, i) => (
+          {items.map((_: any, i: number) => (
             <button
               key={i}
               onClick={() => setMobileSlide(i)}
@@ -249,7 +173,7 @@ export default function Blog() {
             href="/blog"
             className="bg-[#12953d] hover:bg-[#0e7a32] transition-colors rounded-full px-[28px] py-[12px] text-white text-[14px] font-semibold inline-flex items-center gap-2"
           >
-            {viewAll[lang]}
+            {blogSectionData.viewAllLabel[lang]}
             <span className="text-[16px]">→</span>
           </Link>
         </div>

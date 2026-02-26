@@ -3,73 +3,19 @@
 import Image from "next/image";
 import { useLang } from "@/context/LanguageContext";
 
-const quickLinks = {
-  en: [
-    { label: "Financial assets", href: "/financial-assets" },
-    { label: "Technical analysis", href: "#" },
-    { label: "Trading platforms", href: "/trading-platforms" },
-    { label: "Types of accounts", href: "/account-types" },
-    { label: "Deposit and withdrawal policy", href: "#" },
-    { label: "Complaints", href: "#" },
-  ],
-  ar: [
-    { label: "الأصول المالية", href: "/financial-assets" },
-    { label: "التحليل الفني", href: "#" },
-    { label: "منصات التداول", href: "/trading-platforms" },
-    { label: "أنواع الحسابات", href: "/account-types" },
-    { label: "سياسة الإيداع والسحب", href: "#" },
-    { label: "الشكاوى", href: "#" },
-  ],
-};
+interface FooterProps {
+  footerQuickLinks: any;
+  footerSupportLinks: any;
+  footerSocialIcons: any;
+  footerLabels: any;
+  footerContactInfo: any;
+}
 
-const supportLinks = {
-  en: [
-    { label: "Islamic Legal Rulings", href: "/islamic-legal-rulings" },
-    { label: "Privacy Policy", href: "/privacy-policy" },
-    { label: "Terms & Conditions", href: "/terms" },
-    { label: "FAQ", href: "/faq" },
-    { label: "Contact Us", href: "/contact" },
-  ],
-  ar: [
-    { label: "الأحكام القانونية الإسلامية", href: "/islamic-legal-rulings" },
-    { label: "سياسة الخصوصية", href: "/privacy-policy" },
-    { label: "الشروط والأحكام", href: "/terms" },
-    { label: "الأسئلة المتكررة", href: "/faq" },
-    { label: "تواصل معنا", href: "/contact" },
-  ],
-};
-
-const socialIcons = [
-  { src: "/images/social-fb.svg", alt: "Facebook" },
-  { src: "/images/social-twitter.svg", alt: "Twitter" },
-  { src: "/images/social-instagram.svg", alt: "Instagram" },
-  { src: "/images/social-linkedin.svg", alt: "LinkedIn" },
-];
-
-const labels = {
-  en: {
-    brandDesc:
-      "StartP empowers businesses with innovative SaaS solutions designed to streamline workflows and drive growth.",
-    quickLinks: "Quick Links",
-    support: "Support",
-    contact: "Contact Information",
-    copyright: "All rights reserved to Namaya Financial Company 2026",
-  },
-  ar: {
-    brandDesc:
-      "نمايا تمكّن الشركات من خلال حلول SaaS المبتكرة المصممة لتبسيط سير العمل ودفع النمو.",
-    quickLinks: "روابط سريعة",
-    support: "الدعم",
-    contact: "معلومات التواصل",
-    copyright: "جميع الحقوق محفوظة لشركة نمايا المالية 2026",
-  },
-};
-
-export default function Footer() {
+export default function Footer({ footerQuickLinks, footerSupportLinks, footerSocialIcons, footerLabels, footerContactInfo }: FooterProps) {
   const { lang } = useLang();
-  const t = labels[lang];
-  const qLinks = quickLinks[lang];
-  const sLinks = supportLinks[lang];
+  const t = footerLabels[lang];
+  const qLinks = footerQuickLinks[lang];
+  const sLinks = footerSupportLinks[lang];
 
   return (
     <footer className="relative min-h-[475px]">
@@ -104,10 +50,10 @@ export default function Footer() {
               {t.brandDesc}
             </p>
             <div className="flex justify-between md:justify-start gap-[10px] pt-[6px]">
-              {socialIcons.map((icon, i) => (
+              {footerSocialIcons.map((icon: any, i: number) => (
                 <a
                   key={i}
-                  href="#"
+                  href={icon.href}
                   className="w-[52px] h-[52px] md:w-[35px] md:h-[35px] rounded-full bg-[rgba(18,149,61,0.4)] flex items-center justify-center hover:bg-[rgba(18,149,61,0.7)] transition-colors"
                 >
                   <Image
@@ -128,7 +74,7 @@ export default function Footer() {
               {t.quickLinks}
             </h3>
             <ul className="flex flex-col gap-[10px]">
-              {qLinks.map((link) => (
+              {qLinks.map((link: any) => (
                 <li key={link.label}>
                   <a
                     href={link.href}
@@ -147,7 +93,7 @@ export default function Footer() {
               {t.support}
             </h3>
             <ul className="flex flex-col gap-[10px]">
-              {sLinks.map((link) => (
+              {sLinks.map((link: any) => (
                 <li key={link.label}>
                   <a
                     href={link.href}
@@ -174,11 +120,11 @@ export default function Footer() {
                   height={16}
                 />
                 <a
-                  href="tel:+966135117700"
+                  href={`tel:${footerContactInfo.phone}`}
                   className="text-[#c5c5c5] text-[16px] leading-[24px] hover:text-white transition-colors"
                   dir="ltr"
                 >
-                  +966135117700
+                  {footerContactInfo.phone}
                 </a>
               </div>
               <div className="flex items-center gap-2">
@@ -189,11 +135,11 @@ export default function Footer() {
                   height={16}
                 />
                 <a
-                  href="mailto:Info@namaya.ar"
+                  href={`mailto:${footerContactInfo.email}`}
                   className="text-[#c5c5c5] text-[16px] leading-[24px] underline hover:text-white transition-colors"
                   dir="ltr"
                 >
-                  Info@namaya.ar
+                  {footerContactInfo.email}
                 </a>
               </div>
             </div>

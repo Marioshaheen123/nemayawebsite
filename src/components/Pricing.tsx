@@ -5,128 +5,23 @@ import SectionBadge from "./SectionBadge";
 import { useState, useRef } from "react";
 import { useLang } from "@/context/LanguageContext";
 
-const features = {
-  en: [
-    "Daily market analysis",
-    "24/7 customer support",
-    "Personal trading advisor",
-    "Daily recommendations",
-    "Instant trading alerts",
-    "Low spread advantage",
-    "VIP support",
-  ],
-  ar: [
-    "تحليل السوق اليومي",
-    "دعم العملاء على مدار الساعة طوال أيام الأسبوع",
-    "مستشار تداول شخصي",
-    "توصيات يومية",
-    "تنبيهات تداول فورية",
-    "ميزة الفارق المنخفض",
-    "دعم VIP",
-  ],
-};
-
-const plans = {
-  en: [
-    {
-      name: "Mini Account",
-      price: "$29",
-      period: "month",
-      description:
-        "Best for individuals and small businesses looking to get started",
-      cta: "Get Started",
-      featuresLabel: "Features",
-      ctaStyle: "bg-[#12953d] border-[#12953d] text-white",
-      rotate: "rotate-2",
-      bg: "bg-white",
-    },
-    {
-      name: "Standard Account",
-      price: "$79",
-      period: "month",
-      description:
-        "Perfect for growing businesses needing more features and support",
-      cta: "Start Free Trial",
-      featuresLabel: "Features",
-      ctaStyle: "bg-[#0e314c] border-[#0e314c] text-white",
-      rotate: "",
-      bg: "",
-      gradient: true,
-    },
-    {
-      name: "Gold Account",
-      price: "$99",
-      period: "month",
-      description:
-        "Ideal for large enterprises that require custom solutions and dedicated support",
-      cta: "Contact Us",
-      featuresLabel: "Features",
-      ctaStyle: "bg-[#12953d] border-[#12953d] text-white",
-      rotate: "-rotate-2",
-      bg: "bg-white",
-    },
-  ],
-  ar: [
-    {
-      name: "حساب مصغر",
-      price: "3,750",
-      period: "ر.س",
-      description: "الأفضل للأفراد والشركات الصغيرة التي تتطلع للبدء",
-      cta: "ابدأ",
-      featuresLabel: "الميزات",
-      ctaStyle: "bg-[#12953d] border-[#12953d] text-white",
-      rotate: "rotate-2",
-      bg: "bg-white",
-    },
-    {
-      name: "حساب قياسي",
-      price: "18,750",
-      period: "ر.س",
-      description:
-        "مثالي للأعمال المتنامية التي تحتاج إلى المزيد من الميزات والدعم",
-      cta: "ابدأ تجربة مجانية",
-      featuresLabel: "الميزات",
-      ctaStyle: "bg-[#0e314c] border-[#0e314c] text-white",
-      rotate: "",
-      bg: "",
-      gradient: true,
-    },
-    {
-      name: "حساب الذهب",
-      price: "37,750",
-      period: "ر.س",
-      description: "الأفضل للأفراد والشركات الصغيرة التي تتطلع للبدء",
-      cta: "ابدأ",
-      featuresLabel: "الميزات",
-      ctaStyle: "bg-[#12953d] border-[#12953d] text-white",
-      rotate: "-rotate-2",
-      bg: "bg-white",
-    },
-  ],
-};
-
-const heading = {
-  en: {
-    before: "Choose the account that suits your ",
-    bold: "budget and goals",
-  },
-  ar: {
-    before: "اختر الحساب الذي يناسب ",
-    bold: "ميزانيتك وأهدافك",
-  },
-};
-
-const viewAll = { en: "View All Account Types", ar: "عرض جميع أنواع الحسابات" };
+interface PricingProps {
+  pricingSectionHeading: any;
+  pricingSectionBadge: any;
+  pricingViewAllLabel: any;
+  plans: any;
+  features: any;
+}
 
 // Rotation classes with md: prefix so they only apply on desktop
 const rotationClasses = ["md:rotate-2", "", "md:-rotate-2"];
 
-export default function Pricing() {
+export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pricingViewAllLabel, plans, features }: PricingProps) {
   const { lang } = useLang();
   const isAr = lang === "ar";
   const planItems = plans[lang];
   const featureItems = features[lang];
-  const h = heading[lang];
+  const h = pricingSectionHeading[lang];
 
   // Mobile carousel state
   const [mobileSlide, setMobileSlide] = useState(0);
@@ -221,7 +116,7 @@ export default function Pricing() {
         <h4 className="text-[#0e314c] text-[16px] md:text-[14px] xl:text-[16px] font-bold leading-[1.4] mb-[4px]">
           {plan.featuresLabel}
         </h4>
-        {featureItems.map((feature, j) => (
+        {featureItems.map((feature: any, j: number) => (
           <div key={j} className="flex items-center gap-[10px]">
             <div className="w-[22px] h-[22px] md:w-[18px] md:h-[18px] xl:w-[20px] xl:h-[20px] rounded-full bg-[rgba(18,149,61,0.1)] flex items-center justify-center shrink-0">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -260,7 +155,7 @@ export default function Pricing() {
       <div className="w-full max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[20px] xl:mb-[28px]">
-          <SectionBadge label="PRICING PLANS" labelAr="خطط الأسعار" />
+          <SectionBadge label={pricingSectionBadge.label} labelAr={pricingSectionBadge.labelAr} />
           <h2 className="section-heading-mobile text-[25px] leading-[32.5px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px] max-w-[664px] xl:max-w-[750px] mx-auto">
             {h.before}
             <span className="font-bold">{h.bold}</span>
@@ -281,7 +176,7 @@ export default function Pricing() {
                 : `translateX(-${mobileSlide * 100}%)`,
             }}
           >
-            {planItems.map((plan, i) => (
+            {planItems.map((plan: any, i: number) => (
               <div key={i} className="w-full shrink-0 px-2">
                 {renderCard(plan, i, true)}
               </div>
@@ -291,7 +186,7 @@ export default function Pricing() {
 
         {/* Desktop grid */}
         <div className="hidden md:grid grid-cols-3 gap-0 items-center">
-          {planItems.map((plan, i) => (
+          {planItems.map((plan: any, i: number) => (
             <div key={i} className="px-3 pb-4">
               {renderCard(plan, i, false)}
             </div>
@@ -300,7 +195,7 @@ export default function Pricing() {
 
         {/* Dots */}
         <div className="flex justify-center gap-2 mt-3 md:mt-2">
-          {planItems.map((_, i) => (
+          {planItems.map((_: any, i: number) => (
             <button
               key={i}
               onClick={() => setMobileSlide(i)}
@@ -317,7 +212,7 @@ export default function Pricing() {
             href="/account-types"
             className="bg-[#12953d] hover:bg-[#0e7a32] transition-colors rounded-full px-[28px] py-[12px] text-white text-[14px] font-semibold inline-flex items-center gap-2"
           >
-            {viewAll[lang]}
+            {pricingViewAllLabel[lang]}
             <span className="text-[16px]">→</span>
           </Link>
         </div>

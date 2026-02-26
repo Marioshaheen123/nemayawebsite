@@ -4,33 +4,23 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/context/LanguageContext";
+import type { Bilingual } from "@/data/types";
 
-const t = {
-  en: {
-    title: "Log in",
-    subtitle: "Welcome back, please enter your details to continue.",
-    accountNumber: "Account Number",
-    password: "Password",
-    rememberMe: "Remember me",
-    forgotPassword: "Forgot password?",
-    loginBtn: "Log In",
-    newHere: "New on our platform?",
-    createAccount: "Create an account",
-  },
-  ar: {
-    title: "تسجيل الدخول",
-    subtitle: "مرحبًا بعودتك، يرجى إدخال بياناتك للمتابعة.",
-    accountNumber: "رقم الحساب",
-    password: "كلمة المرور",
-    rememberMe: "تذكرني",
-    forgotPassword: "نسيت كلمة المرور؟",
-    loginBtn: "تسجيل الدخول",
-    newHere: "جديد على منصتنا؟",
-    createAccount: "إنشاء حساب",
-  },
-};
+interface LoginPageProps {
+  loginText: Bilingual<{
+    title: string;
+    subtitle: string;
+    accountNumber: string;
+    password: string;
+    rememberMe: string;
+    forgotPassword: string;
+    loginBtn: string;
+    newHere: string;
+    createAccount: string;
+  }>;
+}
 
-export default function LoginPage() {
+export default function LoginPage({ loginText: t }: LoginPageProps) {
   const { lang, toggleLang } = useLang();
   const isAr = lang === "ar";
   const content = t[lang];

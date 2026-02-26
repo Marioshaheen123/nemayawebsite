@@ -4,27 +4,19 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/context/LanguageContext";
+import type { Bilingual } from "@/data/types";
 
-const t = {
-  en: {
-    title: "Forgot Password",
-    description:
-      "Enter your email and we'll send you instructions to reset your password",
-    emailLabel: "Email",
-    sendBtn: "Send Reset Link",
-    backToLogin: "Back to Login",
-  },
-  ar: {
-    title: "نسيت كلمة المرور",
-    description:
-      "أدخل بريدك الإلكتروني وسنرسل لك تعليمات لإعادة تعيين كلمة المرور",
-    emailLabel: "البريد الإلكتروني",
-    sendBtn: "إرسال رابط إعادة التعيين",
-    backToLogin: "العودة لتسجيل الدخول",
-  },
-};
+interface ForgotPasswordPageProps {
+  forgotPasswordText: Bilingual<{
+    title: string;
+    description: string;
+    emailLabel: string;
+    sendBtn: string;
+    backToLogin: string;
+  }>;
+}
 
-export default function ForgotPasswordPage() {
+export default function ForgotPasswordPage({ forgotPasswordText: t }: ForgotPasswordPageProps) {
   const { lang, toggleLang } = useLang();
   const isAr = lang === "ar";
   const content = t[lang];

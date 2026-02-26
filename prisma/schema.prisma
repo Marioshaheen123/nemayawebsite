@@ -1,0 +1,271 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ─── Authentication ─────────────────────────────────────────────────
+
+model AdminUser {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  hashedPassword String
+  name           String?
+  role           String   @default("admin")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// ─── Generic Content Blocks (key-value JSON store) ──────────────────
+
+model ContentBlock {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  valueJson String
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Blog ───────────────────────────────────────────────────────────
+
+model BlogArticle {
+  id                  String   @id @default(cuid())
+  slug                String   @unique
+  imageUrl            String
+  day                 String
+  monthEn             String
+  monthAr             String
+  readTimeEn          String
+  readTimeAr          String
+  titleEn             String
+  titleAr             String
+  excerptEn           String
+  excerptAr           String
+  bodyEn              String
+  bodyAr              String
+  suggestedBreakAfter Int?
+  published           Boolean  @default(true)
+  sortOrder           Int      @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model SuggestedArticle {
+  id        String @id @default(cuid())
+  imageUrl  String
+  titleEn   String
+  titleAr   String
+  slug      String
+  sortOrder Int    @default(0)
+}
+
+// ─── FAQ ────────────────────────────────────────────────────────────
+
+model FaqCategory {
+  id         String    @id @default(cuid())
+  nameEn     String
+  nameAr     String
+  sortOrder  Int       @default(0)
+  isHomepage Boolean   @default(false)
+  questions  FaqItem[]
+}
+
+model FaqItem {
+  id         String      @id @default(cuid())
+  questionEn String
+  questionAr String
+  answerEn   String
+  answerAr   String
+  sortOrder  Int         @default(0)
+  categoryId String
+  category   FaqCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+// ─── Plans / Account Types ──────────────────────────────────────────
+
+model Plan {
+  id              String  @id @default(cuid())
+  nameEn          String
+  nameAr          String
+  priceEn         String
+  priceAr         String
+  periodEn        String
+  periodAr        String
+  descriptionEn   String
+  descriptionAr   String
+  featuresLabelEn String
+  featuresLabelAr String
+  ctaEn           String
+  ctaAr           String
+  ctaStyle        String
+  bg              String
+  gradient        Boolean @default(false)
+  sortOrder       Int     @default(0)
+}
+
+model PlanFeature {
+  id        String @id @default(cuid())
+  labelEn   String
+  labelAr   String
+  sortOrder Int    @default(0)
+}
+
+// ─── Financial Assets ───────────────────────────────────────────────
+
+model FinancialAsset {
+  id            String           @id @default(cuid())
+  slug          String           @unique
+  nameEn        String
+  nameAr        String
+  headlineEn    String
+  headlineAr    String
+  descriptionEn String
+  descriptionAr String
+  imageUrl      String
+  statsEn       String
+  statsAr       String
+  whatIsEn      String
+  whatIsAr      String
+  sortOrder     Int              @default(0)
+  instruments   Instrument[]
+  advantages    AssetAdvantage[]
+  faqs          AssetFaq[]
+}
+
+model Instrument {
+  id        String         @id @default(cuid())
+  nameEn    String
+  nameAr    String
+  symbol    String
+  spread    String
+  leverage  String
+  hours     String
+  sortOrder Int            @default(0)
+  assetId   String
+  asset     FinancialAsset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+}
+
+model AssetAdvantage {
+  id        String         @id @default(cuid())
+  titleEn   String
+  titleAr   String
+  descEn    String
+  descAr    String
+  sortOrder Int            @default(0)
+  assetId   String
+  asset     FinancialAsset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+}
+
+model AssetFaq {
+  id         String         @id @default(cuid())
+  questionEn String
+  questionAr String
+  answerEn   String
+  answerAr   String
+  sortOrder  Int            @default(0)
+  assetId    String
+  asset      FinancialAsset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+}
+
+// ─── Videos ─────────────────────────────────────────────────────────
+
+model Video {
+  id          String   @id @default(cuid())
+  videoId     String   @unique
+  titleEn     String
+  titleAr     String
+  descEn      String
+  descAr      String
+  fullDescEn  String
+  fullDescAr  String
+  takeawaysEn String
+  takeawaysAr String
+  linkTextEn  String
+  linkTextAr  String
+  day         String
+  monthEn     String
+  monthAr     String
+  durationEn  String
+  durationAr  String
+  videoUrl    String
+  labelEn     String   @default("")
+  labelAr     String   @default("")
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── Legal Pages ────────────────────────────────────────────────────
+
+model LegalSection {
+  id           String @id @default(cuid())
+  pageType     String
+  titleEn      String
+  titleAr      String
+  paragraphsEn String
+  paragraphsAr String
+  sortOrder    Int    @default(0)
+}
+
+// ─── Islamic Rulings ────────────────────────────────────────────────
+
+model IslamicRulingSection {
+  id        String              @id @default(cuid())
+  nameEn    String
+  nameAr    String
+  sortOrder Int                 @default(0)
+  items     IslamicRulingItem[]
+}
+
+model IslamicRulingItem {
+  id         String               @id @default(cuid())
+  titleEn    String
+  titleAr    String
+  questionEn String
+  questionAr String
+  answerEn   String
+  answerAr   String
+  muftiEn    String
+  muftiAr    String
+  sortOrder  Int                  @default(0)
+  sectionId  String
+  section    IslamicRulingSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+}
+
+// ─── Navigation ─────────────────────────────────────────────────────
+
+model NavItem {
+  id          String    @id @default(cuid())
+  location    String
+  labelEn     String
+  labelAr     String
+  href        String
+  hasDropdown Boolean   @default(false)
+  sortOrder   Int       @default(0)
+  parentId    String?
+  parent      NavItem?  @relation("NavChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children    NavItem[] @relation("NavChildren")
+}
+
+model SocialIcon {
+  id        String @id @default(cuid())
+  src       String
+  alt       String
+  href      String
+  sortOrder Int    @default(0)
+}
+
+// ─── Site Images ────────────────────────────────────────────────────
+
+model SiteImage {
+  id        String   @id @default(cuid())
+  path      String   @unique
+  altText   String?
+  category  String?
+  fileName  String
+  mimeType  String?
+  sizeBytes Int?
+  createdAt DateTime @default(now())
+}

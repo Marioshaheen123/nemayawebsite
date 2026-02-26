@@ -3,334 +3,25 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useLang } from "@/context/LanguageContext";
+import PageHeroBanner from "@/components/shared/PageHeroBanner";
 
-interface Video {
-  title: string;
-  desc: string;
-  fullDesc: string;
-  takeaways: string[];
-  linkText: string;
-  day: string;
-  month: string;
-  duration: string;
-  videoUrl: string;
-  label?: string;
+interface VideosPageProps {
+  videos: any;
+  heroTitle: any;
+  watchNowLabel: any;
+  moreVideoLabel: any;
+  keyTakeawaysLabel: any;
+  directLinkLabel: any;
 }
 
-const videos: { en: Video[]; ar: Video[] } = {
-  en: [
-    {
-      title: "Finding Instruments",
-      desc: "Learn how to quickly find currencies, commodities, or stocks.",
-      fullDesc:
-        "Learn how to navigate the Namaya platform to find any asset in seconds. This guide covers currencies, commodities, and stocks.",
-      takeaways: [
-        "How to use the global search bar.",
-        "Filtering by asset class (Forex, Metals, Indices).",
-        "Adding an instrument to your Favorites.",
-      ],
-      linkText: "Try searching in the Trading Platform",
-      day: "10",
-      month: "December",
-      duration: "2 min watch",
-      videoUrl: "",
-    },
-    {
-      title: "Login Guide",
-      desc: "Easy steps to access your Namaya trading platform.",
-      fullDesc:
-        "A step-by-step walkthrough to access your Namaya trading account. Learn how to log in securely and set up your profile.",
-      takeaways: [
-        "How to create your account credentials.",
-        "Secure login best practices.",
-        "Setting up two-factor authentication.",
-      ],
-      linkText: "Access the Trading Platform",
-      day: "09",
-      month: "December",
-      duration: "5 min watch",
-      videoUrl: "",
-    },
-    {
-      title: "Trade Details",
-      desc: "Master the key parameters before opening a new trade.",
-      fullDesc:
-        "Understand the essential details of every trade. This guide covers order types, lot sizes, and risk management basics.",
-      takeaways: [
-        "Understanding order types (Market, Limit, Stop).",
-        "Setting the right lot size for your account.",
-        "Using stop-loss and take-profit levels.",
-      ],
-      linkText: "Open a trade in the Trading Platform",
-      day: "06",
-      month: "December",
-      duration: "3 min watch",
-      videoUrl: "",
-    },
-    {
-      title: "Finding Instruments",
-      desc: "Learn how to quickly find currencies, commodities, or stocks.",
-      fullDesc:
-        "Learn how to navigate the Namaya platform to find any asset in seconds. This guide covers currencies, commodities, and stocks.",
-      takeaways: [
-        "How to use the global search bar.",
-        "Filtering by asset class (Forex, Metals, Indices).",
-        "Adding an instrument to your Favorites.",
-      ],
-      linkText: "Try searching in the Trading Platform",
-      day: "02",
-      month: "December",
-      duration: "2 min watch",
-      label: "Video Lesson",
-      videoUrl: "",
-    },
-    {
-      title: "Login Guide",
-      desc: "Easy steps to access your Namaya trading platform.",
-      fullDesc:
-        "A step-by-step walkthrough to access your Namaya trading account. Learn how to log in securely and set up your profile.",
-      takeaways: [
-        "How to create your account credentials.",
-        "Secure login best practices.",
-        "Setting up two-factor authentication.",
-      ],
-      linkText: "Access the Trading Platform",
-      day: "05",
-      month: "November",
-      duration: "5 min watch",
-      label: "Video Lesson",
-      videoUrl: "",
-    },
-    {
-      title: "Trade Details",
-      desc: "Master the key parameters before opening a new trade.",
-      fullDesc:
-        "Understand the essential details of every trade. This guide covers order types, lot sizes, and risk management basics.",
-      takeaways: [
-        "Understanding order types (Market, Limit, Stop).",
-        "Setting the right lot size for your account.",
-        "Using stop-loss and take-profit levels.",
-      ],
-      linkText: "Open a trade in the Trading Platform",
-      day: "03",
-      month: "November",
-      duration: "3 min watch",
-      label: "Video Lesson",
-      videoUrl: "",
-    },
-    {
-      title: "Finding Instruments",
-      desc: "Learn how to quickly find currencies, commodities, or stocks.",
-      fullDesc:
-        "Learn how to navigate the Namaya platform to find any asset in seconds. This guide covers currencies, commodities, and stocks.",
-      takeaways: [
-        "How to use the global search bar.",
-        "Filtering by asset class (Forex, Metals, Indices).",
-        "Adding an instrument to your Favorites.",
-      ],
-      linkText: "Try searching in the Trading Platform",
-      day: "02",
-      month: "October",
-      duration: "2 min watch",
-      label: "Video Lesson",
-      videoUrl: "",
-    },
-    {
-      title: "Login Guide",
-      desc: "Easy steps to access your Namaya trading platform.",
-      fullDesc:
-        "A step-by-step walkthrough to access your Namaya trading account. Learn how to log in securely and set up your profile.",
-      takeaways: [
-        "How to create your account credentials.",
-        "Secure login best practices.",
-        "Setting up two-factor authentication.",
-      ],
-      linkText: "Access the Trading Platform",
-      day: "05",
-      month: "October",
-      duration: "5 min watch",
-      label: "Video Lesson",
-      videoUrl: "",
-    },
-    {
-      title: "Trade Details",
-      desc: "Master the key parameters before opening a new trade.",
-      fullDesc:
-        "Understand the essential details of every trade. This guide covers order types, lot sizes, and risk management basics.",
-      takeaways: [
-        "Understanding order types (Market, Limit, Stop).",
-        "Setting the right lot size for your account.",
-        "Using stop-loss and take-profit levels.",
-      ],
-      linkText: "Open a trade in the Trading Platform",
-      day: "03",
-      month: "October",
-      duration: "3 min watch",
-      label: "Video Lesson",
-      videoUrl: "",
-    },
-  ],
-  ar: [
-    {
-      title: "البحث عن الأدوات",
-      desc: "تعلم كيفية العثور بسرعة على العملات أو السلع أو الأسهم.",
-      fullDesc:
-        "تعلم كيفية التنقل في منصة نمايا للعثور على أي أصل في ثوانٍ. يغطي هذا الدليل العملات والسلع والأسهم.",
-      takeaways: [
-        "كيفية استخدام شريط البحث العام.",
-        "التصفية حسب فئة الأصول (فوركس، معادن، مؤشرات).",
-        "إضافة أداة إلى المفضلة.",
-      ],
-      linkText: "جرب البحث في منصة التداول",
-      day: "10",
-      month: "ديسمبر",
-      duration: "شاهد لمدة دقيقتين",
-      videoUrl: "",
-    },
-    {
-      title: "دليل تسجيل الدخول",
-      desc: "خطوات سهلة للوصول إلى منصة تداول نامايا الخاصة بك.",
-      fullDesc:
-        "دليل خطوة بخطوة للوصول إلى حساب تداول نمايا الخاص بك. تعلم كيفية تسجيل الدخول بأمان وإعداد ملفك الشخصي.",
-      takeaways: [
-        "كيفية إنشاء بيانات اعتماد حسابك.",
-        "أفضل ممارسات تسجيل الدخول الآمن.",
-        "إعداد المصادقة الثنائية.",
-      ],
-      linkText: "الوصول إلى منصة التداول",
-      day: "09",
-      month: "ديسمبر",
-      duration: "شاهد لمدة خمس دقائق",
-      videoUrl: "",
-    },
-    {
-      title: "تفاصيل التجارة",
-      desc: "إتقان المعلمات الأساسية قبل فتح صفقة جديدة.",
-      fullDesc:
-        "فهم التفاصيل الأساسية لكل صفقة. يغطي هذا الدليل أنواع الأوامر وأحجام اللوت وأساسيات إدارة المخاطر.",
-      takeaways: [
-        "فهم أنواع الأوامر (سوق، حد، وقف).",
-        "تحديد حجم اللوت المناسب لحسابك.",
-        "استخدام مستويات وقف الخسارة وجني الأرباح.",
-      ],
-      linkText: "افتح صفقة في منصة التداول",
-      day: "06",
-      month: "ديسمبر",
-      duration: "شاهد لمدة ثلاث دقائق",
-      videoUrl: "",
-    },
-    {
-      title: "البحث عن الأدوات",
-      desc: "تعلم كيفية العثور بسرعة على العملات أو السلع أو الأسهم.",
-      fullDesc:
-        "تعلم كيفية التنقل في منصة نمايا للعثور على أي أصل في ثوانٍ. يغطي هذا الدليل العملات والسلع والأسهم.",
-      takeaways: [
-        "كيفية استخدام شريط البحث العام.",
-        "التصفية حسب فئة الأصول (فوركس، معادن، مؤشرات).",
-        "إضافة أداة إلى المفضلة.",
-      ],
-      linkText: "جرب البحث في منصة التداول",
-      day: "02",
-      month: "ديسمبر",
-      duration: "دقيقة مشاهدة",
-      label: "درس الفيديو",
-      videoUrl: "",
-    },
-    {
-      title: "دليل تسجيل الدخول",
-      desc: "خطوات سهلة للوصول إلى منصة تداول نامايا الخاصة بك.",
-      fullDesc:
-        "دليل خطوة بخطوة للوصول إلى حساب تداول نمايا الخاص بك. تعلم كيفية تسجيل الدخول بأمان وإعداد ملفك الشخصي.",
-      takeaways: [
-        "كيفية إنشاء بيانات اعتماد حسابك.",
-        "أفضل ممارسات تسجيل الدخول الآمن.",
-        "إعداد المصادقة الثنائية.",
-      ],
-      linkText: "الوصول إلى منصة التداول",
-      day: "05",
-      month: "نوفمبر",
-      duration: "دقيقة مشاهدة",
-      label: "درس الفيديو",
-      videoUrl: "",
-    },
-    {
-      title: "تفاصيل التجارة",
-      desc: "إتقان المعلمات الأساسية قبل فتح صفقة جديدة.",
-      fullDesc:
-        "فهم التفاصيل الأساسية لكل صفقة. يغطي هذا الدليل أنواع الأوامر وأحجام اللوت وأساسيات إدارة المخاطر.",
-      takeaways: [
-        "فهم أنواع الأوامر (سوق، حد، وقف).",
-        "تحديد حجم اللوت المناسب لحسابك.",
-        "استخدام مستويات وقف الخسارة وجني الأرباح.",
-      ],
-      linkText: "افتح صفقة في منصة التداول",
-      day: "03",
-      month: "نوفمبر",
-      duration: "دقيقة مشاهدة",
-      label: "درس الفيديو",
-      videoUrl: "",
-    },
-    {
-      title: "البحث عن الأدوات",
-      desc: "تعلم كيفية العثور بسرعة على العملات أو السلع أو الأسهم.",
-      fullDesc:
-        "تعلم كيفية التنقل في منصة نمايا للعثور على أي أصل في ثوانٍ. يغطي هذا الدليل العملات والسلع والأسهم.",
-      takeaways: [
-        "كيفية استخدام شريط البحث العام.",
-        "التصفية حسب فئة الأصول (فوركس، معادن، مؤشرات).",
-        "إضافة أداة إلى المفضلة.",
-      ],
-      linkText: "جرب البحث في منصة التداول",
-      day: "02",
-      month: "أكتوبر",
-      duration: "دقيقة مشاهدة",
-      label: "درس الفيديو",
-      videoUrl: "",
-    },
-    {
-      title: "دليل تسجيل الدخول",
-      desc: "خطوات سهلة للوصول إلى منصة تداول نامايا الخاصة بك.",
-      fullDesc:
-        "دليل خطوة بخطوة للوصول إلى حساب تداول نمايا الخاص بك. تعلم كيفية تسجيل الدخول بأمان وإعداد ملفك الشخصي.",
-      takeaways: [
-        "كيفية إنشاء بيانات اعتماد حسابك.",
-        "أفضل ممارسات تسجيل الدخول الآمن.",
-        "إعداد المصادقة الثنائية.",
-      ],
-      linkText: "الوصول إلى منصة التداول",
-      day: "05",
-      month: "أكتوبر",
-      duration: "دقيقة مشاهدة",
-      label: "درس الفيديو",
-      videoUrl: "",
-    },
-    {
-      title: "تفاصيل التجارة",
-      desc: "إتقان المعلمات الأساسية قبل فتح صفقة جديدة.",
-      fullDesc:
-        "فهم التفاصيل الأساسية لكل صفقة. يغطي هذا الدليل أنواع الأوامر وأحجام اللوت وأساسيات إدارة المخاطر.",
-      takeaways: [
-        "فهم أنواع الأوامر (سوق، حد، وقف).",
-        "تحديد حجم اللوت المناسب لحسابك.",
-        "استخدام مستويات وقف الخسارة وجني الأرباح.",
-      ],
-      linkText: "افتح صفقة في منصة التداول",
-      day: "03",
-      month: "أكتوبر",
-      duration: "دقيقة مشاهدة",
-      label: "درس الفيديو",
-      videoUrl: "",
-    },
-  ],
-};
-
-const heroTitle = { en: "Video", ar: "فيديو" };
-const watchNowLabel = { en: "Watch Now", ar: "شاهد الآن" };
-const moreVideoLabel = { en: "More video", ar: "المزيد من الفيديو" };
-const keyTakeawaysLabel = { en: "Key Takeaways:", ar: "النقاط الرئيسية:" };
-const directLinkLabel = { en: "Direct Link to Tool:", ar: "رابط مباشر للأداة:" };
-
-export default function VideosPage() {
+export default function VideosPage({
+  videos,
+  heroTitle,
+  watchNowLabel,
+  moreVideoLabel,
+  keyTakeawaysLabel,
+  directLinkLabel,
+}: VideosPageProps) {
   const { lang } = useLang();
   const isAr = lang === "ar";
   const items = videos[lang];
@@ -341,29 +32,11 @@ export default function VideosPage() {
   // Detail view
   if (selectedIndex !== null) {
     const video = items[selectedIndex];
-    const otherVideos = items.filter((_, i) => i !== selectedIndex).slice(0, 3);
+    const otherVideos = items.filter((_: any, i: number) => i !== selectedIndex).slice(0, 3);
 
     return (
       <>
-        {/* Hero Banner */}
-        <section className="relative bg-[#001005] pt-[69px] md:pt-[100px] xl:pt-[110px]">
-          <div className="absolute inset-0 overflow-hidden">
-            <Image
-              src="/images/blog-hero-bg.png"
-              alt=""
-              fill
-              className="object-cover opacity-80"
-            />
-          </div>
-          <div
-            dir={isAr ? "rtl" : undefined}
-            className="relative px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px] py-[30px] md:py-[40px]"
-          >
-            <h1 className="text-white text-[28px] md:text-[36px] xl:text-[40px] font-medium leading-[1.4]">
-              {video.title}
-            </h1>
-          </div>
-        </section>
+        <PageHeroBanner title={video.title} />
 
         {/* Video Detail Content */}
         <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px] px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
@@ -485,7 +158,7 @@ export default function VideosPage() {
                   {keyTakeawaysLabel[lang]}
                 </h3>
                 <ul className="list-disc text-[#6084a4] text-[16px] leading-[1.4] ms-[24px] flex flex-col gap-[4px]">
-                  {video.takeaways.map((t, i) => (
+                  {video.takeaways.map((t: string, i: number) => (
                     <li key={i}>{t}</li>
                   ))}
                 </ul>
@@ -530,7 +203,7 @@ export default function VideosPage() {
               {moreVideoLabel[lang]}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[24px] md:gap-[30px]">
-              {otherVideos.map((v, i) => {
+              {otherVideos.map((v: any, i: number) => {
                 const originalIndex = items.indexOf(v);
                 return (
                   <button
@@ -617,25 +290,7 @@ export default function VideosPage() {
   // Grid listing view
   return (
     <>
-      {/* Hero Banner */}
-      <section className="relative bg-[#001005] pt-[69px] md:pt-[100px] xl:pt-[110px]">
-        <div className="absolute inset-0 overflow-hidden">
-          <Image
-            src="/images/blog-hero-bg.png"
-            alt=""
-            fill
-            className="object-cover opacity-80"
-          />
-        </div>
-        <div
-          dir={isAr ? "rtl" : undefined}
-          className="relative px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px] py-[30px] md:py-[40px]"
-        >
-          <h1 className="text-white text-[40px] md:text-[55px] xl:text-[65px] font-extrabold leading-[1.3]">
-            {heroTitle[lang]}
-          </h1>
-        </div>
-      </section>
+      <PageHeroBanner title={heroTitle[lang]} />
 
       {/* Video Grid */}
       <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
@@ -644,7 +299,7 @@ export default function VideosPage() {
           className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[24px] md:gap-[30px]">
-            {items.map((video, i) => (
+            {items.map((video: any, i: number) => (
               <button
                 key={i}
                 onClick={() => {
