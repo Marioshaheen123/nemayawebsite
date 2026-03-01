@@ -40,7 +40,7 @@ export default async function FinancialAssetDetailRoute({
         leverage: inst.leverage,
         hours: inst.hours,
       })) ?? [],
-      whatIs: lang === "en" ? ((dbAsset as any).whatIsEn ?? []) : ((dbAsset as any).whatIsAr ?? []),
+      whatIs: (() => { const raw = lang === "en" ? (dbAsset as any).whatIsEn : (dbAsset as any).whatIsAr; if (!raw) return []; return typeof raw === "string" ? JSON.parse(raw) : raw; })(),
       advantages: (dbAsset as any).advantages?.map((adv: any) => ({
         title: lang === "en" ? adv.titleEn : adv.titleAr,
         desc: lang === "en" ? adv.descEn : adv.descAr,

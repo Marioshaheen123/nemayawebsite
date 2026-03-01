@@ -53,9 +53,9 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
     isMobile: boolean
   ) => (
     <div
-      className={`${isMobile ? "" : rotationClasses[i]} ${plan.bg} rounded-[25px] border border-[#cacceb] p-[25px] md:p-[20px] xl:p-[28px] flex flex-col gap-[14px] md:gap-[12px] xl:gap-[16px] ${
+      className={`${isMobile ? "" : rotationClasses[i]} ${plan.bg} rounded-[20px] md:rounded-[22px] border border-[#cacceb] p-[25px] md:p-[18px] xl:p-[24px] flex flex-col gap-[14px] md:gap-[10px] xl:gap-[14px] ${
         isAr ? "text-right" : ""
-      } ${plan.gradient ? "md:py-[30px] xl:py-[38px]" : ""}`}
+      } ${plan.gradient ? "md:py-[24px] xl:py-[32px]" : ""}`}
       style={
         plan.gradient
           ? {
@@ -66,8 +66,8 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
       }
     >
       {/* Price section */}
-      <div className={isMobile ? "" : "h-[155px] xl:h-[170px]"}>
-        <h3 className="text-[#0e314c] text-[24px] md:text-[20px] xl:text-[24px] font-bold leading-[28.8px] md:leading-[26px] xl:leading-[30px] mb-[8px] md:mb-[6px]">
+      <div className={isMobile ? "" : "h-[140px] xl:h-[155px]"}>
+        <h3 className="text-[#0e314c] text-[24px] md:text-[18px] xl:text-[20px] font-bold leading-[28.8px] md:leading-[24px] xl:leading-[26px] mb-[8px] md:mb-[6px]">
           {plan.name}
         </h3>
         <div className="flex items-end gap-0 mb-[8px] md:mb-[6px]">
@@ -80,7 +80,7 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
                 className={`text-[#0e314c] font-bold mx-1 ${
                   isMobile
                     ? "text-[40px] leading-[48px]"
-                    : "text-[50px] leading-[50px] xl:text-[60px] xl:leading-[60px]"
+                    : "text-[40px] leading-[40px] xl:text-[48px] xl:leading-[48px]"
                 }`}
               >
                 {plan.price}
@@ -95,7 +95,7 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
                 className={`text-[#0e314c] font-bold ${
                   isMobile
                     ? "text-[40px] leading-[48px]"
-                    : "text-[50px] leading-[50px] xl:text-[60px] xl:leading-[60px]"
+                    : "text-[40px] leading-[40px] xl:text-[48px] xl:leading-[48px]"
                 }`}
               >
                 {plan.price}
@@ -106,19 +106,19 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
             </>
           )}
         </div>
-        <p className="text-[#6084a4] text-[14px] md:text-[13px] xl:text-[15px] leading-[1.4]">
+        <p className="text-[#6084a4] text-[14px] md:text-[12px] xl:text-[13px] leading-[1.4]">
           {plan.description}
         </p>
       </div>
 
       {/* Features */}
-      <div className="flex flex-col gap-[5px] md:gap-[4px] xl:gap-[6px]">
-        <h4 className="text-[#0e314c] text-[16px] md:text-[14px] xl:text-[16px] font-bold leading-[1.4] mb-[4px]">
+      <div className="flex flex-col gap-[5px] md:gap-[3px] xl:gap-[5px]">
+        <h4 className="text-[#0e314c] text-[16px] md:text-[13px] xl:text-[14px] font-bold leading-[1.4] mb-[4px]">
           {plan.featuresLabel}
         </h4>
         {featureItems.map((feature: any, j: number) => (
-          <div key={j} className="flex items-center gap-[10px]">
-            <div className="w-[22px] h-[22px] md:w-[18px] md:h-[18px] xl:w-[20px] xl:h-[20px] rounded-full bg-[rgba(18,149,61,0.1)] flex items-center justify-center shrink-0">
+          <div key={j} className="flex items-center gap-[8px]">
+            <div className="w-[22px] h-[22px] md:w-[16px] md:h-[16px] xl:w-[18px] xl:h-[18px] rounded-full bg-[rgba(18,149,61,0.1)] flex items-center justify-center shrink-0">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path
                   d="M2.5 6L5 8.5L9.5 3.5"
@@ -129,7 +129,7 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
                 />
               </svg>
             </div>
-            <span className="text-[#6084a4] text-[14px] md:text-[13px] xl:text-[15px] leading-[20px]">
+            <span className="text-[#6084a4] text-[14px] md:text-[12px] xl:text-[13px] leading-[18px]">
               {feature}
             </span>
           </div>
@@ -140,7 +140,7 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
       <div className={isAr ? "text-right" : ""}>
         <Link
           href="/account-types"
-          className={`inline-block border rounded-[5px] px-[36px] py-[12px] md:py-[10px] xl:py-[14px] text-[14px] md:text-[13px] xl:text-[14px] font-semibold leading-[21px] hover:opacity-90 transition-opacity ${
+          className={`inline-block border rounded-[5px] px-[36px] py-[12px] md:px-[28px] md:py-[9px] xl:py-[12px] text-[14px] md:text-[12px] xl:text-[13px] font-semibold leading-[21px] hover:opacity-90 transition-opacity ${
             isMobile ? "w-full text-center" : "w-fit"
           } ${plan.ctaStyle}`}
         >
@@ -151,12 +151,12 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
   );
 
   return (
-    <section className="min-h-screen-safe flex items-center py-[60px] px-4 md:py-[50px] md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
-      <div className="w-full max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
+    <section className="min-h-screen-safe flex items-center py-[60px] px-4 md:py-[50px]">
+      <div className="w-full max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[20px] xl:mb-[28px]">
           <SectionBadge label={pricingSectionBadge.label} labelAr={pricingSectionBadge.labelAr} />
-          <h2 className="section-heading-mobile text-[25px] leading-[32.5px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px] max-w-[664px] xl:max-w-[750px] mx-auto">
+          <h2 className="section-heading-mobile text-[25px] leading-[32.5px] md:text-[32px] md:leading-[40px] xl:text-[40px] xl:leading-[48px] text-[#0e314c] mt-[10px] max-w-[600px] xl:max-w-[680px] mx-auto">
             {h.before}
             <span className="font-bold">{h.bold}</span>
           </h2>

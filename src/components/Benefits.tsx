@@ -44,8 +44,8 @@ export default function Benefits({ benefitsFeatures, benefitsHeading, benefitsCt
   };
 
   return (
-    <section className="min-h-screen-safe flex items-center py-[60px] px-3 md:py-[120px] md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
-      <div className="w-full max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
+    <section className="min-h-screen-safe flex items-center py-[60px] px-3 md:py-[120px]">
+      <div className="w-full max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[40px]">
           <SectionBadge label={benefitsBadge.label} labelAr={benefitsBadge.labelAr} />

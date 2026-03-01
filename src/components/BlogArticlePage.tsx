@@ -49,7 +49,7 @@ export default function BlogArticlePage({
       <PageHeroBanner title={article.title} />
 
       {/* Article Content */}
-      <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px] px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
+      <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px]">
         <div
           dir={isAr ? "rtl" : undefined}
           className="max-w-[840px] mx-auto relative"
@@ -177,10 +177,10 @@ export default function BlogArticlePage({
       </section>
 
       {/* More Articles */}
-      <section className="bg-white pb-[60px] md:pb-[80px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
+      <section className="bg-white pb-[60px] md:pb-[80px]">
         <div
           dir={isAr ? "rtl" : undefined}
-          className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto"
+          className="max-w-7xl mx-auto px-6"
         >
           <h2 className="text-[#0e314c] text-[32px] md:text-[40px] leading-[48px] text-center mb-[40px]">
             {t.moreArticles}

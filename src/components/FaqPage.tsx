@@ -30,10 +30,10 @@ export default function FaqPage({
       <PageHeroBanner title={faqPageHeroTitle[lang]} />
 
       {/* Intro */}
-      <section className="bg-white pt-[40px] md:pt-[50px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
+      <section className="bg-white pt-[40px] md:pt-[50px]">
         <div
           dir={isAr ? "rtl" : undefined}
-          className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto"
+          className="max-w-7xl mx-auto px-6"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[20px] md:gap-[40px]">
             <p className="text-[#12953d] text-[14px] md:text-[15px] leading-[1.5]">
@@ -47,10 +47,10 @@ export default function FaqPage({
       </section>
 
       {/* FAQ Content */}
-      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
+      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px]">
         <div
           dir={isAr ? "rtl" : undefined}
-          className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto"
+          className="max-w-7xl mx-auto px-6"
         >
           <div className="flex flex-col md:flex-row gap-[30px] md:gap-[40px]">
             {/* Sidebar Categories */}

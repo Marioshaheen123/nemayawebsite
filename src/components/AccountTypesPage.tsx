@@ -140,10 +140,10 @@ export default function AccountTypesPage({
       <PageHeroBanner title={accountTypesPageHeroTitle[lang]} />
 
       {/* Account Cards */}
-      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
+      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px]">
         <div
           dir={isAr ? "rtl" : undefined}
-          className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto"
+          className="max-w-7xl mx-auto px-6"
         >
           {/* Heading */}
           <div className="text-center mb-[32px] md:mb-[40px]">

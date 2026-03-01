@@ -4,7 +4,7 @@ export const metadata = { title: "Homepage Editor — Nemaya Admin" };
 
 export default function HomepageEditorPage() {
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6">
       {/* Page header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Homepage Editor</h1>

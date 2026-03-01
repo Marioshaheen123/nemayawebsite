@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useLang } from "@/context/LanguageContext";
+import { useUserAuth } from "@/context/UserAuthContext";
 import type { Bilingual } from "@/data/types";
 
 interface LoginPageProps {
@@ -22,11 +24,29 @@ interface LoginPageProps {
 
 export default function LoginPage({ loginText: t }: LoginPageProps) {
   const { lang, toggleLang } = useLang();
+  const { login } = useUserAuth();
+  const router = useRouter();
   const isAr = lang === "ar";
   const content = t[lang];
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [form, setForm] = useState({ accountNumber: "", password: "" });
+  const [error, setError] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!form.accountNumber || !form.password) {
+      setError(isAr ? "يرجى ملء جميع الحقول" : "Please fill in all fields");
+      return;
+    }
+    const success = login(form.accountNumber, form.password);
+    if (success) {
+      router.push("/personal-area");
+    } else {
+      setError(isAr ? "بيانات الدخول غير صحيحة" : "Invalid credentials");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#f4f5fa] flex items-center justify-center px-4 py-20 relative">
@@ -68,7 +88,15 @@ export default function LoginPage({ loginText: t }: LoginPageProps) {
           </p>
         </div>
 
+        {/* Error message */}
+        {error && (
+          <div className="mb-4 p-3 rounded-[6px] bg-[#ff4c51]/10 border border-[#ff4c51]/30 text-[#ff4c51] text-[14px] text-center">
+            {error}
+          </div>
+        )}
+
         {/* Form */}
+        <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-5 mb-5">
           {/* Account Number */}
           <div className="relative">
@@ -143,9 +171,10 @@ export default function LoginPage({ loginText: t }: LoginPageProps) {
         </div>
 
         {/* Log In Button */}
-        <button className="w-full bg-[#057e33] rounded-[6px] px-[18px] py-[10px] text-white text-[15px] font-medium shadow-[0px_2px_4px_0px_rgba(46,38,61,0.16)] hover:bg-[#046b2b] transition-all cursor-pointer">
+        <button type="submit" className="w-full bg-[#057e33] rounded-[6px] px-[18px] py-[10px] text-white text-[15px] font-medium shadow-[0px_2px_4px_0px_rgba(46,38,61,0.16)] hover:bg-[#046b2b] transition-all cursor-pointer">
           {content.loginBtn}
         </button>
+        </form>
 
         {/* Create account link */}
         <div className="text-center mt-5">

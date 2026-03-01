@@ -8,8 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Loader2, Save, ArrowLeft, CheckCircle, XCircle } from "lucide-react";
+import { useAdminLang } from "@/context/AdminLanguageContext";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -64,6 +64,7 @@ function serializeBodyArray(text: string): string {
 
 export default function BlogArticleForm({ defaultValues, mode }: BlogArticleFormProps) {
   const router = useRouter();
+  const { adminLang } = useAdminLang();
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -154,7 +155,7 @@ export default function BlogArticleForm({ defaultValues, mode }: BlogArticleForm
   const isLoading = status === "loading";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-6xl">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Header bar */}
       <div className="flex items-center justify-between">
         <Link
@@ -286,44 +287,44 @@ export default function BlogArticleForm({ defaultValues, mode }: BlogArticleForm
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-semibold text-gray-700">Date & Read Time</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* English side */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="secondary" className="text-xs">EN</Badge>
-              <span className="text-xs text-gray-500 font-medium">English</span>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
+        <CardContent className="space-y-4">
+          {adminLang === "en" ? (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="day">Day</Label>
+                  <Input id="day" placeholder="15" {...register("day")} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="monthEn">Month</Label>
+                  <Input id="monthEn" placeholder="January" {...register("monthEn")} />
+                </div>
+              </div>
               <div className="space-y-1.5">
-                <Label htmlFor="day">Day</Label>
+                <Label htmlFor="readTimeEn">Read Time</Label>
+                <Input id="readTimeEn" placeholder="5 min read" {...register("readTimeEn")} />
+              </div>
+              <input type="hidden" {...register("monthAr")} />
+              <input type="hidden" {...register("readTimeAr")} />
+            </div>
+          ) : (
+            <div className="space-y-4" dir="rtl">
+              <div className="space-y-1.5">
+                <Label htmlFor="day">اليوم</Label>
                 <Input id="day" placeholder="15" {...register("day")} />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="monthEn">Month</Label>
-                <Input id="monthEn" placeholder="January" {...register("monthEn")} />
+                <Label htmlFor="monthAr">الشهر</Label>
+                <Input id="monthAr" dir="rtl" placeholder="يناير" {...register("monthAr")} />
               </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="readTimeAr">وقت القراءة</Label>
+                <Input id="readTimeAr" dir="rtl" placeholder="5 دقائق قراءة" {...register("readTimeAr")} />
+              </div>
+              <input type="hidden" {...register("monthEn")} />
+              <input type="hidden" {...register("readTimeEn")} />
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="readTimeEn">Read Time</Label>
-              <Input id="readTimeEn" placeholder="5 min read" {...register("readTimeEn")} />
-            </div>
-          </div>
-
-          {/* Arabic side */}
-          <div className="space-y-4" dir="rtl">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="outline" className="text-xs">AR</Badge>
-              <span className="text-xs text-gray-500 font-medium">العربية</span>
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="monthAr">الشهر</Label>
-              <Input id="monthAr" placeholder="يناير" {...register("monthAr")} />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="readTimeAr">وقت القراءة</Label>
-              <Input id="readTimeAr" placeholder="5 دقائق قراءة" {...register("readTimeAr")} />
-            </div>
-          </div>
+          )}
         </CardContent>
       </Card>
 
@@ -332,44 +333,41 @@ export default function BlogArticleForm({ defaultValues, mode }: BlogArticleForm
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-semibold text-gray-700">Title</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* EN */}
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="secondary" className="text-xs">EN</Badge>
+        <CardContent>
+          {adminLang === "en" ? (
+            <div className="space-y-1.5">
+              <Label htmlFor="titleEn">
+                Title (English) <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="titleEn"
+                placeholder="Article title in English"
+                {...register("titleEn", { required: "English title is required" })}
+                className={errors.titleEn ? "border-red-400" : ""}
+              />
+              {errors.titleEn && (
+                <p className="text-xs text-red-500">{errors.titleEn.message}</p>
+              )}
+              <input type="hidden" {...register("titleAr")} />
             </div>
-            <Label htmlFor="titleEn">
-              Title (English) <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="titleEn"
-              placeholder="Article title in English"
-              {...register("titleEn", { required: "English title is required" })}
-              className={errors.titleEn ? "border-red-400" : ""}
-            />
-            {errors.titleEn && (
-              <p className="text-xs text-red-500">{errors.titleEn.message}</p>
-            )}
-          </div>
-
-          {/* AR */}
-          <div className="space-y-1.5" dir="rtl">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="outline" className="text-xs">AR</Badge>
+          ) : (
+            <div className="space-y-1.5" dir="rtl">
+              <Label htmlFor="titleAr">
+                عنوان المقال <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="titleAr"
+                dir="rtl"
+                placeholder="عنوان المقال بالعربية"
+                {...register("titleAr", { required: "Arabic title is required" })}
+                className={errors.titleAr ? "border-red-400" : ""}
+              />
+              {errors.titleAr && (
+                <p className="text-xs text-red-500">{errors.titleAr.message}</p>
+              )}
+              <input type="hidden" {...register("titleEn")} />
             </div>
-            <Label htmlFor="titleAr">
-              عنوان المقال <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="titleAr"
-              placeholder="عنوان المقال بالعربية"
-              {...register("titleAr", { required: "Arabic title is required" })}
-              className={errors.titleAr ? "border-red-400" : ""}
-            />
-            {errors.titleAr && (
-              <p className="text-xs text-red-500">{errors.titleAr.message}</p>
-            )}
-          </div>
+          )}
         </CardContent>
       </Card>
 
@@ -378,34 +376,31 @@ export default function BlogArticleForm({ defaultValues, mode }: BlogArticleForm
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-semibold text-gray-700">Excerpt</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* EN */}
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="secondary" className="text-xs">EN</Badge>
+        <CardContent>
+          {adminLang === "en" ? (
+            <div className="space-y-1.5">
+              <Label htmlFor="excerptEn">Excerpt (English)</Label>
+              <Textarea
+                id="excerptEn"
+                placeholder="Short summary shown on listing page..."
+                rows={3}
+                {...register("excerptEn")}
+              />
+              <input type="hidden" {...register("excerptAr")} />
             </div>
-            <Label htmlFor="excerptEn">Excerpt (English)</Label>
-            <Textarea
-              id="excerptEn"
-              placeholder="Short summary shown on listing page..."
-              rows={3}
-              {...register("excerptEn")}
-            />
-          </div>
-
-          {/* AR */}
-          <div className="space-y-1.5" dir="rtl">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="outline" className="text-xs">AR</Badge>
+          ) : (
+            <div className="space-y-1.5" dir="rtl">
+              <Label htmlFor="excerptAr">ملخص المقال</Label>
+              <Textarea
+                id="excerptAr"
+                dir="rtl"
+                placeholder="ملخص قصير يظهر في صفحة القائمة..."
+                rows={3}
+                {...register("excerptAr")}
+              />
+              <input type="hidden" {...register("excerptEn")} />
             </div>
-            <Label htmlFor="excerptAr">ملخص المقال</Label>
-            <Textarea
-              id="excerptAr"
-              placeholder="ملخص قصير يظهر في صفحة القائمة..."
-              rows={3}
-              {...register("excerptAr")}
-            />
-          </div>
+          )}
         </CardContent>
       </Card>
 
@@ -417,36 +412,33 @@ export default function BlogArticleForm({ defaultValues, mode }: BlogArticleForm
             Each paragraph is separated by a blank line. The content is stored as a JSON array of paragraphs.
           </p>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* EN */}
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="secondary" className="text-xs">EN</Badge>
+        <CardContent>
+          {adminLang === "en" ? (
+            <div className="space-y-1.5">
+              <Label htmlFor="bodyEn">Body (English)</Label>
+              <Textarea
+                id="bodyEn"
+                placeholder={"First paragraph...\n\nSecond paragraph...\n\nThird paragraph..."}
+                rows={14}
+                className="font-mono text-xs leading-relaxed"
+                {...register("bodyEn")}
+              />
+              <input type="hidden" {...register("bodyAr")} />
             </div>
-            <Label htmlFor="bodyEn">Body (English)</Label>
-            <Textarea
-              id="bodyEn"
-              placeholder={"First paragraph...\n\nSecond paragraph...\n\nThird paragraph..."}
-              rows={14}
-              className="font-mono text-xs leading-relaxed"
-              {...register("bodyEn")}
-            />
-          </div>
-
-          {/* AR */}
-          <div className="space-y-1.5" dir="rtl">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="outline" className="text-xs">AR</Badge>
+          ) : (
+            <div className="space-y-1.5" dir="rtl">
+              <Label htmlFor="bodyAr">محتوى المقال</Label>
+              <Textarea
+                id="bodyAr"
+                dir="rtl"
+                placeholder={"الفقرة الأولى...\n\nالفقرة الثانية...\n\nالفقرة الثالثة..."}
+                rows={14}
+                className="font-mono text-xs leading-relaxed"
+                {...register("bodyAr")}
+              />
+              <input type="hidden" {...register("bodyEn")} />
             </div>
-            <Label htmlFor="bodyAr">محتوى المقال</Label>
-            <Textarea
-              id="bodyAr"
-              placeholder={"الفقرة الأولى...\n\nالفقرة الثانية...\n\nالفقرة الثالثة..."}
-              rows={14}
-              className="font-mono text-xs leading-relaxed"
-              {...register("bodyAr")}
-            />
-          </div>
+          )}
         </CardContent>
       </Card>
 

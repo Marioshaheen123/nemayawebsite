@@ -101,8 +101,8 @@ export default function TradingPlatformsPage({
       </section>
 
       {/* Main Content */}
-      <section className="bg-white py-[40px] md:py-[64px] xl:py-[80px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
-        <div className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
+      <section className="bg-white py-[40px] md:py-[64px] xl:py-[80px]">
+        <div className="max-w-7xl mx-auto px-6">
           {isAr ? (
             /* Arabic: Content LEFT, Image RIGHT */
             <div className="flex flex-col lg:flex-row items-center gap-[24px] lg:gap-[48px]">

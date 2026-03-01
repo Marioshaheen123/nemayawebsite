@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useAdminLang } from "@/context/AdminLanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,6 +26,8 @@ interface LegalPageEditorProps {
 }
 
 export default function LegalPageEditor({ pageType, pageTitle }: LegalPageEditorProps) {
+  const { adminLang } = useAdminLang();
+  const isAr = adminLang === "ar";
   const [sections, setSections] = useState<LegalSection[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -224,17 +227,8 @@ export default function LegalPageEditor({ pageType, pageTitle }: LegalPageEditor
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {/* Titles */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor={`titleEn-${section.id}`}>Title (English)</Label>
-                    <Input
-                      id={`titleEn-${section.id}`}
-                      value={section.titleEn}
-                      onChange={(e) => updateSection(section.id, "titleEn", e.target.value)}
-                      placeholder="Section title in English"
-                    />
-                  </div>
+                {/* Title */}
+                {isAr ? (
                   <div className="space-y-2">
                     <Label htmlFor={`titleAr-${section.id}`}>Title (Arabic)</Label>
                     <Input
@@ -245,28 +239,20 @@ export default function LegalPageEditor({ pageType, pageTitle }: LegalPageEditor
                       dir="rtl"
                     />
                   </div>
-                </div>
-
-                {/* Paragraphs */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                ) : (
                   <div className="space-y-2">
-                    <Label htmlFor={`paragraphsEn-${section.id}`}>
-                      Paragraphs (English) — one per line
-                    </Label>
-                    <Textarea
-                      id={`paragraphsEn-${section.id}`}
-                      value={parseJsonToLines(section.paragraphsEn)}
-                      onChange={(e) =>
-                        updateSection(
-                          section.id,
-                          "paragraphsEn",
-                          JSON.stringify(e.target.value.split("\n").filter(Boolean))
-                        )
-                      }
-                      placeholder="Enter each paragraph on a new line..."
-                      className="min-h-[140px] resize-y"
+                    <Label htmlFor={`titleEn-${section.id}`}>Title (English)</Label>
+                    <Input
+                      id={`titleEn-${section.id}`}
+                      value={section.titleEn}
+                      onChange={(e) => updateSection(section.id, "titleEn", e.target.value)}
+                      placeholder="Section title in English"
                     />
                   </div>
+                )}
+
+                {/* Paragraphs */}
+                {isAr ? (
                   <div className="space-y-2">
                     <Label htmlFor={`paragraphsAr-${section.id}`}>
                       Paragraphs (Arabic) — one per line
@@ -286,7 +272,26 @@ export default function LegalPageEditor({ pageType, pageTitle }: LegalPageEditor
                       className="min-h-[140px] resize-y"
                     />
                   </div>
-                </div>
+                ) : (
+                  <div className="space-y-2">
+                    <Label htmlFor={`paragraphsEn-${section.id}`}>
+                      Paragraphs (English) — one per line
+                    </Label>
+                    <Textarea
+                      id={`paragraphsEn-${section.id}`}
+                      value={parseJsonToLines(section.paragraphsEn)}
+                      onChange={(e) =>
+                        updateSection(
+                          section.id,
+                          "paragraphsEn",
+                          JSON.stringify(e.target.value.split("\n").filter(Boolean))
+                        )
+                      }
+                      placeholder="Enter each paragraph on a new line..."
+                      className="min-h-[140px] resize-y"
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}

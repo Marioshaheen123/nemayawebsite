@@ -40,8 +40,8 @@ export default function HowItWorks({ howItWorksContent, howItWorksBadge, howItWo
         className="object-cover"
       />
 
-      <div className="relative z-10 w-full py-[60px] px-3 md:py-[120px] md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
-        <div className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
+      <div className="relative z-10 w-full py-[60px] px-3 md:py-[120px]">
+        <div className="max-w-7xl mx-auto px-6">
           {/* Desktop layout */}
           <div className="hidden md:flex items-center gap-[60px] xl:gap-[80px]">
             {/* Person image */}

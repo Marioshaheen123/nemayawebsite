@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { useLang } from "@/context/LanguageContext";
+import { useUserAuth } from "@/context/UserAuthContext";
 
 interface HeaderProps {
   headerNavItems: any;
@@ -14,6 +16,7 @@ export default function Header({ headerNavItems, headerCta }: HeaderProps) {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLLIElement | null>(null);
   const { lang, toggleLang } = useLang();
+  const { user, isLoggedIn } = useUserAuth();
   // Filter out items that have children with actual entries, and strip empty children arrays
   const rawItems = headerNavItems[lang] || [];
   const items = rawItems.map((item: any) => ({
@@ -38,7 +41,7 @@ export default function Header({ headerNavItems, headerCta }: HeaderProps) {
       <nav className="bg-[#001005] w-full px-4 md:px-[50px] xl:px-[80px] 2xl:px-[120px] flex items-center h-[69px] md:h-[100px] xl:h-[110px]">
         {/* Logo */}
         <a href="/" className="flex items-center gap-[7px] shrink-0">
-          <Image src="/images/nemayalogo.png" alt="Namaya for Investment" width={260} height={60} className="brightness-0 invert w-[130px] md:w-[225px] xl:w-[260px] h-auto" />
+          <Image src="/images/nemayalogo.png" alt="Namaya for Investment" width={260} height={60} className="w-[130px] md:w-[225px] xl:w-[260px] h-auto" />
         </a>
 
         <div className="flex-1" />
@@ -102,28 +105,50 @@ export default function Header({ headerNavItems, headerCta }: HeaderProps) {
             </svg>
             {lang === "en" ? "العربية" : "EN"}
           </button>
-          <a
-            href="/register"
-            className="rounded-full px-[24px] py-[10px] text-white text-[13px] font-semibold border border-white/20 hover:bg-white/10 transition-all"
-          >
-            {buttons.signup}
-          </a>
-          <a
-            href="/login"
-            className="rounded-full px-[24px] py-[10px] bg-[#12953d] text-white text-[13px] font-semibold hover:bg-[#0e7a31] transition-all"
-          >
-            {buttons.login}
-          </a>
+          {isLoggedIn && user ? (
+            <Link
+              href="/personal-area"
+              className="flex items-center gap-[10px] rounded-full px-[14px] py-[6px] bg-white/10 hover:bg-white/20 transition-all"
+            >
+              <div className="w-[32px] h-[32px] rounded-full bg-[#12953d] flex items-center justify-center text-white text-[13px] font-semibold">
+                {user.firstName[0]}{user.lastName[0]}
+              </div>
+              <span className="text-white text-[13px] font-medium">
+                {user.firstName} {user.lastName}
+              </span>
+            </Link>
+          ) : (
+            <>
+              <a
+                href="/register"
+                className="rounded-full px-[24px] py-[10px] text-white text-[13px] font-semibold border border-white/20 hover:bg-white/10 transition-all"
+              >
+                {buttons.signup}
+              </a>
+              <a
+                href="/login"
+                className="rounded-full px-[24px] py-[10px] bg-[#12953d] text-white text-[13px] font-semibold hover:bg-[#0e7a31] transition-all"
+              >
+                {buttons.login}
+              </a>
+            </>
+          )}
         </div>
 
         {/* Mobile CTA + Menu */}
         <div className="flex lg:hidden items-center gap-3">
-          <a
-            href="/login"
-            className="bg-[#12953d] rounded-[5px] px-3 py-[6px] text-white text-[10px] font-semibold leading-[15px] capitalize"
-          >
-            {buttons.login}
-          </a>
+          {isLoggedIn && user ? (
+            <Link href="/personal-area" className="w-[30px] h-[30px] rounded-full bg-[#12953d] flex items-center justify-center text-white text-[10px] font-semibold">
+              {user.firstName[0]}{user.lastName[0]}
+            </Link>
+          ) : (
+            <a
+              href="/login"
+              className="bg-[#12953d] rounded-[5px] px-3 py-[6px] text-white text-[10px] font-semibold leading-[15px] capitalize"
+            >
+              {buttons.login}
+            </a>
+          )}
           <button
             className="flex flex-col gap-[5px] p-2"
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -190,12 +215,23 @@ export default function Header({ headerNavItems, headerCta }: HeaderProps) {
               </svg>
               {lang === "en" ? "العربية" : "EN"}
             </button>
-            <a href="/register" className="rounded-full px-6 py-3 text-white text-sm font-semibold border border-white/20 hover:bg-white/10 transition-all">
-              {buttons.signup}
-            </a>
-            <a href="/login" className="rounded-full px-6 py-3 bg-[#12953d] text-white text-sm font-semibold hover:bg-[#0e7a31] transition-all">
-              {buttons.login}
-            </a>
+            {isLoggedIn && user ? (
+              <Link href="/personal-area" className="flex items-center gap-2 rounded-full px-6 py-3 bg-[#12953d] text-white text-sm font-semibold hover:bg-[#0e7a31] transition-all">
+                <div className="w-[24px] h-[24px] rounded-full bg-white/20 flex items-center justify-center text-[10px]">
+                  {user.firstName[0]}{user.lastName[0]}
+                </div>
+                {user.firstName} {user.lastName}
+              </Link>
+            ) : (
+              <>
+                <a href="/register" className="rounded-full px-6 py-3 text-white text-sm font-semibold border border-white/20 hover:bg-white/10 transition-all">
+                  {buttons.signup}
+                </a>
+                <a href="/login" className="rounded-full px-6 py-3 bg-[#12953d] text-white text-sm font-semibold hover:bg-[#0e7a31] transition-all">
+                  {buttons.login}
+                </a>
+              </>
+            )}
           </div>
         </div>
       )}

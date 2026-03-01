@@ -27,7 +27,7 @@ export default function Footer({ footerQuickLinks, footerSupportLinks, footerSoc
         className="object-cover object-top"
       />
 
-      <div className="relative z-10 max-w-[1440px] 2xl:max-w-[1640px] mx-auto px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
         {/* Main footer content */}
         <div
           className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 pt-[50px] md:pt-[80px] pb-[50px] md:pb-[80px]"

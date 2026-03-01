@@ -22,7 +22,7 @@ export default function PageHeroBanner({ title, subtitle }: PageHeroBannerProps)
       </div>
       <div
         dir={isAr ? "rtl" : undefined}
-        className={`relative px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px] py-[30px] ${
+        className={`relative max-w-7xl mx-auto px-6 py-[30px] ${
           subtitle ? "md:py-[50px]" : "md:py-[40px]"
         }`}
       >

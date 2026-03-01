@@ -193,7 +193,7 @@ export default function VideoForm({ initial }: VideoFormProps) {
   };
 
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="space-y-6">
       {/* Back button + title */}
       <div className="flex items-center gap-4">
         <Button

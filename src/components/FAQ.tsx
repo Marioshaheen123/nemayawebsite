@@ -21,12 +21,12 @@ export default function FAQ({ homepageFaqItems, homepageFaqHeading, homepageFaqB
   const h = homepageFaqHeading[lang];
 
   return (
-    <section className="min-h-screen-safe flex items-center py-[60px] px-4 md:py-[80px] md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
-      <div className="w-full max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
+    <section className="min-h-screen-safe flex items-center py-[60px] px-4 md:py-[80px]">
+      <div className="w-full max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[40px]">
           <SectionBadge label={homepageFaqBadge.label} labelAr={homepageFaqBadge.labelAr} />
-          <h2 className="section-heading-mobile text-[25px] leading-[32.5px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px] max-w-[664px] xl:max-w-[750px] mx-auto">
+          <h2 className="section-heading-mobile text-[25px] leading-[32.5px] md:text-[32px] md:leading-[40px] xl:text-[40px] xl:leading-[48px] text-[#0e314c] mt-[10px] max-w-[600px] xl:max-w-[680px] mx-auto">
             {h.before}
             <span className="font-bold">{h.bold}</span>
           </h2>
@@ -34,13 +34,13 @@ export default function FAQ({ homepageFaqItems, homepageFaqHeading, homepageFaqB
 
         {/* FAQ Grid */}
         <div
-          className="p-4 md:p-[30px] xl:p-[40px] rounded-[25px]"
+          className="p-4 md:p-[24px] xl:p-[32px] rounded-[22px]"
           style={{
             backgroundImage:
               "linear-gradient(181deg, rgba(18, 149, 61, 0) 38%, rgb(248, 248, 248) 80%)",
           }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
             {/* Left column */}
             <div className="flex flex-col gap-6">
               {leftFaqs.map((faq: any, i: number) => (
@@ -91,7 +91,7 @@ function FAQItem({
 }) {
   return (
     <div
-      className={`bg-white border rounded-[25px] p-[25px] transition-all ${
+      className={`bg-white border rounded-[20px] md:rounded-[22px] p-[25px] md:p-[20px] xl:p-[24px] transition-all ${
         isOpen ? "border-[#12953d]" : "border-[#cacceb]"
       }`}
     >
@@ -99,16 +99,16 @@ function FAQItem({
         onClick={onClick}
         className="w-full flex items-center gap-4 text-left rtl:text-right"
       >
-        <span className="flex-1 text-[#0e314c] text-[20px] xl:text-[24px] font-semibold leading-[24px] xl:leading-[28px]">
+        <span className="flex-1 text-[#0e314c] text-[20px] md:text-[16px] xl:text-[18px] font-semibold leading-[24px] md:leading-[22px] xl:leading-[24px]">
           {question}
         </span>
         <div
           className={`w-[44px] h-[44px] rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
-            isOpen ? "bg-[#0e314c] rotate-45" : "bg-[#12953d] rotate-0"
+            isOpen ? "bg-[#0e314c] rotate-180" : "bg-[#12953d] rotate-0"
           }`}
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M10 4V16M4 10H16" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M5 7.5L10 12.5L15 7.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       </button>

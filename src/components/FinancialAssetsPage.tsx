@@ -30,57 +30,47 @@ export default function FinancialAssetsPage({
       <PageHeroBanner title={heroTitle[lang]} subtitle={heroSubtitle[lang]} />
 
       {/* Asset Cards Grid */}
-      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px] px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
+      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px]">
         <div
           dir={isAr ? "rtl" : undefined}
-          className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto"
+          className="max-w-7xl mx-auto px-6"
         >
-          <div className="flex flex-col gap-[20px] md:gap-[24px]">
-            {data.map((card, idx) => (
+          <div className="flex flex-col gap-[24px]">
+            {data.map((card) => (
               <Link
                 key={card.slug}
                 href={`/financial-assets/${card.slug}`}
-                className={`group flex flex-col md:flex-row border border-[#cacceb] rounded-[20px] overflow-hidden hover:border-[#12953d] hover:shadow-[0_8px_30px_rgba(18,149,61,0.10)] transition-all duration-300 ${
-                  isAr && idx % 2 !== 0 ? "md:flex-row-reverse" : !isAr && idx % 2 !== 0 ? "md:flex-row-reverse" : ""
-                }`}
+                className="group relative flex flex-col md:flex-row bg-white rounded-[16px] shadow-[0_16px_48px_rgba(0,0,0,0.18)] overflow-hidden hover:shadow-[0_20px_56px_rgba(0,0,0,0.22)] transition-shadow duration-300"
               >
+                {/* Decorative inset border */}
+                <div className="hidden md:block absolute inset-[20px] border border-[#cacceb] rounded-[20px] pointer-events-none z-10" />
+
                 {/* Image */}
-                <div className="relative w-full md:w-[42%] lg:w-[38%] shrink-0 h-[220px] md:h-auto md:min-h-[240px]">
+                <div className="relative w-full md:w-[300px] shrink-0 h-[220px] md:h-auto md:min-h-[300px] overflow-hidden">
                   <Image
                     src={cardImages[card.slug]}
                     alt={card.headline}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="object-cover scale-[1.05] group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>
 
                 {/* Content */}
-                <div className="flex flex-col justify-center flex-1 p-[24px] md:p-[36px] lg:p-[44px]">
-                  <span className="inline-block w-fit px-[14px] py-[4px] bg-[#12953d] rounded-full text-white text-[12px] md:text-[13px] font-semibold mb-[14px]">
-                    {card.name}
-                  </span>
-                  <h3 className="text-[#0e314c] text-[22px] md:text-[26px] lg:text-[28px] font-bold leading-[1.3] mb-[12px]">
+                <div
+                  className={`flex flex-col justify-center flex-1 p-[24px] md:py-[41px] md:px-[48px] ${
+                    isAr ? "text-right" : "text-left"
+                  }`}
+                >
+                  <h3 className="text-[#0e314c] text-[18px] md:text-[20px] font-bold leading-[24px] mb-[10px]">
                     {card.headline}
                   </h3>
-                  <p className="text-[#6084a4] text-[14px] md:text-[15px] leading-[1.7] mb-[24px]">
+                  <p className="text-[#6084a4] text-[15px] md:text-[17px] leading-[25.5px] mb-[20px]">
                     {card.description}
                   </p>
-                  <div className="group/btn inline-flex items-center gap-[10px] text-[#12953d] text-[15px] font-semibold">
-                    <span>{exploreLabel[lang]}</span>
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className={`group-hover:translate-x-1 transition-transform duration-300 ${isAr ? "rotate-180 group-hover:-translate-x-1" : ""}`}
-                    >
-                      <path d="M5 12h14" />
-                      <path d="M12 5l7 7-7 7" />
-                    </svg>
+                  <div className={`flex ${isAr ? "justify-end" : "justify-start"}`}>
+                    <span className="inline-flex items-center gap-[4px] bg-[#12953d] text-white text-[14px] md:text-[16px] leading-[24px] px-[24px] py-[8px] rounded-full group-hover:bg-[#0e7a31] transition-colors duration-300">
+                      {exploreLabel[lang]} {card.name}
+                    </span>
                   </div>
                 </div>
               </Link>

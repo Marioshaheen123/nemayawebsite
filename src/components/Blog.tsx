@@ -61,7 +61,7 @@ export default function Blog({ blogSectionData, blogArticles }: BlogProps) {
 
       {/* Content */}
       <div
-        className={`border border-[#cacceb] border-t-0 rounded-b-[25px] flex flex-col px-[30px] pb-[24px] ${
+        className={`border border-[#cacceb] border-t-0 rounded-b-[25px] flex flex-col px-[20px] md:px-[24px] pb-[20px] md:pb-[20px] ${
           isAr ? "text-right" : ""
         }`}
       >
@@ -72,9 +72,9 @@ export default function Blog({ blogSectionData, blogArticles }: BlogProps) {
           }`}
         >
           <div className="relative -mt-[62px]">
-            <div className="bg-[#12953d] rounded-[15px] overflow-hidden w-[94px]">
-              <div className="flex flex-col items-center p-[10px]">
-                <span className="text-white text-[40px] font-bold leading-[40px]">
+            <div className="bg-[#12953d] rounded-[12px] md:rounded-[13px] overflow-hidden w-[80px] md:w-[82px]">
+              <div className="flex flex-col items-center p-[8px] md:p-[9px]">
+                <span className="text-white text-[34px] md:text-[32px] font-bold leading-[34px] md:leading-[32px]">
                   {article.day}
                 </span>
               </div>
@@ -91,12 +91,12 @@ export default function Blog({ blogSectionData, blogArticles }: BlogProps) {
         </div>
 
         {/* Title */}
-        <h3 className="text-[#0e314c] text-[20px] xl:text-[24px] leading-[26px] xl:leading-[30px] mt-[14px] line-clamp-3">
+        <h3 className="text-[#0e314c] text-[20px] md:text-[17px] xl:text-[19px] leading-[26px] md:leading-[23px] xl:leading-[25px] mt-[12px] line-clamp-3">
           {article.title}
         </h3>
 
         {/* Excerpt */}
-        <p className="text-[#6084a4] text-[14px] xl:text-[15px] leading-[22px] xl:leading-[24px] mt-[10px] line-clamp-3">
+        <p className="text-[#6084a4] text-[14px] md:text-[13px] xl:text-[14px] leading-[22px] md:leading-[20px] xl:leading-[22px] mt-[8px] line-clamp-3">
           {article.excerpt}
         </p>
 
@@ -112,12 +112,12 @@ export default function Blog({ blogSectionData, blogArticles }: BlogProps) {
   );
 
   return (
-    <section className="min-h-screen-safe flex items-center py-[60px] px-3 md:py-[80px] md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
-      <div className="w-full max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
+    <section className="min-h-screen-safe flex items-center py-[60px] px-3 md:py-[80px]">
+      <div className="w-full max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[40px]">
           <SectionBadge label={blogSectionData.badge.label} labelAr={blogSectionData.badge.labelAr} />
-          <h2 className="section-heading-mobile text-[25px] leading-[32.5px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[10px]">
+          <h2 className="section-heading-mobile text-[25px] leading-[32.5px] md:text-[32px] md:leading-[40px] xl:text-[40px] xl:leading-[48px] text-[#0e314c] mt-[10px]">
             {h.before}
             <span className="font-bold">{h.bold}</span>
           </h2>

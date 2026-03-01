@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useAdminLang } from "@/context/AdminLanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -42,6 +43,8 @@ interface IslamicRulingSection {
 }
 
 export default function IslamicRulingsEditor() {
+  const { adminLang } = useAdminLang();
+  const isAr = adminLang === "ar";
   const [sections, setSections] = useState<IslamicRulingSection[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
@@ -317,8 +320,8 @@ export default function IslamicRulingsEditor() {
                       ) : (
                         <ChevronRight className="w-5 h-5 text-gray-400 shrink-0" />
                       )}
-                      <CardTitle className="text-base font-semibold text-gray-800">
-                        {section.nameEn || "Untitled Section"}
+                      <CardTitle className="text-base font-semibold text-gray-800" dir={isAr ? "rtl" : undefined}>
+                        {(isAr ? section.nameAr : section.nameEn) || "Untitled Section"}
                       </CardTitle>
                       <Badge variant="secondary" className="ml-2">
                         {section.items.length} ruling{section.items.length !== 1 ? "s" : ""}
@@ -352,25 +355,28 @@ export default function IslamicRulingsEditor() {
 
                 {isExpanded && (
                   <CardContent className="pt-4 space-y-4">
-                    {/* Section name fields */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4 border-b border-gray-100">
-                      <div className="space-y-2">
-                        <Label>Section Name (English)</Label>
-                        <Input
-                          value={section.nameEn}
-                          onChange={(e) => updateSection(section.id, "nameEn", e.target.value)}
-                          placeholder="Section name in English"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Section Name (Arabic)</Label>
-                        <Input
-                          value={section.nameAr}
-                          onChange={(e) => updateSection(section.id, "nameAr", e.target.value)}
-                          placeholder="اسم القسم بالعربية"
-                          dir="rtl"
-                        />
-                      </div>
+                    {/* Section name field */}
+                    <div className="pb-4 border-b border-gray-100">
+                      {isAr ? (
+                        <div className="space-y-2">
+                          <Label>Section Name (Arabic)</Label>
+                          <Input
+                            value={section.nameAr}
+                            onChange={(e) => updateSection(section.id, "nameAr", e.target.value)}
+                            placeholder="اسم القسم بالعربية"
+                            dir="rtl"
+                          />
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <Label>Section Name (English)</Label>
+                          <Input
+                            value={section.nameEn}
+                            onChange={(e) => updateSection(section.id, "nameEn", e.target.value)}
+                            placeholder="Section name in English"
+                          />
+                        </div>
+                      )}
                     </div>
 
                     {/* Items */}
@@ -410,8 +416,8 @@ export default function IslamicRulingsEditor() {
                                     ) : (
                                       <ChevronRight className="w-4 h-4 text-gray-400" />
                                     )}
-                                    <span className="text-sm font-medium text-gray-700">
-                                      {item.titleEn || "Untitled Ruling"}
+                                    <span className="text-sm font-medium text-gray-700" dir={isAr ? "rtl" : undefined}>
+                                      {(isAr ? item.titleAr : item.titleEn) || "Untitled Ruling"}
                                     </span>
                                   </button>
                                   <div className="flex gap-2">
@@ -443,18 +449,7 @@ export default function IslamicRulingsEditor() {
                                 {isItemExpanded && (
                                   <div className="p-4 space-y-4">
                                     {/* Title */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                      <div className="space-y-1.5">
-                                        <Label className="text-xs">Title (English)</Label>
-                                        <Input
-                                          value={item.titleEn}
-                                          onChange={(e) =>
-                                            updateItem(section.id, item.id, "titleEn", e.target.value)
-                                          }
-                                          placeholder="Ruling title in English"
-                                          className="text-sm"
-                                        />
-                                      </div>
+                                    {isAr ? (
                                       <div className="space-y-1.5">
                                         <Label className="text-xs">Title (Arabic)</Label>
                                         <Input
@@ -467,21 +462,22 @@ export default function IslamicRulingsEditor() {
                                           className="text-sm"
                                         />
                                       </div>
-                                    </div>
-
-                                    {/* Question */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    ) : (
                                       <div className="space-y-1.5">
-                                        <Label className="text-xs">Question (English)</Label>
-                                        <Textarea
-                                          value={item.questionEn}
+                                        <Label className="text-xs">Title (English)</Label>
+                                        <Input
+                                          value={item.titleEn}
                                           onChange={(e) =>
-                                            updateItem(section.id, item.id, "questionEn", e.target.value)
+                                            updateItem(section.id, item.id, "titleEn", e.target.value)
                                           }
-                                          placeholder="Question text in English"
-                                          className="text-sm min-h-[80px] resize-y"
+                                          placeholder="Ruling title in English"
+                                          className="text-sm"
                                         />
                                       </div>
+                                    )}
+
+                                    {/* Question */}
+                                    {isAr ? (
                                       <div className="space-y-1.5">
                                         <Label className="text-xs">Question (Arabic)</Label>
                                         <Textarea
@@ -494,21 +490,22 @@ export default function IslamicRulingsEditor() {
                                           className="text-sm min-h-[80px] resize-y"
                                         />
                                       </div>
-                                    </div>
-
-                                    {/* Answer */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    ) : (
                                       <div className="space-y-1.5">
-                                        <Label className="text-xs">Answer (English)</Label>
+                                        <Label className="text-xs">Question (English)</Label>
                                         <Textarea
-                                          value={item.answerEn}
+                                          value={item.questionEn}
                                           onChange={(e) =>
-                                            updateItem(section.id, item.id, "answerEn", e.target.value)
+                                            updateItem(section.id, item.id, "questionEn", e.target.value)
                                           }
-                                          placeholder="Answer text in English"
-                                          className="text-sm min-h-[100px] resize-y"
+                                          placeholder="Question text in English"
+                                          className="text-sm min-h-[80px] resize-y"
                                         />
                                       </div>
+                                    )}
+
+                                    {/* Answer */}
+                                    {isAr ? (
                                       <div className="space-y-1.5">
                                         <Label className="text-xs">Answer (Arabic)</Label>
                                         <Textarea
@@ -521,21 +518,22 @@ export default function IslamicRulingsEditor() {
                                           className="text-sm min-h-[100px] resize-y"
                                         />
                                       </div>
-                                    </div>
-
-                                    {/* Mufti */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    ) : (
                                       <div className="space-y-1.5">
-                                        <Label className="text-xs">Mufti (English)</Label>
-                                        <Input
-                                          value={item.muftiEn}
+                                        <Label className="text-xs">Answer (English)</Label>
+                                        <Textarea
+                                          value={item.answerEn}
                                           onChange={(e) =>
-                                            updateItem(section.id, item.id, "muftiEn", e.target.value)
+                                            updateItem(section.id, item.id, "answerEn", e.target.value)
                                           }
-                                          placeholder="Mufti name in English"
-                                          className="text-sm"
+                                          placeholder="Answer text in English"
+                                          className="text-sm min-h-[100px] resize-y"
                                         />
                                       </div>
+                                    )}
+
+                                    {/* Mufti */}
+                                    {isAr ? (
                                       <div className="space-y-1.5">
                                         <Label className="text-xs">Mufti (Arabic)</Label>
                                         <Input
@@ -548,7 +546,19 @@ export default function IslamicRulingsEditor() {
                                           className="text-sm"
                                         />
                                       </div>
-                                    </div>
+                                    ) : (
+                                      <div className="space-y-1.5">
+                                        <Label className="text-xs">Mufti (English)</Label>
+                                        <Input
+                                          value={item.muftiEn}
+                                          onChange={(e) =>
+                                            updateItem(section.id, item.id, "muftiEn", e.target.value)
+                                          }
+                                          placeholder="Mufti name in English"
+                                          className="text-sm"
+                                        />
+                                      </div>
+                                    )}
 
                                     <div className="flex justify-end pt-1">
                                       <Button

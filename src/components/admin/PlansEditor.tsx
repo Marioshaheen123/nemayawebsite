@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useAdminLang } from "@/context/AdminLanguageContext";
 import {
   Plus,
   Pencil,
@@ -60,6 +61,7 @@ interface PlanFormProps {
 }
 
 function PlanForm({ initial, onSave, onCancel }: PlanFormProps) {
+  const { adminLang } = useAdminLang();
   const {
     register,
     handleSubmit,
@@ -91,88 +93,106 @@ function PlanForm({ initial, onSave, onCancel }: PlanFormProps) {
   return (
     <form onSubmit={handleSubmit(onSave)} className="space-y-5">
       {/* Name */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {adminLang === "en" ? (
         <div className="space-y-1.5">
           <Label>Plan Name (EN)</Label>
           <Input placeholder="Standard" {...field("nameEn")} />
           {errors.nameEn && <p className="text-red-500 text-xs">{errors.nameEn.message}</p>}
+          <input type="hidden" {...register("nameAr")} />
         </div>
-        <div className="space-y-1.5">
-          <Label>Plan Name (AR)</Label>
+      ) : (
+        <div className="space-y-1.5" dir="rtl">
+          <Label>اسم الخطة (AR)</Label>
           <Input dir="rtl" placeholder="قياسي" {...field("nameAr")} />
           {errors.nameAr && <p className="text-red-500 text-xs">{errors.nameAr.message}</p>}
+          <input type="hidden" {...register("nameEn")} />
         </div>
-      </div>
+      )}
 
       {/* Price */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {adminLang === "en" ? (
         <div className="space-y-1.5">
           <Label>Price (EN)</Label>
           <Input placeholder="$99" {...field("priceEn")} />
           {errors.priceEn && <p className="text-red-500 text-xs">{errors.priceEn.message}</p>}
+          <input type="hidden" {...register("priceAr")} />
         </div>
-        <div className="space-y-1.5">
-          <Label>Price (AR)</Label>
+      ) : (
+        <div className="space-y-1.5" dir="rtl">
+          <Label>السعر (AR)</Label>
           <Input dir="rtl" placeholder="٩٩$" {...field("priceAr")} />
           {errors.priceAr && <p className="text-red-500 text-xs">{errors.priceAr.message}</p>}
+          <input type="hidden" {...register("priceEn")} />
         </div>
-      </div>
+      )}
 
       {/* Period */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {adminLang === "en" ? (
         <div className="space-y-1.5">
           <Label>Period (EN)</Label>
           <Input placeholder="per month" {...field("periodEn")} />
           {errors.periodEn && <p className="text-red-500 text-xs">{errors.periodEn.message}</p>}
+          <input type="hidden" {...register("periodAr")} />
         </div>
-        <div className="space-y-1.5">
-          <Label>Period (AR)</Label>
+      ) : (
+        <div className="space-y-1.5" dir="rtl">
+          <Label>الفترة (AR)</Label>
           <Input dir="rtl" placeholder="في الشهر" {...field("periodAr")} />
           {errors.periodAr && <p className="text-red-500 text-xs">{errors.periodAr.message}</p>}
+          <input type="hidden" {...register("periodEn")} />
         </div>
-      </div>
+      )}
 
       {/* Description */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {adminLang === "en" ? (
         <div className="space-y-1.5">
           <Label>Description (EN)</Label>
           <Textarea rows={2} placeholder="Ideal for beginners..." {...field("descriptionEn")} />
           {errors.descriptionEn && <p className="text-red-500 text-xs">{errors.descriptionEn.message}</p>}
+          <input type="hidden" {...register("descriptionAr")} />
         </div>
-        <div className="space-y-1.5">
-          <Label>Description (AR)</Label>
+      ) : (
+        <div className="space-y-1.5" dir="rtl">
+          <Label>الوصف (AR)</Label>
           <Textarea rows={2} dir="rtl" placeholder="مثالي للمبتدئين..." {...field("descriptionAr")} />
           {errors.descriptionAr && <p className="text-red-500 text-xs">{errors.descriptionAr.message}</p>}
+          <input type="hidden" {...register("descriptionEn")} />
         </div>
-      </div>
+      )}
 
       {/* Features Label */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {adminLang === "en" ? (
         <div className="space-y-1.5">
           <Label>Features Label (EN)</Label>
           <Input placeholder="Features" {...field("featuresLabelEn")} />
           {errors.featuresLabelEn && <p className="text-red-500 text-xs">{errors.featuresLabelEn.message}</p>}
+          <input type="hidden" {...register("featuresLabelAr")} />
         </div>
-        <div className="space-y-1.5">
-          <Label>Features Label (AR)</Label>
+      ) : (
+        <div className="space-y-1.5" dir="rtl">
+          <Label>عنوان المميزات (AR)</Label>
           <Input dir="rtl" placeholder="المميزات" {...field("featuresLabelAr")} />
           {errors.featuresLabelAr && <p className="text-red-500 text-xs">{errors.featuresLabelAr.message}</p>}
+          <input type="hidden" {...register("featuresLabelEn")} />
         </div>
-      </div>
+      )}
 
       {/* CTA */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {adminLang === "en" ? (
         <div className="space-y-1.5">
           <Label>CTA Text (EN)</Label>
           <Input placeholder="Get Started" {...field("ctaEn")} />
           {errors.ctaEn && <p className="text-red-500 text-xs">{errors.ctaEn.message}</p>}
+          <input type="hidden" {...register("ctaAr")} />
         </div>
-        <div className="space-y-1.5">
-          <Label>CTA Text (AR)</Label>
+      ) : (
+        <div className="space-y-1.5" dir="rtl">
+          <Label>نص الزر (AR)</Label>
           <Input dir="rtl" placeholder="ابدأ الآن" {...field("ctaAr")} />
           {errors.ctaAr && <p className="text-red-500 text-xs">{errors.ctaAr.message}</p>}
+          <input type="hidden" {...register("ctaEn")} />
         </div>
-      </div>
+      )}
 
       {/* Styling */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -233,6 +253,7 @@ interface FeaturesEditorProps {
 }
 
 function FeaturesEditor({ initial, onSaved }: FeaturesEditorProps) {
+  const { adminLang } = useAdminLang();
   const {
     register,
     control,
@@ -267,15 +288,24 @@ function FeaturesEditor({ initial, onSaved }: FeaturesEditorProps) {
       {fields.map((field, index) => (
         <div key={field.id} className="flex items-center gap-2">
           <GripVertical className="w-4 h-4 text-gray-300 shrink-0 cursor-grab" />
-          <Input
-            placeholder="Feature label (EN)"
-            {...register(`features.${index}.labelEn`, { required: true })}
-          />
-          <Input
-            dir="rtl"
-            placeholder="الميزة (AR)"
-            {...register(`features.${index}.labelAr`, { required: true })}
-          />
+          {adminLang === "en" ? (
+            <>
+              <Input
+                placeholder="Feature label (EN)"
+                {...register(`features.${index}.labelEn`, { required: true })}
+              />
+              <input type="hidden" {...register(`features.${index}.labelAr`)} />
+            </>
+          ) : (
+            <>
+              <Input
+                dir="rtl"
+                placeholder="الميزة (AR)"
+                {...register(`features.${index}.labelAr`, { required: true })}
+              />
+              <input type="hidden" {...register(`features.${index}.labelEn`)} />
+            </>
+          )}
           <div className="flex flex-col gap-0.5">
             <button
               type="button"
@@ -333,6 +363,7 @@ interface PlansEditorProps {
 }
 
 export default function PlansEditor({ initialPlans, initialFeatures }: PlansEditorProps) {
+  const { adminLang } = useAdminLang();
   const [plans, setPlans] = useState<Plan[]>(initialPlans);
   const [features, setFeatures] = useState<PlanFeature[]>(initialFeatures);
   const [addingPlan, setAddingPlan] = useState(false);
@@ -425,10 +456,9 @@ export default function PlansEditor({ initialPlans, initialFeatures }: PlansEdit
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <CardTitle className="text-lg">{plan.nameEn}</CardTitle>
-                    <p className="text-gray-500 text-sm mt-0.5" dir="rtl">
-                      {plan.nameAr}
-                    </p>
+                    <CardTitle className="text-lg" dir={adminLang === "ar" ? "rtl" : undefined}>
+                      {adminLang === "en" ? plan.nameEn : plan.nameAr}
+                    </CardTitle>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <Badge variant="secondary">#{plan.sortOrder}</Badge>
@@ -467,18 +497,29 @@ export default function PlansEditor({ initialPlans, initialFeatures }: PlansEdit
               {/* Summary when not editing */}
               {!isEditing && (
                 <CardContent className="pt-0">
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm" dir={adminLang === "ar" ? "rtl" : undefined}>
                     <div>
-                      <span className="text-gray-400 text-xs uppercase tracking-wide">Price</span>
-                      <p className="font-semibold">{plan.priceEn} <span className="text-gray-400 font-normal">{plan.periodEn}</span></p>
+                      <span className="text-gray-400 text-xs uppercase tracking-wide">
+                        {adminLang === "en" ? "Price" : "السعر"}
+                      </span>
+                      <p className="font-semibold">
+                        {adminLang === "en" ? plan.priceEn : plan.priceAr}{" "}
+                        <span className="text-gray-400 font-normal">
+                          {adminLang === "en" ? plan.periodEn : plan.periodAr}
+                        </span>
+                      </p>
                     </div>
                     <div>
                       <span className="text-gray-400 text-xs uppercase tracking-wide">CTA Style</span>
                       <p className="font-medium">{plan.ctaStyle}</p>
                     </div>
                     <div className="col-span-2">
-                      <span className="text-gray-400 text-xs uppercase tracking-wide">Description</span>
-                      <p className="text-gray-600 line-clamp-2">{plan.descriptionEn}</p>
+                      <span className="text-gray-400 text-xs uppercase tracking-wide">
+                        {adminLang === "en" ? "Description" : "الوصف"}
+                      </span>
+                      <p className="text-gray-600 line-clamp-2">
+                        {adminLang === "en" ? plan.descriptionEn : plan.descriptionAr}
+                      </p>
                     </div>
                   </div>
                 </CardContent>

@@ -83,7 +83,7 @@ export default function BenefitsCarousel({ carouselCards, carouselHeading, carou
   return (
     <section className="min-h-screen-safe flex flex-col justify-center py-[24px] md:py-[80px] overflow-hidden">
       {/* Header */}
-      <div className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto px-3 md:px-[52px] xl:px-[80px]">
+      <div className="max-w-7xl mx-auto px-6">
         <div className={`mb-[16px] md:mb-[40px] text-center ${isAr ? "md:text-right" : "md:text-left"}`}>
           <SectionBadge label={carouselBadge.label} labelAr={carouselBadge.labelAr} />
           <h2 className="text-[18px] leading-[24px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[8px] md:mt-[10px]">
@@ -94,7 +94,7 @@ export default function BenefitsCarousel({ carouselCards, carouselHeading, carou
       </div>
 
       {/* Carousel */}
-      <div ref={containerRef} className="max-w-[1535px] 2xl:max-w-[1735px] mx-auto px-3 md:px-[52px] xl:px-[80px]">
+      <div ref={containerRef} className="max-w-7xl mx-auto px-6">
         <div
           ref={trackRef}
           className="flex transition-transform duration-500 ease-in-out"

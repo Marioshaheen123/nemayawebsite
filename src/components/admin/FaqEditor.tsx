@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useAdminLang } from "@/context/AdminLanguageContext";
 import {
   ChevronDown,
   ChevronRight,
@@ -57,6 +58,7 @@ interface CategoryFormProps {
 }
 
 function CategoryForm({ initial, onSave, onCancel }: CategoryFormProps) {
+  const { adminLang } = useAdminLang();
   const {
     register,
     handleSubmit,
@@ -72,7 +74,7 @@ function CategoryForm({ initial, onSave, onCancel }: CategoryFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSave)} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {adminLang === "en" ? (
         <div className="space-y-1.5">
           <Label htmlFor="nameEn">Name (EN)</Label>
           <Input
@@ -83,9 +85,11 @@ function CategoryForm({ initial, onSave, onCancel }: CategoryFormProps) {
           {errors.nameEn && (
             <p className="text-red-500 text-xs">{errors.nameEn.message}</p>
           )}
+          <input type="hidden" {...register("nameAr")} />
         </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="nameAr">Name (AR)</Label>
+      ) : (
+        <div className="space-y-1.5" dir="rtl">
+          <Label htmlFor="nameAr">الاسم (AR)</Label>
           <Input
             id="nameAr"
             dir="rtl"
@@ -95,8 +99,9 @@ function CategoryForm({ initial, onSave, onCancel }: CategoryFormProps) {
           {errors.nameAr && (
             <p className="text-red-500 text-xs">{errors.nameAr.message}</p>
           )}
+          <input type="hidden" {...register("nameEn")} />
         </div>
-      </div>
+      )}
       <div className="flex items-center gap-6">
         <div className="space-y-1.5">
           <Label htmlFor="sortOrder">Sort Order</Label>
@@ -163,6 +168,7 @@ function ItemForm({
   onSave,
   onCancel,
 }: ItemFormProps) {
+  const { adminLang } = useAdminLang();
   const {
     register,
     handleSubmit,
@@ -180,52 +186,61 @@ function ItemForm({
 
   return (
     <form onSubmit={handleSubmit(onSave)} className="space-y-4 py-2">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <Label>Question (EN)</Label>
-          <Input
-            placeholder="What is...?"
-            {...register("questionEn", { required: "Required" })}
-          />
-          {errors.questionEn && (
-            <p className="text-red-500 text-xs">{errors.questionEn.message}</p>
-          )}
+      {adminLang === "en" ? (
+        <div className="space-y-4">
+          <div className="space-y-1.5">
+            <Label>Question (EN)</Label>
+            <Input
+              placeholder="What is...?"
+              {...register("questionEn", { required: "Required" })}
+            />
+            {errors.questionEn && (
+              <p className="text-red-500 text-xs">{errors.questionEn.message}</p>
+            )}
+          </div>
+          <div className="space-y-1.5">
+            <Label>Answer (EN)</Label>
+            <Textarea
+              rows={3}
+              placeholder="The answer in English..."
+              {...register("answerEn", { required: "Required" })}
+            />
+            {errors.answerEn && (
+              <p className="text-red-500 text-xs">{errors.answerEn.message}</p>
+            )}
+          </div>
+          <input type="hidden" {...register("questionAr")} />
+          <input type="hidden" {...register("answerAr")} />
         </div>
-        <div className="space-y-1.5">
-          <Label>Question (AR)</Label>
-          <Input
-            dir="rtl"
-            placeholder="ما هو...؟"
-            {...register("questionAr", { required: "Required" })}
-          />
-          {errors.questionAr && (
-            <p className="text-red-500 text-xs">{errors.questionAr.message}</p>
-          )}
+      ) : (
+        <div className="space-y-4" dir="rtl">
+          <div className="space-y-1.5">
+            <Label>السؤال (AR)</Label>
+            <Input
+              dir="rtl"
+              placeholder="ما هو...؟"
+              {...register("questionAr", { required: "Required" })}
+            />
+            {errors.questionAr && (
+              <p className="text-red-500 text-xs">{errors.questionAr.message}</p>
+            )}
+          </div>
+          <div className="space-y-1.5">
+            <Label>الإجابة (AR)</Label>
+            <Textarea
+              rows={3}
+              dir="rtl"
+              placeholder="الإجابة بالعربية..."
+              {...register("answerAr", { required: "Required" })}
+            />
+            {errors.answerAr && (
+              <p className="text-red-500 text-xs">{errors.answerAr.message}</p>
+            )}
+          </div>
+          <input type="hidden" {...register("questionEn")} />
+          <input type="hidden" {...register("answerEn")} />
         </div>
-        <div className="space-y-1.5">
-          <Label>Answer (EN)</Label>
-          <Textarea
-            rows={3}
-            placeholder="The answer in English..."
-            {...register("answerEn", { required: "Required" })}
-          />
-          {errors.answerEn && (
-            <p className="text-red-500 text-xs">{errors.answerEn.message}</p>
-          )}
-        </div>
-        <div className="space-y-1.5">
-          <Label>Answer (AR)</Label>
-          <Textarea
-            rows={3}
-            dir="rtl"
-            placeholder="الإجابة بالعربية..."
-            {...register("answerAr", { required: "Required" })}
-          />
-          {errors.answerAr && (
-            <p className="text-red-500 text-xs">{errors.answerAr.message}</p>
-          )}
-        </div>
-      </div>
+      )}
       <div className="flex items-end gap-4">
         <div className="space-y-1.5">
           <Label>Category</Label>
@@ -277,6 +292,7 @@ interface FaqEditorProps {
 }
 
 export default function FaqEditor({ initialCategories }: FaqEditorProps) {
+  const { adminLang } = useAdminLang();
   const [categories, setCategories] = useState<FaqCategory[]>(initialCategories);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
@@ -440,10 +456,7 @@ export default function FaqEditor({ initialCategories }: FaqEditorProps) {
                   <ChevronRight className="w-4 h-4 text-gray-400 shrink-0" />
                 )}
                 <span className="font-medium text-gray-800 truncate">
-                  {category.nameEn}
-                </span>
-                <span className="text-gray-400 text-sm truncate hidden sm:block">
-                  / {category.nameAr}
+                  {adminLang === "en" ? category.nameEn : category.nameAr}
                 </span>
                 <Badge variant="secondary" className="ml-1 shrink-0">
                   {category.questions.length} Q
@@ -521,15 +534,12 @@ export default function FaqEditor({ initialCategories }: FaqEditorProps) {
                         </div>
                       ) : (
                         <div className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50/50 group">
-                          <div className="flex-1 min-w-0">
+                          <div className="flex-1 min-w-0" dir={adminLang === "ar" ? "rtl" : undefined}>
                             <p className="font-medium text-gray-800 text-sm leading-snug">
-                              {item.questionEn}
+                              {adminLang === "en" ? item.questionEn : item.questionAr}
                             </p>
                             <p className="text-gray-500 text-xs mt-0.5 line-clamp-2">
-                              {item.answerEn}
-                            </p>
-                            <p className="text-gray-400 text-xs mt-1 dir-rtl text-right">
-                              {item.questionAr}
+                              {adminLang === "en" ? item.answerEn : item.answerAr}
                             </p>
                           </div>
                           <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">

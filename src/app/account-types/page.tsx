@@ -10,8 +10,8 @@ export default async function AccountTypes() {
     await Promise.all([
       getHeaderData(),
       getFooterData(),
-      getContentBlock("accountTypes.pageHeroTitle"),
-      getContentBlock("accountTypes.pageHeading"),
+      getContentBlock("pricing.accountTypesPageHeroTitle"),
+      getContentBlock("pricing.accountTypesPageHeading"),
       getPlansBilingual(),
     ]);
 

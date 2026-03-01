@@ -39,7 +39,7 @@ export default function VideosPage({
         <PageHeroBanner title={video.title} />
 
         {/* Video Detail Content */}
-        <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px] px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
+        <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px]">
           <div
             dir={isAr ? "rtl" : undefined}
             className="max-w-[840px] mx-auto"
@@ -194,10 +194,10 @@ export default function VideosPage({
         </section>
 
         {/* More Videos Section */}
-        <section className="bg-white pb-[60px] md:pb-[80px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
+        <section className="bg-white pb-[60px] md:pb-[80px]">
           <div
             dir={isAr ? "rtl" : undefined}
-            className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto"
+            className="max-w-7xl mx-auto px-6"
           >
             <h2 className="text-[#0e314c] text-[32px] md:text-[40px] font-normal leading-[48px] text-center mb-[40px]">
               {moreVideoLabel[lang]}
@@ -293,10 +293,10 @@ export default function VideosPage({
       <PageHeroBanner title={heroTitle[lang]} />
 
       {/* Video Grid */}
-      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
+      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px]">
         <div
           dir={isAr ? "rtl" : undefined}
-          className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto"
+          className="max-w-7xl mx-auto px-6"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[24px] md:gap-[30px]">
             {items.map((video: any, i: number) => (

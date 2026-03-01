@@ -81,7 +81,7 @@ export default function AboutPage({
         </div>
         <div
           dir={isAr ? "rtl" : undefined}
-          className="relative px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px] py-[30px] md:py-[50px] xl:py-[60px]"
+          className="relative max-w-7xl mx-auto px-6 py-[30px] md:py-[50px] xl:py-[60px]"
         >
           <h1 className="text-white text-[32px] md:text-[48px] xl:text-[60px] font-extrabold leading-[1.15] max-w-[600px]">
             {hero.title1}
@@ -95,10 +95,10 @@ export default function AboutPage({
       </section>
 
       {/* ===== REDEFINING INVESTMENT ===== */}
-      <section className="bg-white py-[50px] md:py-[70px] xl:py-[80px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
+      <section className="bg-white py-[50px] md:py-[70px] xl:py-[80px]">
         <div
           dir={isAr ? "rtl" : undefined}
-          className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto"
+          className="max-w-7xl mx-auto px-6"
         >
           <div className="text-center mb-[24px]">
             <SectionBadge label={redefiningBadge.label} labelAr={redefiningBadge.labelAr} />
@@ -144,10 +144,10 @@ export default function AboutPage({
       </section>
 
       {/* ===== VISION ===== */}
-      <section className="bg-[#f9f9f9] py-[50px] md:py-[70px] xl:py-[80px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
+      <section className="bg-[#f9f9f9] py-[50px] md:py-[70px] xl:py-[80px]">
         <div
           dir={isAr ? "rtl" : undefined}
-          className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto"
+          className="max-w-7xl mx-auto px-6"
         >
           <div className="text-center mb-[16px]">
             <SectionBadge label={visionBadge.label} labelAr={visionBadge.labelAr} />
@@ -185,8 +185,8 @@ export default function AboutPage({
       </section>
 
       {/* ===== MISSION ===== */}
-      <section className="bg-white py-[40px] md:py-[50px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
-        <div className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto text-center">
+      <section className="bg-white py-[40px] md:py-[50px]">
+        <div className="max-w-7xl mx-auto px-6 text-center">
           <h2
             dir={isAr ? "rtl" : undefined}
             className="text-[#0e314c] text-[22px] md:text-[32px] xl:text-[36px] leading-[1.3]"
@@ -197,8 +197,8 @@ export default function AboutPage({
       </section>
 
       {/* ===== VALUES ===== */}
-      <section className="bg-white pb-[50px] md:pb-[70px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
-        <div className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
+      <section className="bg-white pb-[50px] md:pb-[70px]">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-[24px]">
             <SectionBadge label={valuesBadge.label} labelAr={valuesBadge.labelAr} />
           </div>
@@ -244,10 +244,10 @@ export default function AboutPage({
       </section>
 
       {/* ===== SECURITY ===== */}
-      <section className="bg-white py-[50px] md:py-[70px] xl:py-[80px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
+      <section className="bg-white py-[50px] md:py-[70px] xl:py-[80px]">
         <div
           dir={isAr ? "rtl" : undefined}
-          className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto"
+          className="max-w-7xl mx-auto px-6"
         >
           <div className="text-center mb-[24px]">
             <SectionBadge
@@ -272,10 +272,10 @@ export default function AboutPage({
       </section>
 
       {/* ===== BRIDGING GLOBAL MARKETS ===== */}
-      <section className="bg-[#f9f9f9] py-[50px] md:py-[70px] xl:py-[80px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
+      <section className="bg-[#f9f9f9] py-[50px] md:py-[70px] xl:py-[80px]">
         <div
           dir={isAr ? "rtl" : undefined}
-          className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto"
+          className="max-w-7xl mx-auto px-6"
         >
           <div className="flex flex-col lg:flex-row items-center gap-[30px] lg:gap-[48px]">
             {/* Text */}
@@ -312,10 +312,10 @@ export default function AboutPage({
       </section>
 
       {/* ===== BLOG / WHAT'S NEW ===== */}
-      <section className="bg-white py-[50px] md:py-[70px] xl:py-[80px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
+      <section className="bg-white py-[50px] md:py-[70px] xl:py-[80px]">
         <div
           dir={isAr ? "rtl" : undefined}
-          className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto"
+          className="max-w-7xl mx-auto px-6"
         >
           <div className="text-center mb-[24px]">
             <SectionBadge label={blogSectionBadge.label} labelAr={blogSectionBadge.labelAr} />

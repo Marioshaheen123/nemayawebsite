@@ -72,7 +72,7 @@ export default function FinancialAssetDetailPage({
         </div>
         <div
           dir={isAr ? "rtl" : undefined}
-          className="relative px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px] py-[30px] md:py-[50px]"
+          className="relative max-w-7xl mx-auto px-6 py-[30px] md:py-[50px]"
         >
           <Link
             href="/financial-assets"
@@ -98,8 +98,8 @@ export default function FinancialAssetDetailPage({
       </section>
 
       {/* Instrument Table */}
-      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px] px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
-        <div dir={isAr ? "rtl" : undefined} className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
+      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px]">
+        <div dir={isAr ? "rtl" : undefined} className="max-w-7xl mx-auto px-6">
           <h2 className="text-[#0e314c] text-[28px] md:text-[36px] xl:text-[40px] font-bold leading-[1.3] mb-[30px] md:mb-[40px]">
             {titles.instruments}
           </h2>
@@ -134,8 +134,8 @@ export default function FinancialAssetDetailPage({
       </section>
 
       {/* What Is Section */}
-      <section className="bg-[#f9f9f9] py-[40px] md:py-[60px] xl:py-[80px] px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
-        <div dir={isAr ? "rtl" : undefined} className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
+      <section className="bg-[#f9f9f9] py-[40px] md:py-[60px] xl:py-[80px]">
+        <div dir={isAr ? "rtl" : undefined} className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col lg:flex-row gap-[30px] md:gap-[40px] items-center">
             <div className="flex-1">
               <h2 className="text-[#0e314c] text-[28px] md:text-[36px] xl:text-[40px] font-bold leading-[1.3] mb-[24px]">
@@ -157,8 +157,8 @@ export default function FinancialAssetDetailPage({
       </section>
 
       {/* Why Trade with Namaya */}
-      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px] px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
-        <div dir={isAr ? "rtl" : undefined} className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
+      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px]">
+        <div dir={isAr ? "rtl" : undefined} className="max-w-7xl mx-auto px-6">
           <h2 className="text-[#0e314c] text-[28px] md:text-[36px] xl:text-[40px] font-bold leading-[1.3] text-center mb-[40px] md:mb-[50px]">
             {titles.whyTrade.replace("{name}", asset.name)}
           </h2>
@@ -188,8 +188,8 @@ export default function FinancialAssetDetailPage({
       </section>
 
       {/* How to Start Trading */}
-      <section className="bg-[#f9f9f9] py-[40px] md:py-[60px] xl:py-[80px] px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
-        <div dir={isAr ? "rtl" : undefined} className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
+      <section className="bg-[#f9f9f9] py-[40px] md:py-[60px] xl:py-[80px]">
+        <div dir={isAr ? "rtl" : undefined} className="max-w-7xl mx-auto px-6">
           <h2 className="text-[#0e314c] text-[28px] md:text-[36px] xl:text-[40px] font-bold leading-[1.3] text-center mb-[40px] md:mb-[50px]">
             {titles.howToStart}
           </h2>
@@ -212,8 +212,8 @@ export default function FinancialAssetDetailPage({
       </section>
 
       {/* FAQ Section */}
-      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px] px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
-        <div dir={isAr ? "rtl" : undefined} className="max-w-[840px] mx-auto">
+      <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px]">
+        <div dir={isAr ? "rtl" : undefined} className="max-w-[840px] mx-auto px-6">
           <h2 className="text-[#0e314c] text-[28px] md:text-[36px] xl:text-[40px] font-bold leading-[1.3] text-center mb-[40px] md:mb-[50px]">
             {titles.faq}
           </h2>
@@ -256,7 +256,7 @@ export default function FinancialAssetDetailPage({
       </section>
 
       {/* Bottom CTA */}
-      <section className="bg-[#001005] py-[50px] md:py-[70px] px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px] relative overflow-hidden">
+      <section className="bg-[#001005] py-[50px] md:py-[70px] relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <Image src="/images/blog-hero-bg.png" alt="" fill className="object-cover opacity-40" />
         </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins, Noto_Kufi_Arabic } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { UserAuthProvider } from "@/context/UserAuthContext";
 import { LayoutShell } from "@/components/LayoutShell";
 
 const poppins = Poppins({
@@ -31,7 +32,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.variable} ${notoKufiArabic.variable} font-[family-name:var(--font-poppins)] antialiased`}>
         <LanguageProvider>
-          <LayoutShell>{children}</LayoutShell>
+          <UserAuthProvider>
+            <LayoutShell>{children}</LayoutShell>
+          </UserAuthProvider>
         </LanguageProvider>
       </body>
     </html>

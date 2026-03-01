@@ -26,7 +26,7 @@ export default function Hero({ heroContent, heroImages }: HeroProps) {
 
       {/* Person image */}
       <div
-        className={`absolute bottom-0 w-full md:w-[927px] h-[268px] sm:h-[320px] md:h-[666px] xl:h-[750px] 2xl:h-[850px] md:max-w-[64%] ${
+        className={`absolute bottom-0 w-full md:w-[600px] lg:w-[700px] xl:w-[750px] 2xl:w-[850px] h-[268px] sm:h-[320px] md:h-[500px] lg:h-[560px] xl:h-[620px] 2xl:h-[700px] md:max-w-[50%] ${
           isAr ? "left-0" : "right-0"
         }`}
       >
@@ -41,12 +41,12 @@ export default function Hero({ heroContent, heroImages }: HeroProps) {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 h-full flex items-end pb-[280px] sm:pb-[330px] md:items-center md:pb-0 px-3 md:px-[52px] xl:px-[80px] 2xl:px-[120px] md:pt-[100px] xl:pt-[110px]">
+      <div className="relative z-10 h-full flex items-end pb-[280px] sm:pb-[330px] md:items-center md:pb-0 max-w-7xl mx-auto px-6 md:pt-[80px] w-full">
         <div
-          className={`max-w-full md:max-w-[795px] xl:max-w-[900px] ${isAr ? "text-right ml-auto mr-0" : ""}`}
+          className={`max-w-full md:max-w-[520px] lg:max-w-[560px] xl:max-w-[620px] 2xl:max-w-[700px] ${isAr ? "text-right ml-auto mr-0" : ""}`}
         >
           {/* Headline */}
-          <h1 className="hero-headline text-[35px] leading-[38.5px] md:text-[90px] md:leading-[99px] xl:text-[110px] xl:leading-[121px] 2xl:text-[130px] 2xl:leading-[143px] text-white mb-5 whitespace-pre-line">
+          <h1 className="hero-headline text-[35px] leading-[38.5px] md:text-[56px] md:leading-[64px] lg:text-[64px] lg:leading-[72px] xl:text-[76px] xl:leading-[84px] 2xl:text-[88px] 2xl:leading-[96px] text-white mb-4 whitespace-pre-line">
             {t.headlineBefore}
             <span className="font-extrabold text-[#12953d]">
               {t.headlineHighlight}
@@ -54,13 +54,13 @@ export default function Hero({ heroContent, heroImages }: HeroProps) {
           </h1>
 
           {/* Subtitle */}
-          <p className="hero-subtitle text-white text-[16px] leading-[24px] md:text-[24px] md:leading-[36px] xl:text-[28px] xl:leading-[42px] max-w-[653px] xl:max-w-[750px] mb-5">
+          <p className="hero-subtitle text-white text-[16px] leading-[24px] md:text-[17px] md:leading-[26px] lg:text-[18px] lg:leading-[28px] xl:text-[20px] xl:leading-[30px] 2xl:text-[22px] 2xl:leading-[34px] max-w-[500px] xl:max-w-[560px] mb-5">
             {t.subtitle}
           </p>
 
           {/* CTA */}
-          <div className="pt-[5px] md:pt-[15px] mb-5">
-            <a href="#" className="cta-glass text-[12px] px-[21px] py-[13px] md:text-[14px] md:px-[36px] md:py-[16px] xl:text-[16px] xl:px-[42px] xl:py-[18px]">
+          <div className="pt-[5px] md:pt-[10px] mb-5">
+            <a href="#" className="cta-glass text-[12px] px-[21px] py-[13px] md:text-[14px] md:px-[32px] md:py-[14px] xl:text-[15px] xl:px-[36px] xl:py-[16px]">
               {t.cta}
             </a>
           </div>

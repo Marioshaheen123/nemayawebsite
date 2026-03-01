@@ -19,7 +19,7 @@ export default function TermsPage({ heroTitle, sections }: TermsPageProps) {
       <PageHeroBanner title={heroTitle[lang]} />
 
       {/* Content */}
-      <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px] px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
+      <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px]">
         <div
           dir={isAr ? "rtl" : undefined}
           className="max-w-[840px] mx-auto flex flex-col gap-[40px]"

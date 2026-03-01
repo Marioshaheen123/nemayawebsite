@@ -4,7 +4,7 @@ export const metadata = { title: "Economic Calendar Editor — Nemaya Admin" };
 
 export default function EconomicCalendarEditorPage() {
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Economic Calendar Editor</h1>
         <p className="text-gray-500 mt-1 text-sm">

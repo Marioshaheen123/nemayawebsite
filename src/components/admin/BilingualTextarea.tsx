@@ -3,6 +3,7 @@
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { useAdminLang } from "@/context/AdminLanguageContext";
 import type { FieldErrors, UseFormRegister, FieldValues, Path } from "react-hook-form";
 
 interface BilingualTextareaProps<T extends FieldValues> {
@@ -28,8 +29,10 @@ export default function BilingualTextarea<T extends FieldValues>({
   placeholderEn,
   placeholderAr,
 }: BilingualTextareaProps<T>) {
-  const enError = errors?.[nameEn];
-  const arError = errors?.[nameAr];
+  const { adminLang } = useAdminLang();
+  const isEn = adminLang === "en";
+  const name = isEn ? nameEn : nameAr;
+  const error = errors?.[name];
 
   return (
     <div className="space-y-2">
@@ -37,41 +40,20 @@ export default function BilingualTextarea<T extends FieldValues>({
         {label}
         {required && <span className="text-red-500 ml-0.5">*</span>}
       </Label>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {/* English */}
-        <div className="space-y-1">
-          <span className="text-xs text-gray-500 font-medium">English</span>
-          <Textarea
-            rows={rows}
-            {...register(nameEn, { required: required ? "Required" : false })}
-            placeholder={placeholderEn ?? "English text…"}
-            className={cn("resize-y", enError && "border-red-400 focus:ring-red-300")}
-          />
-          {enError && (
-            <p className="text-xs text-red-600">
-              {enError.message as string}
-            </p>
-          )}
-        </div>
-
-        {/* Arabic */}
-        <div className="space-y-1">
-          <span className="text-xs text-gray-500 font-medium">
-            Arabic <span className="text-gray-400">(العربية)</span>
-          </span>
-          <Textarea
-            dir="rtl"
-            rows={rows}
-            {...register(nameAr, { required: required ? "Required" : false })}
-            placeholder={placeholderAr ?? "النص العربي…"}
-            className={cn("resize-y", arError && "border-red-400 focus:ring-red-300")}
-          />
-          {arError && (
-            <p className="text-xs text-red-600 text-right">
-              {arError.message as string}
-            </p>
-          )}
-        </div>
+      <input type="hidden" {...register(isEn ? nameAr : nameEn)} />
+      <div>
+        <Textarea
+          rows={rows}
+          dir={isEn ? undefined : "rtl"}
+          {...register(name, { required: required ? "Required" : false })}
+          placeholder={isEn ? (placeholderEn ?? "English text…") : (placeholderAr ?? "النص العربي…")}
+          className={cn("resize-y", error && "border-red-400 focus:ring-red-300")}
+        />
+        {error && (
+          <p className={cn("text-xs text-red-600 mt-1", !isEn && "text-right")}>
+            {error.message as string}
+          </p>
+        )}
       </div>
     </div>
   );

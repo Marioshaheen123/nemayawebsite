@@ -138,8 +138,8 @@ export default function EconomicCalendarPage({
       <PageHeroBanner title={i18n.heroTitle[lang]} />
 
       {/* Calendar Content */}
-      <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px] px-4 md:px-[52px] xl:px-[64px] 2xl:px-[120px]">
-        <div dir={isAr ? "rtl" : undefined} className="max-w-[1335px] 2xl:max-w-[1535px] mx-auto">
+      <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px]">
+        <div dir={isAr ? "rtl" : undefined} className="max-w-7xl mx-auto px-6">
           {/* Filter Tabs */}
           <div className="bg-[#f9f9f9] rounded-[12px] p-[16px] mb-[40px]">
             <div className="flex flex-wrap gap-[8px]">

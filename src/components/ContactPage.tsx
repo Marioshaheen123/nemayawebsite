@@ -60,7 +60,7 @@ export default function ContactPage({ i18n, totalSteps }: ContactPageProps) {
       <PageHeroBanner title={i18n.heroTitle[lang]} />
 
       {/* Contact Form */}
-      <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px] px-4 md:px-[52px] xl:px-[80px] 2xl:px-[120px]">
+      <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px]">
         <div
           dir={isAr ? "rtl" : undefined}
           className="max-w-[840px] mx-auto"

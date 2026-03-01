@@ -3,6 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { useAdminLang } from "@/context/AdminLanguageContext";
 import type { FieldErrors, UseFormRegister, FieldValues, Path } from "react-hook-form";
 
 interface BilingualTextFieldProps<T extends FieldValues> {
@@ -26,8 +27,10 @@ export default function BilingualTextField<T extends FieldValues>({
   placeholderEn,
   placeholderAr,
 }: BilingualTextFieldProps<T>) {
-  const enError = errors?.[nameEn];
-  const arError = errors?.[nameAr];
+  const { adminLang } = useAdminLang();
+  const isEn = adminLang === "en";
+  const name = isEn ? nameEn : nameAr;
+  const error = errors?.[name];
 
   return (
     <div className="space-y-2">
@@ -35,39 +38,20 @@ export default function BilingualTextField<T extends FieldValues>({
         {label}
         {required && <span className="text-red-500 ml-0.5">*</span>}
       </Label>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {/* English */}
-        <div className="space-y-1">
-          <span className="text-xs text-gray-500 font-medium">English</span>
-          <Input
-            {...register(nameEn, { required: required ? "Required" : false })}
-            placeholder={placeholderEn ?? "English text…"}
-            className={cn(enError && "border-red-400 focus:ring-red-300")}
-          />
-          {enError && (
-            <p className="text-xs text-red-600">
-              {enError.message as string}
-            </p>
-          )}
-        </div>
-
-        {/* Arabic */}
-        <div className="space-y-1">
-          <span className="text-xs text-gray-500 font-medium">
-            Arabic <span className="text-gray-400">(العربية)</span>
-          </span>
-          <Input
-            dir="rtl"
-            {...register(nameAr, { required: required ? "Required" : false })}
-            placeholder={placeholderAr ?? "النص العربي…"}
-            className={cn(arError && "border-red-400 focus:ring-red-300")}
-          />
-          {arError && (
-            <p className="text-xs text-red-600 text-right">
-              {arError.message as string}
-            </p>
-          )}
-        </div>
+      {/* Keep the hidden language registered so its value is preserved on save */}
+      <input type="hidden" {...register(isEn ? nameAr : nameEn)} />
+      <div>
+        <Input
+          dir={isEn ? undefined : "rtl"}
+          {...register(name, { required: required ? "Required" : false })}
+          placeholder={isEn ? (placeholderEn ?? "English text…") : (placeholderAr ?? "النص العربي…")}
+          className={cn(error && "border-red-400 focus:ring-red-300")}
+        />
+        {error && (
+          <p className={cn("text-xs text-red-600 mt-1", !isEn && "text-right")}>
+            {error.message as string}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useAdminLang } from "@/context/AdminLanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -55,6 +56,8 @@ interface VideoFormProps {
 }
 
 function VideoForm({ initial, onSave, onCancel }: VideoFormProps) {
+  const { adminLang } = useAdminLang();
+  const isAr = adminLang === "ar";
   const {
     register,
     handleSubmit,
@@ -165,29 +168,36 @@ function VideoForm({ initial, onSave, onCancel }: VideoFormProps) {
           Title
         </h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <Label>Title (EN)</Label>
-          <Input
-            placeholder="Introduction to Forex Trading"
-            {...field("titleEn")}
-          />
-          {errors.titleEn && (
-            <p className="text-red-500 text-xs">{errors.titleEn.message}</p>
-          )}
-        </div>
-        <div className="space-y-1.5">
-          <Label>Title (AR)</Label>
-          <Input
-            dir="rtl"
-            placeholder="مقدمة في تداول الفوركس"
-            {...field("titleAr")}
-          />
-          {errors.titleAr && (
-            <p className="text-red-500 text-xs">{errors.titleAr.message}</p>
-          )}
-        </div>
-      </div>
+      {isAr ? (
+        <>
+          <input type="hidden" {...field("titleEn")} />
+          <div className="space-y-1.5">
+            <Label>Title (AR)</Label>
+            <Input
+              dir="rtl"
+              placeholder="مقدمة في تداول الفوركس"
+              {...field("titleAr")}
+            />
+            {errors.titleAr && (
+              <p className="text-red-500 text-xs">{errors.titleAr.message}</p>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          <input type="hidden" {...field("titleAr")} />
+          <div className="space-y-1.5">
+            <Label>Title (EN)</Label>
+            <Input
+              placeholder="Introduction to Forex Trading"
+              {...field("titleEn")}
+            />
+            {errors.titleEn && (
+              <p className="text-red-500 text-xs">{errors.titleEn.message}</p>
+            )}
+          </div>
+        </>
+      )}
 
       {/* ── Label / Badge ─────────────────────────────────────── */}
       <div className="pt-1 pb-1 border-b border-gray-100">
@@ -195,16 +205,23 @@ function VideoForm({ initial, onSave, onCancel }: VideoFormProps) {
           Label / Badge
         </h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <Label>Label (EN)</Label>
-          <Input placeholder="Beginner" {...field("labelEn", false)} />
-        </div>
-        <div className="space-y-1.5">
-          <Label>Label (AR)</Label>
-          <Input dir="rtl" placeholder="مبتدئ" {...field("labelAr", false)} />
-        </div>
-      </div>
+      {isAr ? (
+        <>
+          <input type="hidden" {...field("labelEn", false)} />
+          <div className="space-y-1.5">
+            <Label>Label (AR)</Label>
+            <Input dir="rtl" placeholder="مبتدئ" {...field("labelAr", false)} />
+          </div>
+        </>
+      ) : (
+        <>
+          <input type="hidden" {...field("labelAr", false)} />
+          <div className="space-y-1.5">
+            <Label>Label (EN)</Label>
+            <Input placeholder="Beginner" {...field("labelEn", false)} />
+          </div>
+        </>
+      )}
 
       {/* ── Date & Duration ───────────────────────────────────── */}
       <div className="pt-1 pb-1 border-b border-gray-100">
@@ -212,45 +229,63 @@ function VideoForm({ initial, onSave, onCancel }: VideoFormProps) {
           Date & Duration
         </h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="space-y-1.5">
-          <Label>Day</Label>
-          <Input placeholder="14" {...field("day")} />
-          {errors.day && (
-            <p className="text-red-500 text-xs">{errors.day.message}</p>
-          )}
-        </div>
-        <div className="space-y-1.5">
-          <Label>Month (EN)</Label>
-          <Input placeholder="January" {...field("monthEn")} />
-          {errors.monthEn && (
-            <p className="text-red-500 text-xs">{errors.monthEn.message}</p>
-          )}
-        </div>
-        <div className="space-y-1.5">
-          <Label>Month (AR)</Label>
-          <Input dir="rtl" placeholder="يناير" {...field("monthAr")} />
-          {errors.monthAr && (
-            <p className="text-red-500 text-xs">{errors.monthAr.message}</p>
-          )}
-        </div>
-        <div className="space-y-1.5">
-          <Label>Duration (EN)</Label>
-          <Input placeholder="12 min" {...field("durationEn")} />
-          {errors.durationEn && (
-            <p className="text-red-500 text-xs">{errors.durationEn.message}</p>
-          )}
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="col-start-1 md:col-start-4 space-y-1.5">
-          <Label>Duration (AR)</Label>
-          <Input dir="rtl" placeholder="١٢ دقيقة" {...field("durationAr")} />
-          {errors.durationAr && (
-            <p className="text-red-500 text-xs">{errors.durationAr.message}</p>
-          )}
-        </div>
-      </div>
+      {isAr ? (
+        <>
+          <input type="hidden" {...field("monthEn")} />
+          <input type="hidden" {...field("durationEn")} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-1.5">
+              <Label>Day</Label>
+              <Input placeholder="14" {...field("day")} />
+              {errors.day && (
+                <p className="text-red-500 text-xs">{errors.day.message}</p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label>Month (AR)</Label>
+              <Input dir="rtl" placeholder="يناير" {...field("monthAr")} />
+              {errors.monthAr && (
+                <p className="text-red-500 text-xs">{errors.monthAr.message}</p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label>Duration (AR)</Label>
+              <Input dir="rtl" placeholder="١٢ دقيقة" {...field("durationAr")} />
+              {errors.durationAr && (
+                <p className="text-red-500 text-xs">{errors.durationAr.message}</p>
+              )}
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <input type="hidden" {...field("monthAr")} />
+          <input type="hidden" {...field("durationAr")} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-1.5">
+              <Label>Day</Label>
+              <Input placeholder="14" {...field("day")} />
+              {errors.day && (
+                <p className="text-red-500 text-xs">{errors.day.message}</p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label>Month (EN)</Label>
+              <Input placeholder="January" {...field("monthEn")} />
+              {errors.monthEn && (
+                <p className="text-red-500 text-xs">{errors.monthEn.message}</p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label>Duration (EN)</Label>
+              <Input placeholder="12 min" {...field("durationEn")} />
+              {errors.durationEn && (
+                <p className="text-red-500 text-xs">{errors.durationEn.message}</p>
+              )}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* ── Short Description ─────────────────────────────────── */}
       <div className="pt-1 pb-1 border-b border-gray-100">
@@ -258,31 +293,38 @@ function VideoForm({ initial, onSave, onCancel }: VideoFormProps) {
           Short Description
         </h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <Label>Description (EN)</Label>
-          <Textarea
-            rows={2}
-            placeholder="A brief overview..."
-            {...field("descEn")}
-          />
-          {errors.descEn && (
-            <p className="text-red-500 text-xs">{errors.descEn.message}</p>
-          )}
-        </div>
-        <div className="space-y-1.5">
-          <Label>Description (AR)</Label>
-          <Textarea
-            rows={2}
-            dir="rtl"
-            placeholder="نظرة عامة مختصرة..."
-            {...field("descAr")}
-          />
-          {errors.descAr && (
-            <p className="text-red-500 text-xs">{errors.descAr.message}</p>
-          )}
-        </div>
-      </div>
+      {isAr ? (
+        <>
+          <input type="hidden" {...field("descEn")} />
+          <div className="space-y-1.5">
+            <Label>Description (AR)</Label>
+            <Textarea
+              rows={2}
+              dir="rtl"
+              placeholder="نظرة عامة مختصرة..."
+              {...field("descAr")}
+            />
+            {errors.descAr && (
+              <p className="text-red-500 text-xs">{errors.descAr.message}</p>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          <input type="hidden" {...field("descAr")} />
+          <div className="space-y-1.5">
+            <Label>Description (EN)</Label>
+            <Textarea
+              rows={2}
+              placeholder="A brief overview..."
+              {...field("descEn")}
+            />
+            {errors.descEn && (
+              <p className="text-red-500 text-xs">{errors.descEn.message}</p>
+            )}
+          </div>
+        </>
+      )}
 
       {/* ── Full Description ──────────────────────────────────── */}
       <div className="pt-1 pb-1 border-b border-gray-100">
@@ -290,31 +332,38 @@ function VideoForm({ initial, onSave, onCancel }: VideoFormProps) {
           Full Description
         </h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <Label>Full Description (EN)</Label>
-          <Textarea
-            rows={4}
-            placeholder="A more detailed explanation..."
-            {...field("fullDescEn")}
-          />
-          {errors.fullDescEn && (
-            <p className="text-red-500 text-xs">{errors.fullDescEn.message}</p>
-          )}
-        </div>
-        <div className="space-y-1.5">
-          <Label>Full Description (AR)</Label>
-          <Textarea
-            rows={4}
-            dir="rtl"
-            placeholder="شرح أكثر تفصيلاً..."
-            {...field("fullDescAr")}
-          />
-          {errors.fullDescAr && (
-            <p className="text-red-500 text-xs">{errors.fullDescAr.message}</p>
-          )}
-        </div>
-      </div>
+      {isAr ? (
+        <>
+          <input type="hidden" {...field("fullDescEn")} />
+          <div className="space-y-1.5">
+            <Label>Full Description (AR)</Label>
+            <Textarea
+              rows={4}
+              dir="rtl"
+              placeholder="شرح أكثر تفصيلاً..."
+              {...field("fullDescAr")}
+            />
+            {errors.fullDescAr && (
+              <p className="text-red-500 text-xs">{errors.fullDescAr.message}</p>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          <input type="hidden" {...field("fullDescAr")} />
+          <div className="space-y-1.5">
+            <Label>Full Description (EN)</Label>
+            <Textarea
+              rows={4}
+              placeholder="A more detailed explanation..."
+              {...field("fullDescEn")}
+            />
+            {errors.fullDescEn && (
+              <p className="text-red-500 text-xs">{errors.fullDescEn.message}</p>
+            )}
+          </div>
+        </>
+      )}
 
       {/* ── Takeaways ─────────────────────────────────────────── */}
       <div className="pt-1 pb-1 border-b border-gray-100">
@@ -328,37 +377,44 @@ function VideoForm({ initial, onSave, onCancel }: VideoFormProps) {
           [&quot;Point 1&quot;, &quot;Point 2&quot;]
         </code>
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <Label>Takeaways (EN)</Label>
-          <Textarea
-            rows={4}
-            placeholder={'["You will learn...", "How to..."]'}
-            className="font-mono text-sm"
-            {...register("takeawaysEn")}
-          />
-          {errors.takeawaysEn && (
-            <p className="text-red-500 text-xs">
-              {errors.takeawaysEn.message}
-            </p>
-          )}
-        </div>
-        <div className="space-y-1.5">
-          <Label>Takeaways (AR)</Label>
-          <Textarea
-            rows={4}
-            dir="rtl"
-            placeholder={'["ستتعلم...", "كيف تتداول..."]'}
-            className="font-mono text-sm"
-            {...register("takeawaysAr")}
-          />
-          {errors.takeawaysAr && (
-            <p className="text-red-500 text-xs">
-              {errors.takeawaysAr.message}
-            </p>
-          )}
-        </div>
-      </div>
+      {isAr ? (
+        <>
+          <input type="hidden" {...register("takeawaysEn")} />
+          <div className="space-y-1.5">
+            <Label>Takeaways (AR)</Label>
+            <Textarea
+              rows={4}
+              dir="rtl"
+              placeholder={'["ستتعلم...", "كيف تتداول..."]'}
+              className="font-mono text-sm"
+              {...register("takeawaysAr")}
+            />
+            {errors.takeawaysAr && (
+              <p className="text-red-500 text-xs">
+                {errors.takeawaysAr.message}
+              </p>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          <input type="hidden" {...register("takeawaysAr")} />
+          <div className="space-y-1.5">
+            <Label>Takeaways (EN)</Label>
+            <Textarea
+              rows={4}
+              placeholder={'["You will learn...", "How to..."]'}
+              className="font-mono text-sm"
+              {...register("takeawaysEn")}
+            />
+            {errors.takeawaysEn && (
+              <p className="text-red-500 text-xs">
+                {errors.takeawaysEn.message}
+              </p>
+            )}
+          </div>
+        </>
+      )}
 
       {/* ── Link Text ─────────────────────────────────────────── */}
       <div className="pt-1 pb-1 border-b border-gray-100">
@@ -366,26 +422,33 @@ function VideoForm({ initial, onSave, onCancel }: VideoFormProps) {
           Link Text
         </h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <Label>Link Text (EN)</Label>
-          <Input placeholder="Watch on YouTube" {...field("linkTextEn")} />
-          {errors.linkTextEn && (
-            <p className="text-red-500 text-xs">{errors.linkTextEn.message}</p>
-          )}
-        </div>
-        <div className="space-y-1.5">
-          <Label>Link Text (AR)</Label>
-          <Input
-            dir="rtl"
-            placeholder="شاهد على يوتيوب"
-            {...field("linkTextAr")}
-          />
-          {errors.linkTextAr && (
-            <p className="text-red-500 text-xs">{errors.linkTextAr.message}</p>
-          )}
-        </div>
-      </div>
+      {isAr ? (
+        <>
+          <input type="hidden" {...field("linkTextEn")} />
+          <div className="space-y-1.5">
+            <Label>Link Text (AR)</Label>
+            <Input
+              dir="rtl"
+              placeholder="شاهد على يوتيوب"
+              {...field("linkTextAr")}
+            />
+            {errors.linkTextAr && (
+              <p className="text-red-500 text-xs">{errors.linkTextAr.message}</p>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          <input type="hidden" {...field("linkTextAr")} />
+          <div className="space-y-1.5">
+            <Label>Link Text (EN)</Label>
+            <Input placeholder="Watch on YouTube" {...field("linkTextEn")} />
+            {errors.linkTextEn && (
+              <p className="text-red-500 text-xs">{errors.linkTextEn.message}</p>
+            )}
+          </div>
+        </>
+      )}
 
       {/* ── Actions ───────────────────────────────────────────── */}
       <div className="flex gap-2 pt-2">
@@ -413,6 +476,8 @@ interface VideosEditorProps {
 }
 
 export default function VideosEditor({ initialVideos }: VideosEditorProps) {
+  const { adminLang } = useAdminLang();
+  const isAr = adminLang === "ar";
   const [videos, setVideos] = useState<VideoRecord[]>(initialVideos);
   const [addingVideo, setAddingVideo] = useState(false);
   const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
@@ -508,21 +573,15 @@ export default function VideosEditor({ initialVideos }: VideosEditorProps) {
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <CardTitle className="text-lg truncate">
-                      {video.titleEn}
+                    <CardTitle className="text-lg truncate" dir={isAr ? "rtl" : undefined}>
+                      {isAr ? video.titleAr : video.titleEn}
                     </CardTitle>
-                    <p
-                      className="text-gray-500 text-sm mt-0.5 truncate"
-                      dir="rtl"
-                    >
-                      {video.titleAr}
-                    </p>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <Badge variant="secondary">#{video.sortOrder}</Badge>
-                    {video.labelEn && (
+                    {(isAr ? video.labelAr : video.labelEn) && (
                       <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">
-                        {video.labelEn}
+                        {isAr ? video.labelAr : video.labelEn}
                       </Badge>
                     )}
                     <Button
@@ -570,22 +629,24 @@ export default function VideosEditor({ initialVideos }: VideosEditorProps) {
                       <span className="text-gray-400 text-xs uppercase tracking-wide">
                         Date
                       </span>
-                      <p className="font-medium">
-                        {video.day} {video.monthEn}
+                      <p className="font-medium" dir={isAr ? "rtl" : undefined}>
+                        {video.day} {isAr ? video.monthAr : video.monthEn}
                       </p>
                     </div>
                     <div>
                       <span className="text-gray-400 text-xs uppercase tracking-wide">
                         Duration
                       </span>
-                      <p className="font-medium">{video.durationEn}</p>
+                      <p className="font-medium" dir={isAr ? "rtl" : undefined}>
+                        {isAr ? video.durationAr : video.durationEn}
+                      </p>
                     </div>
                     <div>
                       <span className="text-gray-400 text-xs uppercase tracking-wide">
                         Description
                       </span>
-                      <p className="text-gray-600 line-clamp-1">
-                        {video.descEn}
+                      <p className="text-gray-600 line-clamp-1" dir={isAr ? "rtl" : undefined}>
+                        {isAr ? video.descAr : video.descEn}
                       </p>
                     </div>
                   </div>

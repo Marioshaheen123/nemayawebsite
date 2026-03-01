@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useAdminLang } from "@/context/AdminLanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -77,7 +78,9 @@ const emptyAsset: FinancialAssetData = {
 
 export default function FinancialAssetForm({ assetId }: FinancialAssetFormProps) {
   const router = useRouter();
+  const { adminLang } = useAdminLang();
   const isEdit = Boolean(assetId);
+  const isAr = adminLang === "ar";
 
   const [asset, setAsset] = useState<FinancialAssetData>(emptyAsset);
   const [loading, setLoading] = useState(isEdit);
@@ -301,7 +304,7 @@ export default function FinancialAssetForm({ assetId }: FinancialAssetFormProps)
           <CardTitle className="text-base">Basic Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Slug</Label>
               <Input
@@ -310,34 +313,29 @@ export default function FinancialAssetForm({ assetId }: FinancialAssetFormProps)
                 placeholder="e.g. forex, commodities"
               />
             </div>
-            <div className="space-y-2">
-              <Label>Name (English)</Label>
-              <Input
-                value={asset.nameEn}
-                onChange={(e) => setField("nameEn", e.target.value)}
-                placeholder="Asset name in English"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Name (Arabic)</Label>
-              <Input
-                value={asset.nameAr}
-                onChange={(e) => setField("nameAr", e.target.value)}
-                placeholder="اسم الأصل بالعربية"
-                dir="rtl"
-              />
-            </div>
+            {isAr ? (
+              <div className="space-y-2">
+                <Label>Name (Arabic)</Label>
+                <Input
+                  value={asset.nameAr}
+                  onChange={(e) => setField("nameAr", e.target.value)}
+                  placeholder="اسم الأصل بالعربية"
+                  dir="rtl"
+                />
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label>Name (English)</Label>
+                <Input
+                  value={asset.nameEn}
+                  onChange={(e) => setField("nameEn", e.target.value)}
+                  placeholder="Asset name in English"
+                />
+              </div>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Headline (English)</Label>
-              <Input
-                value={asset.headlineEn}
-                onChange={(e) => setField("headlineEn", e.target.value)}
-                placeholder="Page headline in English"
-              />
-            </div>
+          {isAr ? (
             <div className="space-y-2">
               <Label>Headline (Arabic)</Label>
               <Input
@@ -347,18 +345,18 @@ export default function FinancialAssetForm({ assetId }: FinancialAssetFormProps)
                 dir="rtl"
               />
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          ) : (
             <div className="space-y-2">
-              <Label>Description (English)</Label>
-              <Textarea
-                value={asset.descriptionEn}
-                onChange={(e) => setField("descriptionEn", e.target.value)}
-                placeholder="Asset description in English"
-                className="min-h-[100px] resize-y"
+              <Label>Headline (English)</Label>
+              <Input
+                value={asset.headlineEn}
+                onChange={(e) => setField("headlineEn", e.target.value)}
+                placeholder="Page headline in English"
               />
             </div>
+          )}
+
+          {isAr ? (
             <div className="space-y-2">
               <Label>Description (Arabic)</Label>
               <Textarea
@@ -369,7 +367,17 @@ export default function FinancialAssetForm({ assetId }: FinancialAssetFormProps)
                 className="min-h-[100px] resize-y"
               />
             </div>
-          </div>
+          ) : (
+            <div className="space-y-2">
+              <Label>Description (English)</Label>
+              <Textarea
+                value={asset.descriptionEn}
+                onChange={(e) => setField("descriptionEn", e.target.value)}
+                placeholder="Asset description in English"
+                className="min-h-[100px] resize-y"
+              />
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -390,18 +398,7 @@ export default function FinancialAssetForm({ assetId }: FinancialAssetFormProps)
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Stats (English) — JSON array or one per line</Label>
-              <Textarea
-                value={parseJsonToLines(asset.statsEn)}
-                onChange={(e) =>
-                  setField("statsEn", JSON.stringify(e.target.value.split("\n").filter(Boolean)))
-                }
-                placeholder="Stat 1&#10;Stat 2&#10;Stat 3"
-                className="min-h-[80px] resize-y"
-              />
-            </div>
+          {isAr ? (
             <div className="space-y-2">
               <Label>Stats (Arabic) — JSON array or one per line</Label>
               <Textarea
@@ -414,20 +411,21 @@ export default function FinancialAssetForm({ assetId }: FinancialAssetFormProps)
                 className="min-h-[80px] resize-y"
               />
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          ) : (
             <div className="space-y-2">
-              <Label>What Is (English) — one paragraph per line</Label>
+              <Label>Stats (English) — JSON array or one per line</Label>
               <Textarea
-                value={parseJsonToLines(asset.whatIsEn)}
+                value={parseJsonToLines(asset.statsEn)}
                 onChange={(e) =>
-                  setField("whatIsEn", JSON.stringify(e.target.value.split("\n").filter(Boolean)))
+                  setField("statsEn", JSON.stringify(e.target.value.split("\n").filter(Boolean)))
                 }
-                placeholder="What is section paragraph in English..."
-                className="min-h-[100px] resize-y"
+                placeholder="Stat 1&#10;Stat 2&#10;Stat 3"
+                className="min-h-[80px] resize-y"
               />
             </div>
+          )}
+
+          {isAr ? (
             <div className="space-y-2">
               <Label>What Is (Arabic) — one paragraph per line</Label>
               <Textarea
@@ -440,7 +438,19 @@ export default function FinancialAssetForm({ assetId }: FinancialAssetFormProps)
                 className="min-h-[100px] resize-y"
               />
             </div>
-          </div>
+          ) : (
+            <div className="space-y-2">
+              <Label>What Is (English) — one paragraph per line</Label>
+              <Textarea
+                value={parseJsonToLines(asset.whatIsEn)}
+                onChange={(e) =>
+                  setField("whatIsEn", JSON.stringify(e.target.value.split("\n").filter(Boolean)))
+                }
+                placeholder="What is section paragraph in English..."
+                className="min-h-[100px] resize-y"
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -486,25 +496,28 @@ export default function FinancialAssetForm({ assetId }: FinancialAssetFormProps)
                     </Button>
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    <div className="space-y-1.5">
-                      <Label className="text-xs">Name (EN)</Label>
-                      <Input
-                        value={inst.nameEn}
-                        onChange={(e) => updateInstrument(idx, "nameEn", e.target.value)}
-                        placeholder="Name EN"
-                        className="text-sm"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-xs">Name (AR)</Label>
-                      <Input
-                        value={inst.nameAr}
-                        onChange={(e) => updateInstrument(idx, "nameAr", e.target.value)}
-                        placeholder="الاسم"
-                        dir="rtl"
-                        className="text-sm"
-                      />
-                    </div>
+                    {isAr ? (
+                      <div className="space-y-1.5">
+                        <Label className="text-xs">Name (AR)</Label>
+                        <Input
+                          value={inst.nameAr}
+                          onChange={(e) => updateInstrument(idx, "nameAr", e.target.value)}
+                          placeholder="الاسم"
+                          dir="rtl"
+                          className="text-sm"
+                        />
+                      </div>
+                    ) : (
+                      <div className="space-y-1.5">
+                        <Label className="text-xs">Name (EN)</Label>
+                        <Input
+                          value={inst.nameEn}
+                          onChange={(e) => updateInstrument(idx, "nameEn", e.target.value)}
+                          placeholder="Name EN"
+                          className="text-sm"
+                        />
+                      </div>
+                    )}
                     <div className="space-y-1.5">
                       <Label className="text-xs">Symbol</Label>
                       <Input
@@ -590,45 +603,52 @@ export default function FinancialAssetForm({ assetId }: FinancialAssetFormProps)
                       <Trash2 className="w-3 h-3" />
                     </Button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="space-y-1.5">
-                      <Label className="text-xs">Title (EN)</Label>
-                      <Input
-                        value={adv.titleEn}
-                        onChange={(e) => updateAdvantage(idx, "titleEn", e.target.value)}
-                        placeholder="Advantage title in English"
-                        className="text-sm"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-xs">Title (AR)</Label>
-                      <Input
-                        value={adv.titleAr}
-                        onChange={(e) => updateAdvantage(idx, "titleAr", e.target.value)}
-                        placeholder="عنوان الميزة"
-                        dir="rtl"
-                        className="text-sm"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-xs">Description (EN)</Label>
-                      <Textarea
-                        value={adv.descEn}
-                        onChange={(e) => updateAdvantage(idx, "descEn", e.target.value)}
-                        placeholder="Description in English"
-                        className="text-sm min-h-[72px] resize-y"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-xs">Description (AR)</Label>
-                      <Textarea
-                        value={adv.descAr}
-                        onChange={(e) => updateAdvantage(idx, "descAr", e.target.value)}
-                        placeholder="الوصف بالعربية"
-                        dir="rtl"
-                        className="text-sm min-h-[72px] resize-y"
-                      />
-                    </div>
+                  <div className="space-y-3">
+                    {isAr ? (
+                      <>
+                        <div className="space-y-1.5">
+                          <Label className="text-xs">Title (AR)</Label>
+                          <Input
+                            value={adv.titleAr}
+                            onChange={(e) => updateAdvantage(idx, "titleAr", e.target.value)}
+                            placeholder="عنوان الميزة"
+                            dir="rtl"
+                            className="text-sm"
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label className="text-xs">Description (AR)</Label>
+                          <Textarea
+                            value={adv.descAr}
+                            onChange={(e) => updateAdvantage(idx, "descAr", e.target.value)}
+                            placeholder="الوصف بالعربية"
+                            dir="rtl"
+                            className="text-sm min-h-[72px] resize-y"
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="space-y-1.5">
+                          <Label className="text-xs">Title (EN)</Label>
+                          <Input
+                            value={adv.titleEn}
+                            onChange={(e) => updateAdvantage(idx, "titleEn", e.target.value)}
+                            placeholder="Advantage title in English"
+                            className="text-sm"
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label className="text-xs">Description (EN)</Label>
+                          <Textarea
+                            value={adv.descEn}
+                            onChange={(e) => updateAdvantage(idx, "descEn", e.target.value)}
+                            placeholder="Description in English"
+                            className="text-sm min-h-[72px] resize-y"
+                          />
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               ))
@@ -678,45 +698,52 @@ export default function FinancialAssetForm({ assetId }: FinancialAssetFormProps)
                       <Trash2 className="w-3 h-3" />
                     </Button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="space-y-1.5">
-                      <Label className="text-xs">Question (EN)</Label>
-                      <Textarea
-                        value={faq.questionEn}
-                        onChange={(e) => updateFaq(idx, "questionEn", e.target.value)}
-                        placeholder="Question in English"
-                        className="text-sm min-h-[60px] resize-y"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-xs">Question (AR)</Label>
-                      <Textarea
-                        value={faq.questionAr}
-                        onChange={(e) => updateFaq(idx, "questionAr", e.target.value)}
-                        placeholder="السؤال بالعربية"
-                        dir="rtl"
-                        className="text-sm min-h-[60px] resize-y"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-xs">Answer (EN)</Label>
-                      <Textarea
-                        value={faq.answerEn}
-                        onChange={(e) => updateFaq(idx, "answerEn", e.target.value)}
-                        placeholder="Answer in English"
-                        className="text-sm min-h-[80px] resize-y"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-xs">Answer (AR)</Label>
-                      <Textarea
-                        value={faq.answerAr}
-                        onChange={(e) => updateFaq(idx, "answerAr", e.target.value)}
-                        placeholder="الجواب بالعربية"
-                        dir="rtl"
-                        className="text-sm min-h-[80px] resize-y"
-                      />
-                    </div>
+                  <div className="space-y-3">
+                    {isAr ? (
+                      <>
+                        <div className="space-y-1.5">
+                          <Label className="text-xs">Question (AR)</Label>
+                          <Textarea
+                            value={faq.questionAr}
+                            onChange={(e) => updateFaq(idx, "questionAr", e.target.value)}
+                            placeholder="السؤال بالعربية"
+                            dir="rtl"
+                            className="text-sm min-h-[60px] resize-y"
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label className="text-xs">Answer (AR)</Label>
+                          <Textarea
+                            value={faq.answerAr}
+                            onChange={(e) => updateFaq(idx, "answerAr", e.target.value)}
+                            placeholder="الجواب بالعربية"
+                            dir="rtl"
+                            className="text-sm min-h-[80px] resize-y"
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="space-y-1.5">
+                          <Label className="text-xs">Question (EN)</Label>
+                          <Textarea
+                            value={faq.questionEn}
+                            onChange={(e) => updateFaq(idx, "questionEn", e.target.value)}
+                            placeholder="Question in English"
+                            className="text-sm min-h-[60px] resize-y"
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label className="text-xs">Answer (EN)</Label>
+                          <Textarea
+                            value={faq.answerEn}
+                            onChange={(e) => updateFaq(idx, "answerEn", e.target.value)}
+                            placeholder="Answer in English"
+                            className="text-sm min-h-[80px] resize-y"
+                          />
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               ))
