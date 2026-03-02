@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/generated/prisma";
+import { PrismaClient } from "../generated/prisma";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 
 function createPrismaClient() {
