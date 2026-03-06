@@ -1,14 +1,23 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import ContactPage from "@/components/ContactPage";
 import Footer from "@/components/Footer";
-import { getContentBlock, getHeaderData, getFooterData } from "@/lib/content";
+import { getContentBlock, getLayoutData } from "@/lib/content";
+import { buildMetadata } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMetadata({
+    titleAr: "تواصل معنا",
+    descriptionAr: "تواصل مع فريق نمايا للاستفسارات والدعم",
+    path: "/contact",
+  });
+}
 
 export default async function Contact() {
-  const [headerData, footerData, i18n, totalSteps] = await Promise.all([
-    getHeaderData(),
-    getFooterData(),
+  const { headerData, footerData } = await getLayoutData();
+  const [i18n, totalSteps] = await Promise.all([
     getContentBlock<any>("contact.i18n"),
     getContentBlock<any>("contact.totalSteps"),
   ]);

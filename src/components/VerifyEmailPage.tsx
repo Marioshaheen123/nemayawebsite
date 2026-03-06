@@ -1,5 +1,7 @@
 "use client";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/context/LanguageContext";
@@ -18,9 +20,12 @@ interface VerifyEmailPageProps {
 }
 
 export default function VerifyEmailPage({ verifyEmailText: t }: VerifyEmailPageProps) {
+  const { mainLogo } = useSiteSettings();
   const { lang, toggleLang } = useLang();
   const isAr = lang === "ar";
   const content = t[lang];
+  const [resending, setResending] = useState(false);
+  const [resent, setResent] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#f4f5fa] flex items-center justify-center px-4 py-20 relative">
@@ -44,7 +49,7 @@ export default function VerifyEmailPage({ verifyEmailText: t }: VerifyEmailPageP
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <Image
-            src="/images/nemayalogo.png"
+            src={mainLogo}
             alt="Namaya for Investment"
             width={233}
             height={64}
@@ -67,7 +72,7 @@ export default function VerifyEmailPage({ verifyEmailText: t }: VerifyEmailPageP
         {/* Skip Button */}
         <Link
           href="/verify-number"
-          className="block w-full bg-[#057e33] rounded-[6px] px-[18px] py-[10px] text-white text-[15px] font-medium text-center shadow-[0px_2px_4px_0px_rgba(46,38,61,0.16)] hover:bg-[#046b2b] transition-all mb-5"
+          className="cta-gradient block w-full rounded-[6px] px-[18px] py-[10px] text-white text-[15px] font-medium text-center shadow-[0px_2px_4px_0px_rgba(46,38,61,0.16)] mb-5"
         >
           {content.skipBtn}
         </Link>
@@ -77,8 +82,25 @@ export default function VerifyEmailPage({ verifyEmailText: t }: VerifyEmailPageP
           <span className="text-[rgba(46,38,61,0.7)] text-[15px]">
             {content.didntGet}{" "}
           </span>
-          <button className="text-[#057e33] text-[15px] hover:underline cursor-pointer">
-            {content.resend}
+          <button
+            onClick={async () => {
+              setResending(true);
+              try {
+                await fetch("/api/user/auth/send-otp", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ email: content.email, type: "email" }),
+                });
+                setResent(true);
+                setTimeout(() => setResent(false), 3000);
+              } catch { /* silent */ } finally {
+                setResending(false);
+              }
+            }}
+            disabled={resending}
+            className="text-accent text-[15px] hover:underline cursor-pointer disabled:opacity-60"
+          >
+            {resending ? (isAr ? "جارٍ الإرسال..." : "Sending...") : resent ? (isAr ? "تم الإرسال ✓" : "Sent ✓") : content.resend}
           </button>
         </div>
       </div>

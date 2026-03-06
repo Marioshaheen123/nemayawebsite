@@ -6,18 +6,6 @@ datasource db {
   provider = "sqlite"
 }
 
-// ─── Authentication ─────────────────────────────────────────────────
-
-model AdminUser {
-  id             String   @id @default(cuid())
-  email          String   @unique
-  hashedPassword String
-  name           String?
-  role           String   @default("admin")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-}
-
 // ─── Generic Content Blocks (key-value JSON store) ──────────────────
 
 model ContentBlock {
@@ -49,6 +37,18 @@ model BlogArticle {
   sortOrder           Int      @default(0)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
+  // Content fields
+  imageAltEn          String?
+  imageAltAr          String?
+  category            String?
+  tags                String?
+  // SEO
+  metaTitleEn         String?
+  metaTitleAr         String?
+  metaDescriptionEn   String?
+  metaDescriptionAr   String?
+  ogImageUrl          String?
+  keywords            String?
 }
 
 model SuggestedArticle {
@@ -98,10 +98,13 @@ model Plan {
   featuresLabelAr String
   ctaEn           String
   ctaAr           String
+  ctaUrl          String  @default("/register")
   ctaStyle        String
   bg              String
   gradient        Boolean @default(false)
   sortOrder       Int     @default(0)
+  benefitsEn      String  @default("[]")
+  benefitsAr      String  @default("[]")
 }
 
 model PlanFeature {
@@ -131,6 +134,13 @@ model FinancialAsset {
   instruments   Instrument[]
   advantages    AssetAdvantage[]
   faqs          AssetFaq[]
+  // SEO
+  metaTitleEn         String?
+  metaTitleAr         String?
+  metaDescriptionEn   String?
+  metaDescriptionAr   String?
+  ogImageUrl          String?
+  keywords            String?
 }
 
 model Instrument {
@@ -194,6 +204,13 @@ model Video {
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  // SEO
+  metaTitleEn         String?
+  metaTitleAr         String?
+  metaDescriptionEn   String?
+  metaDescriptionAr   String?
+  ogImageUrl          String?
+  keywords            String?
 }
 
 // ─── Legal Pages ────────────────────────────────────────────────────
@@ -256,6 +273,114 @@ model SocialIcon {
   sortOrder Int    @default(0)
 }
 
+// ─── User ──────────────────────────────────────────────────────────
+
+model User {
+  id              String   @id @default(cuid())
+  accountId       String   @unique
+  email           String
+  passwordHash    String
+  firstName       String   @default("")
+  lastName        String   @default("")
+  mobile          String   @default("")
+  dateOfBirth     String   @default("")
+  address         String   @default("")
+  city            String   @default("")
+  postalCode      String   @default("")
+  country         String   @default("")
+  profession      String   @default("")
+  additionalPhone String   @default("")
+  annualIncome    String   @default("")
+  avatar          String   @default("")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model UserDocument {
+  id        String   @id @default(cuid())
+  userId    String
+  docKey    String
+  face      String?
+  url       String
+  fileName  String
+  status    String   @default("Pending") // "Pending", "Approved", "Rejected"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model ContactRequest {
+  id           String   @id @default(cuid())
+  userId       String?
+  firstName    String
+  lastName     String
+  email        String
+  phoneNumber  String
+  reason       String
+  requestType  String
+  topicDetails String
+  status       String   @default("New") // "New", "In Progress", "Resolved"
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ─── Admin ─────────────────────────────────────────────────────────
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ─── Economic Developments ─────────────────────────────────────────
+
+model EconomicDevelopment {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  imageUrl  String
+  day       String
+  monthEn   String
+  monthAr   String
+  readTimeEn String
+  readTimeAr String
+  titleEn   String
+  titleAr   String
+  excerptEn String
+  excerptAr String
+  bodyEn    String
+  bodyAr    String
+  featured  Boolean  @default(false)
+  published Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // Content fields
+  imageAltEn          String?
+  imageAltAr          String?
+  category            String?
+  tags                String?
+  // SEO
+  metaTitleEn         String?
+  metaTitleAr         String?
+  metaDescriptionEn   String?
+  metaDescriptionAr   String?
+  ogImageUrl          String?
+  keywords            String?
+}
+
+model SuggestedEconomicDevelopment {
+  id        String @id @default(cuid())
+  imageUrl  String
+  titleEn   String
+  titleAr   String
+  slug      String
+  sortOrder Int    @default(0)
+}
+
 // ─── Site Images ────────────────────────────────────────────────────
 
 model SiteImage {
@@ -267,4 +392,35 @@ model SiteImage {
   mimeType  String?
   sizeBytes Int?
   createdAt DateTime @default(now())
+}
+
+// ─── Audit Log ────────────────────────────────────────────────────
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  adminId    String
+  adminEmail String
+  action     String
+  resource   String
+  resourceId String?
+  details    String?
+  ip         String
+  createdAt  DateTime @default(now())
+}
+
+// ─── Financial Transactions ─────────────────────────────────────────
+
+model Transaction {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime @default(now())
+  method    String   // "Credit Card", "Bank Transfer", "Internal"
+  type      String   // "Deposit", "Withdrawal", "Bonus"
+  amount    Float
+  currency  String   @default("USD")
+  status    String   @default("Pending") // "Completed", "Pending", "Failed"
+  reference String?
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

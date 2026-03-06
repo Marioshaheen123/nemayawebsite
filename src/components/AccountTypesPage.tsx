@@ -57,7 +57,7 @@ export default function AccountTypesPage({
         plan.gradient
           ? {
               backgroundImage:
-                "linear-gradient(180deg, rgba(18, 149, 61, 0.08) 0%, rgba(255, 255, 255, 1) 60%)",
+                "linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 8%, transparent) 0%, rgba(255, 255, 255, 1) 60%)",
             }
           : undefined
       }
@@ -103,13 +103,13 @@ export default function AccountTypesPage({
         <h4 className="text-[#0e314c] text-[16px] font-bold leading-[1.4] mb-[4px]">
           {plan.featuresLabel}
         </h4>
-        {featureItems.map((feature: string, j: number) => (
+        {(plan.benefits?.length > 0 ? plan.benefits : featureItems).map((feature: string, j: number) => (
           <div key={j} className="flex items-center gap-[10px]">
-            <div className="w-[22px] h-[22px] rounded-full bg-[rgba(18,149,61,0.1)] flex items-center justify-center shrink-0">
+            <div className="w-[22px] h-[22px] rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path
                   d="M2.5 6L5 8.5L9.5 3.5"
-                  stroke="#12953d"
+                  stroke="currentColor"
                   strokeWidth="1.8"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -126,8 +126,8 @@ export default function AccountTypesPage({
       {/* CTA */}
       <div className={isAr ? "text-right" : ""}>
         <a
-          href="#"
-          className={`inline-block border rounded-[5px] px-[36px] py-[14px] text-[14px] font-semibold leading-[21px] hover:opacity-90 transition-opacity ${plan.ctaStyle}`}
+          href={plan.ctaUrl || "/register"}
+          className="cta-gradient inline-block rounded-[12px] px-[36px] py-[14px] text-[14px] font-semibold leading-[21px] hover:opacity-90 transition-opacity"
         >
           {plan.cta}
         </a>
@@ -137,7 +137,13 @@ export default function AccountTypesPage({
 
   return (
     <>
-      <PageHeroBanner title={accountTypesPageHeroTitle[lang]} />
+      <PageHeroBanner
+        title={accountTypesPageHeroTitle[lang]}
+        breadcrumbs={[
+          { label: isAr ? "الرئيسية" : "Home", href: "/" },
+          { label: accountTypesPageHeroTitle[lang] },
+        ]}
+      />
 
       {/* Account Cards */}
       <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px]">
@@ -202,7 +208,7 @@ export default function AccountTypesPage({
                 key={i}
                 onClick={() => setCurrentPage(i)}
                 className={`w-[12px] h-[12px] rounded-full transition-colors cursor-pointer ${
-                  i === currentPage ? "bg-[#12953d]" : "bg-[#cacceb]"
+                  i === currentPage ? "bg-site-gradient" : "bg-[#cacceb]"
                 }`}
               />
             ))}

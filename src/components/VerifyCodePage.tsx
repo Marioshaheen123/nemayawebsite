@@ -1,7 +1,9 @@
 "use client";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 import { useState, useRef } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useLang } from "@/context/LanguageContext";
 import type { Bilingual } from "@/data/types";
 
@@ -18,11 +20,16 @@ interface VerifyCodePageProps {
 }
 
 export default function VerifyCodePage({ verifyCodeText: t }: VerifyCodePageProps) {
+  const { mainLogo } = useSiteSettings();
   const { lang, toggleLang } = useLang();
   const isAr = lang === "ar";
   const content = t[lang];
+  const router = useRouter();
   const [code, setCode] = useState<string[]>(Array(6).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [resending, setResending] = useState(false);
 
   const handleChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return;
@@ -74,7 +81,7 @@ export default function VerifyCodePage({ verifyCodeText: t }: VerifyCodePageProp
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <Image
-            src="/images/nemayalogo.png"
+            src={mainLogo}
             alt="Namaya for Investment"
             width={233}
             height={64}
@@ -113,14 +120,51 @@ export default function VerifyCodePage({ verifyCodeText: t }: VerifyCodePageProp
               onChange={(e) => handleChange(i, e.target.value)}
               onKeyDown={(e) => handleKeyDown(i, e)}
               onPaste={i === 0 ? handlePaste : undefined}
-              className="w-[44px] h-[50px] md:w-[52px] md:h-[56px] border border-[rgba(46,38,61,0.12)] rounded-[6px] text-center text-[20px] font-medium text-[rgba(46,38,61,0.9)] focus:outline-none focus:border-[#057e33] transition-colors"
+              className="w-[44px] h-[50px] md:w-[52px] md:h-[56px] border border-[rgba(46,38,61,0.12)] rounded-[6px] text-center text-[20px] font-medium text-[rgba(46,38,61,0.9)] focus:outline-none focus:border-accent transition-colors"
             />
           ))}
         </div>
 
+        {/* Error */}
+        {error && (
+          <div className="mb-4 p-3 rounded-[6px] bg-[#ff4c51]/10 border border-[#ff4c51]/30 text-[#ff4c51] text-[14px] text-center">
+            {error}
+          </div>
+        )}
+
         {/* Verify Button */}
-        <button className="w-full bg-[#057e33] rounded-[6px] px-[18px] py-[10px] text-white text-[15px] font-medium shadow-[0px_2px_4px_0px_rgba(46,38,61,0.16)] hover:bg-[#046b2b] transition-all cursor-pointer mb-5">
-          {content.verifyBtn}
+        <button
+          onClick={async () => {
+            setError("");
+            const fullCode = code.join("");
+            if (fullCode.length !== 6) {
+              setError(isAr ? "يرجى إدخال الرمز المكون من 6 أرقام" : "Please enter the 6-digit code");
+              return;
+            }
+            setSubmitting(true);
+            try {
+              const phone = typeof window !== "undefined" ? sessionStorage.getItem("verify_phone") || "" : "";
+              const res = await fetch("/api/user/auth/verify-code", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ code: fullCode, phone }),
+              });
+              if (res.ok) {
+                router.push("/personal-area");
+              } else {
+                const data = await res.json();
+                setError(data.error || (isAr ? "رمز غير صحيح" : "Invalid code"));
+              }
+            } catch {
+              setError(isAr ? "حدث خطأ" : "An error occurred");
+            } finally {
+              setSubmitting(false);
+            }
+          }}
+          disabled={submitting}
+          className="cta-gradient w-full rounded-[6px] px-[18px] py-[10px] text-white text-[15px] font-medium shadow-[0px_2px_4px_0px_rgba(46,38,61,0.16)] cursor-pointer mb-5 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {submitting ? (isAr ? "جارٍ التحقق..." : "Verifying...") : content.verifyBtn}
         </button>
 
         {/* Resend */}
@@ -128,8 +172,24 @@ export default function VerifyCodePage({ verifyCodeText: t }: VerifyCodePageProp
           <span className="text-[rgba(46,38,61,0.7)] text-[15px]">
             {content.didntGet}{" "}
           </span>
-          <button className="text-[#057e33] text-[15px] hover:underline cursor-pointer">
-            {content.resend}
+          <button
+            onClick={async () => {
+              setResending(true);
+              try {
+                const phone = typeof window !== "undefined" ? sessionStorage.getItem("verify_phone") || "" : "";
+                await fetch("/api/user/auth/send-otp", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ phone, type: "sms" }),
+                });
+              } catch { /* silent */ } finally {
+                setResending(false);
+              }
+            }}
+            disabled={resending}
+            className="text-accent text-[15px] hover:underline cursor-pointer disabled:opacity-60"
+          >
+            {resending ? (isAr ? "جارٍ الإرسال..." : "Sending...") : content.resend}
           </button>
         </div>
       </div>

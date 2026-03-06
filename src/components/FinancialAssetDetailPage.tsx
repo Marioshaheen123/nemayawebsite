@@ -55,7 +55,7 @@ export default function FinancialAssetDetailPage({
         </h1>
         <Link
           href="/financial-assets"
-          className="text-[#12953d] text-[16px] font-semibold hover:underline"
+          className="text-primary text-[16px] font-semibold hover:underline"
         >
           {backLabel[lang]}
         </Link>
@@ -118,7 +118,7 @@ export default function FinancialAssetDetailPage({
                 {asset.instruments.map((inst, i) => (
                   <tr
                     key={i}
-                    className={`border-b border-[#f0f0f0] ${i % 2 === 0 ? "bg-white" : "bg-[#f9f9f9]"} hover:bg-[rgba(18,149,61,0.04)] transition-colors`}
+                    className={`border-b border-[#f0f0f0] ${i % 2 === 0 ? "bg-white" : "bg-[#f9f9f9]"} hover:bg-primary/[0.04] transition-colors`}
                   >
                     <td className="text-[#0e314c] text-[14px] md:text-[15px] font-medium px-[20px] py-[14px]">{inst.name}</td>
                     <td className="text-[#6084a4] text-[14px] md:text-[15px] px-[20px] py-[14px] font-mono">{inst.symbol}</td>
@@ -166,9 +166,9 @@ export default function FinancialAssetDetailPage({
             {asset.advantages.map((adv, i) => (
               <div
                 key={i}
-                className="flex gap-[16px] bg-[#f9f9f9] border border-[#cacceb] rounded-[20px] p-[24px] md:p-[28px] hover:border-[#12953d] hover:shadow-[0_4px_20px_rgba(18,149,61,0.08)] transition-all"
+                className="flex gap-[16px] bg-[#f9f9f9] border border-[#cacceb] rounded-[20px] p-[24px] md:p-[28px] hover:border-primary hover:shadow-lg transition-all"
               >
-                <div className="w-[48px] h-[48px] rounded-full bg-[#12953d] flex items-center justify-center shrink-0">
+                <div className="w-[48px] h-[48px] rounded-full bg-site-gradient flex items-center justify-center shrink-0">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M20 6L9 17l-5-5" />
                   </svg>
@@ -196,7 +196,7 @@ export default function FinancialAssetDetailPage({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[20px] md:gap-[24px]">
             {steps.map((step, i) => (
               <div key={i} className="bg-white border border-[#cacceb] rounded-[20px] p-[28px] md:p-[32px] text-center">
-                <div className="w-[60px] h-[60px] rounded-full bg-[#12953d] flex items-center justify-center mx-auto mb-[20px]">
+                <div className="w-[60px] h-[60px] rounded-full bg-site-gradient flex items-center justify-center mx-auto mb-[20px]">
                   <span className="text-white text-[24px] font-bold">{step.step}</span>
                 </div>
                 <h3 className="text-[#0e314c] text-[20px] md:text-[22px] font-bold leading-[1.3] mb-[10px]">
@@ -222,7 +222,7 @@ export default function FinancialAssetDetailPage({
               <div
                 key={i}
                 className={`border rounded-[16px] overflow-hidden transition-colors ${
-                  openFaq === i ? "border-[#12953d] bg-[rgba(18,149,61,0.02)]" : "border-[#cacceb]"
+                  openFaq === i ? "border-primary bg-primary/[0.02]" : "border-[#cacceb]"
                 }`}
               >
                 <button
@@ -233,9 +233,9 @@ export default function FinancialAssetDetailPage({
                     {item.q}
                   </span>
                   <svg
-                    width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#12953d"
+                    width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    className={`shrink-0 transition-transform duration-300 ${isAr ? "mr-[16px]" : "ml-[16px]"} ${openFaq === i ? "rotate-180" : ""}`}
+                    className={`shrink-0 text-primary transition-transform duration-300 ${isAr ? "mr-[16px]" : "ml-[16px]"} ${openFaq === i ? "rotate-180" : ""}`}
                   >
                     <path d="M6 9l6 6 6-6" />
                   </svg>
@@ -269,7 +269,7 @@ export default function FinancialAssetDetailPage({
           </p>
           <a
             href="#"
-            className="inline-flex items-center justify-center px-[40px] py-[18px] bg-[#12953d] border border-[#b0f127] rounded-[8px] text-white text-[16px] font-semibold hover:bg-[#0e7a31] transition-colors"
+            className="cta-gradient inline-flex items-center justify-center px-[40px] py-[18px] rounded-[12px] text-[16px] font-semibold"
           >
             {cta.btn}
           </a>

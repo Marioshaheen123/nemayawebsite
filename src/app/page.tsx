@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Benefits from "@/components/Benefits";
@@ -7,19 +8,28 @@ import Pricing from "@/components/Pricing";
 import Blog from "@/components/Blog";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
-import { getHomepageData, getHeaderData, getFooterData, getBlogArticles } from "@/lib/content";
+import { getHomepageData, getLayoutData, getBlogArticles } from "@/lib/content";
+import { buildMetadata } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMetadata({
+    titleAr: "نمايا - استثمر الآن بذكاء",
+    descriptionAr: "كن ذكيًا واستثمر في أصولك بأمان. نمايا هي منصتك السعودية الآمنة للتداول في الأسواق المحلية والعالمية.",
+    path: "/",
+  });
+}
 
 export default async function Home() {
-  const [headerData, footerData, homepageData, blogArticlesRaw] = await Promise.all([
-    getHeaderData(),
-    getFooterData(),
+  const [{ headerData, footerData }, homepageData, blogArticlesRaw] = await Promise.all([
+    getLayoutData(),
     getHomepageData(),
     getBlogArticles(),
   ]);
 
   // Transform DB plans to bilingual format
+  const parseBenefits = (json: string) => { try { const a = JSON.parse(json); return Array.isArray(a) ? a : []; } catch { return []; } };
   const plansBilingual = {
     en: homepageData.pricing.plans.map((p: any) => ({
       name: p.nameEn,
@@ -27,10 +37,12 @@ export default async function Home() {
       period: p.periodEn,
       description: p.descriptionEn,
       cta: p.ctaEn,
+      ctaUrl: p.ctaUrl || "/register",
       featuresLabel: p.featuresLabelEn,
       ctaStyle: p.ctaStyle,
       bg: p.bg,
       gradient: p.gradient || undefined,
+      benefits: parseBenefits(p.benefitsEn),
     })),
     ar: homepageData.pricing.plans.map((p: any) => ({
       name: p.nameAr,
@@ -38,10 +50,12 @@ export default async function Home() {
       period: p.periodAr,
       description: p.descriptionAr,
       cta: p.ctaAr,
+      ctaUrl: p.ctaUrl || "/register",
       featuresLabel: p.featuresLabelAr,
       ctaStyle: p.ctaStyle,
       bg: p.bg,
       gradient: p.gradient || undefined,
+      benefits: parseBenefits(p.benefitsAr),
     })),
   };
 
@@ -96,22 +110,22 @@ export default async function Home() {
         benefitsFeatures={homepageData.benefits.features}
         benefitsHeading={homepageData.benefits.heading}
         benefitsCtaText={homepageData.benefits.ctaText}
-        benefitsBadge={homepageData.benefits.badge}
+
         benefitsImages={homepageData.benefits.images}
       />
       <BenefitsCarousel
         carouselCards={homepageData.carousel.cards}
         carouselHeading={homepageData.carousel.heading}
-        carouselBadge={homepageData.carousel.badge}
+
       />
       <HowItWorks
         howItWorksContent={homepageData.howItWorks.content}
-        howItWorksBadge={homepageData.howItWorks.badge}
+
         howItWorksImage={homepageData.howItWorks.image}
       />
       <Pricing
         pricingSectionHeading={homepageData.pricing.sectionHeading}
-        pricingSectionBadge={homepageData.pricing.sectionBadge}
+
         pricingViewAllLabel={homepageData.pricing.viewAllLabel}
         plans={plansBilingual}
         features={featuresBilingual}
@@ -123,7 +137,7 @@ export default async function Home() {
       <FAQ
         homepageFaqItems={faqItemsBilingual}
         homepageFaqHeading={homepageData.faq.heading}
-        homepageFaqBadge={homepageData.faq.badge}
+
       />
       <Footer {...footerData} />
     </main>

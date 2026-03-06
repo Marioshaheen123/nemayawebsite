@@ -1,60 +1,54 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import AboutPage from "@/components/AboutPage";
 import Footer from "@/components/Footer";
-import { getHeaderData, getFooterData, getContentBlock, getBlogArticlesBilingual } from "@/lib/content";
+import { getLayoutData, getContentBlocks, getBlogArticlesBilingual } from "@/lib/content";
+import { buildMetadata } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMetadata({
+    titleAr: "عن نمايا",
+    descriptionAr: "تعرف على شركة نمايا المالية ورؤيتنا في عالم الاستثمار والتداول",
+    path: "/about",
+  });
+}
 
 export default async function About() {
-  const [
-    headerData,
-    footerData,
-    heroContent,
-    redefiningBadge,
-    redefiningContent,
-    stats,
-    visionBadge,
-    visionTitle,
-    visionCards,
-    visionImages,
-    missionTitle,
-    valuesBadge,
-    valuesHeading,
-    values,
-    valuesImage,
-    securityBadge,
-    securityContent,
-    bridgingContent,
-    bridgingImage,
-    blogSectionBadge,
-    blogSectionHeading,
-    blogSectionData,
-    blogData,
-  ] = await Promise.all([
-    getHeaderData(),
-    getFooterData(),
-    getContentBlock("about.heroContent"),
-    getContentBlock("about.redefiningBadge"),
-    getContentBlock("about.redefiningContent"),
-    getContentBlock("about.stats"),
-    getContentBlock("about.visionBadge"),
-    getContentBlock("about.visionTitle"),
-    getContentBlock("about.visionCards"),
-    getContentBlock("about.visionImages"),
-    getContentBlock("about.missionTitle"),
-    getContentBlock("about.valuesBadge"),
-    getContentBlock("about.valuesHeading"),
-    getContentBlock("about.values"),
-    getContentBlock("about.valuesImage"),
-    getContentBlock("about.securityBadge"),
-    getContentBlock("about.securityContent"),
-    getContentBlock("about.bridgingContent"),
-    getContentBlock("about.bridgingImage"),
-    getContentBlock("about.blogSectionBadge"),
-    getContentBlock("about.blogSectionHeading"),
-    getContentBlock("blog.sectionData"),
-    getBlogArticlesBilingual(),
+  const { headerData, footerData } = await getLayoutData();
+
+  // Batch-fetch all about content blocks in a single query
+  const blocks = await getContentBlocks([
+    "about.heroContent", "about.redefiningBadge", "about.redefiningContent", "about.stats",
+    "about.visionBadge", "about.visionTitle", "about.visionCards", "about.visionImages",
+    "about.missionTitle", "about.valuesBadge", "about.valuesHeading", "about.values",
+    "about.valuesImage", "about.securityBadge", "about.securityContent",
+    "about.bridgingContent", "about.bridgingImage",
+    "about.blogSectionBadge", "about.blogSectionHeading", "blog.sectionData",
   ]);
+  const blogData = await getBlogArticlesBilingual();
+
+  const heroContent = blocks["about.heroContent"];
+  const redefiningBadge = blocks["about.redefiningBadge"];
+  const redefiningContent = blocks["about.redefiningContent"];
+  const stats = blocks["about.stats"];
+  const visionBadge = blocks["about.visionBadge"];
+  const visionTitle = blocks["about.visionTitle"];
+  const visionCards = blocks["about.visionCards"];
+  const visionImages = blocks["about.visionImages"];
+  const missionTitle = blocks["about.missionTitle"];
+  const valuesBadge = blocks["about.valuesBadge"];
+  const valuesHeading = blocks["about.valuesHeading"];
+  const values = blocks["about.values"];
+  const valuesImage = blocks["about.valuesImage"];
+  const securityBadge = blocks["about.securityBadge"];
+  const securityContent = blocks["about.securityContent"];
+  const bridgingContent = blocks["about.bridgingContent"];
+  const bridgingImage = blocks["about.bridgingImage"];
+  const blogSectionBadge = blocks["about.blogSectionBadge"];
+  const blogSectionHeading = blocks["about.blogSectionHeading"];
+  const blogSectionData = blocks["blog.sectionData"];
 
   // Build bilingual blog articles for the about page (first 3)
   const blogArticles = {

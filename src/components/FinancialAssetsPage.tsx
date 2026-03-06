@@ -27,7 +27,14 @@ export default function FinancialAssetsPage({
 
   return (
     <>
-      <PageHeroBanner title={heroTitle[lang]} subtitle={heroSubtitle[lang]} />
+      <PageHeroBanner
+        title={heroTitle[lang]}
+        subtitle={heroSubtitle[lang]}
+        breadcrumbs={[
+          { label: isAr ? "الرئيسية" : "Home", href: "/" },
+          { label: heroTitle[lang] },
+        ]}
+      />
 
       {/* Asset Cards Grid */}
       <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px]">
@@ -68,7 +75,7 @@ export default function FinancialAssetsPage({
                     {card.description}
                   </p>
                   <div className={`flex ${isAr ? "justify-end" : "justify-start"}`}>
-                    <span className="inline-flex items-center gap-[4px] bg-[#12953d] text-white text-[14px] md:text-[16px] leading-[24px] px-[24px] py-[8px] rounded-full group-hover:bg-[#0e7a31] transition-colors duration-300">
+                    <span className="cta-gradient inline-flex items-center gap-[4px] text-white text-[14px] md:text-[16px] leading-[24px] px-[24px] py-[8px] rounded-full">
                       {exploreLabel[lang]} {card.name}
                     </span>
                   </div>

@@ -1,16 +1,16 @@
 "use client";
 
-import SectionBadge from "./SectionBadge";
+
 import { useState } from "react";
 import { useLang } from "@/context/LanguageContext";
 
 interface FAQProps {
   homepageFaqItems: any;
   homepageFaqHeading: any;
-  homepageFaqBadge: any;
+
 }
 
-export default function FAQ({ homepageFaqItems, homepageFaqHeading, homepageFaqBadge }: FAQProps) {
+export default function FAQ({ homepageFaqItems, homepageFaqHeading }: FAQProps) {
   const [openIndex, setOpenIndex] = useState(1);
   const { lang } = useLang();
   const isAr = lang === "ar";
@@ -25,7 +25,6 @@ export default function FAQ({ homepageFaqItems, homepageFaqHeading, homepageFaqB
       <div className="w-full max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[40px]">
-          <SectionBadge label={homepageFaqBadge.label} labelAr={homepageFaqBadge.labelAr} />
           <h2 className="section-heading-mobile text-[25px] leading-[32.5px] md:text-[32px] md:leading-[40px] xl:text-[40px] xl:leading-[48px] text-[#0e314c] mt-[10px] max-w-[600px] xl:max-w-[680px] mx-auto">
             {h.before}
             <span className="font-bold">{h.bold}</span>
@@ -37,7 +36,7 @@ export default function FAQ({ homepageFaqItems, homepageFaqHeading, homepageFaqB
           className="p-4 md:p-[24px] xl:p-[32px] rounded-[22px]"
           style={{
             backgroundImage:
-              "linear-gradient(181deg, rgba(18, 149, 61, 0) 38%, rgb(248, 248, 248) 80%)",
+              "linear-gradient(181deg, color-mix(in srgb, var(--color-primary) 0%, transparent) 38%, rgb(248, 248, 248) 80%)",
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
@@ -92,7 +91,7 @@ function FAQItem({
   return (
     <div
       className={`bg-white border rounded-[20px] md:rounded-[22px] p-[25px] md:p-[20px] xl:p-[24px] transition-all ${
-        isOpen ? "border-[#12953d]" : "border-[#cacceb]"
+        isOpen ? "border-primary" : "border-[#cacceb]"
       }`}
     >
       <button
@@ -104,7 +103,7 @@ function FAQItem({
         </span>
         <div
           className={`w-[44px] h-[44px] rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
-            isOpen ? "bg-[#0e314c] rotate-180" : "bg-[#12953d] rotate-0"
+            isOpen ? "bg-[#0e314c] rotate-180" : "bg-site-gradient rotate-0"
           }`}
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">

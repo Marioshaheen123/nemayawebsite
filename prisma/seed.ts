@@ -10,7 +10,7 @@
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
-import bcrypt from "bcryptjs";
+import { hash } from "bcryptjs";
 
 // ─── Data imports ─────────────────────────────────────────────────────────────
 
@@ -139,6 +139,13 @@ import {
 // Contact
 import { i18n as contactI18n, TOTAL_STEPS as contactTotalSteps } from "../src/data/contact";
 
+// Economic Developments
+import {
+  economicDevelopmentArticles,
+  suggestedEconomicDevelopments,
+  economicDevelopmentsHeroTitle,
+} from "../src/data/economicDevelopments";
+
 // Economic Calendar
 import {
   sampleData as calendarSampleData,
@@ -206,6 +213,8 @@ async function main() {
   await prisma.plan.deleteMany();
   await prisma.faqItem.deleteMany();
   await prisma.faqCategory.deleteMany();
+  await prisma.suggestedEconomicDevelopment.deleteMany();
+  await prisma.economicDevelopment.deleteMany();
   await prisma.suggestedArticle.deleteMany();
   await prisma.blogArticle.deleteMany();
   await prisma.video.deleteMany();
@@ -214,16 +223,14 @@ async function main() {
 
   console.log("All existing data deleted.");
 
-  // ── 2. AdminUser ─────────────────────────────────────────────────────────────
+  // ── 2. AdminUser ───────────────────────────────────────────────────────────────
   console.log("Seeding AdminUser...");
-
-  const hashedPassword = await bcrypt.hash("Admin123!@#", 12);
+  const adminPasswordHash = await hash("admin123", 12);
   await prisma.adminUser.create({
     data: {
-      email: "admin@nemaya.ar",
-      hashedPassword,
+      email: "admin@nemaya.com",
+      passwordHash: adminPasswordHash,
       name: "Admin",
-      role: "admin",
     },
   });
 
@@ -235,6 +242,8 @@ async function main() {
     { key: "blog.sectionData", value: blogSectionData },
     { key: "blog.pageHeroTitle", value: blogPageHeroTitle },
     { key: "blog.moreArticlesCards", value: moreArticlesCards },
+    // Economic Developments
+    { key: "economicDevelopments.pageHeroTitle", value: economicDevelopmentsHeroTitle },
     // FAQ
     { key: "faq.homepageFaqHeading", value: homepageFaqHeading },
     { key: "faq.homepageFaqBadge", value: homepageFaqBadge },
@@ -328,6 +337,10 @@ async function main() {
     { key: "legal.termsHeroTitle", value: termsHeroTitle },
     { key: "legal.islamicRulingsHeroTitle", value: irHeroTitle },
     { key: "legal.islamicRulingsSectionLabels", value: sectionLabels },
+    // New legal pages
+    { key: "legal.depositWithdrawalHeroTitle", value: { en: "Deposit & Withdrawal Policy", ar: "سياسة الإيداع والسحب" } },
+    { key: "legal.websiteVerificationHeroTitle", value: { en: "Official Website Verification", ar: "التحقق من الموقع الرسمي" } },
+    { key: "legal.securityReliabilityHeroTitle", value: { en: "Security & Reliability", ar: "الأمان والموثوقية" } },
   ];
 
   for (const block of contentBlocks) {
@@ -387,6 +400,61 @@ async function main() {
     const ar = arSuggested[i];
 
     await prisma.suggestedArticle.create({
+      data: {
+        imageUrl: en.image,
+        titleEn: en.title,
+        titleAr: ar.title,
+        slug: en.slug,
+        sortOrder: i,
+      },
+    });
+  }
+
+  // ── 5b. EconomicDevelopment ──────────────────────────────────────────────────
+  console.log("Seeding EconomicDevelopment...");
+
+  const enEconArticles = economicDevelopmentArticles.en;
+  const arEconArticles = economicDevelopmentArticles.ar;
+  const econArticleCount = Math.min(enEconArticles.length, arEconArticles.length);
+
+  for (let i = 0; i < econArticleCount; i++) {
+    const en = enEconArticles[i];
+    const ar = arEconArticles[i];
+
+    await prisma.economicDevelopment.create({
+      data: {
+        slug: en.id,
+        imageUrl: en.image,
+        day: en.day,
+        monthEn: en.month,
+        monthAr: ar.month,
+        readTimeEn: en.readTime,
+        readTimeAr: ar.readTime,
+        titleEn: en.title,
+        titleAr: ar.title,
+        excerptEn: en.excerpt,
+        excerptAr: ar.excerpt,
+        bodyEn: JSON.stringify(en.body),
+        bodyAr: JSON.stringify(ar.body),
+        featured: en.featured ?? false,
+        published: true,
+        sortOrder: i,
+      },
+    });
+  }
+
+  // ── 5c. SuggestedEconomicDevelopment ───────────────────────────────────────────
+  console.log("Seeding SuggestedEconomicDevelopment...");
+
+  const enEconSuggested = suggestedEconomicDevelopments.en;
+  const arEconSuggested = suggestedEconomicDevelopments.ar;
+  const econSuggestedCount = Math.min(enEconSuggested.length, arEconSuggested.length);
+
+  for (let i = 0; i < econSuggestedCount; i++) {
+    const en = enEconSuggested[i];
+    const ar = arEconSuggested[i];
+
+    await prisma.suggestedEconomicDevelopment.create({
       data: {
         imageUrl: en.image,
         titleEn: en.title,
@@ -707,6 +775,214 @@ async function main() {
         titleAr: ar.title,
         paragraphsEn: JSON.stringify(en.paragraphs),
         paragraphsAr: JSON.stringify(ar.paragraphs),
+        sortOrder: i,
+      },
+    });
+  }
+
+  // ── 11b. LegalSection — Deposit & Withdrawal Policy ─────────────────────────
+  console.log("Seeding LegalSection (deposit-withdrawal)...");
+
+  const depositWithdrawalSections = [
+    {
+      titleAr: "السحب: كيف يتم؟",
+      paragraphsAr: [
+        "يتم السحب من المحفظة/بوابة العميل عبر تقديم طلب سحب، ثم اختيار وسيلة الاستلام حسب المتاح.",
+      ],
+    },
+    {
+      titleAr: "قواعد أساسية للسحب",
+      paragraphsAr: [
+        "السحب يكون لصاحب الحساب فقط.",
+        "غالباً يتم السحب إلى نفس مصدر الإيداع قدر الإمكان (نفس الحساب البنكي/نفس البطاقة) لتقليل مخاطر الاحتيال ومشاكل المطابقة.",
+        "إذا طلبت السحب إلى وسيلة مختلفة عن التي أودعت منها: قد يُطلب مستندات إضافية لإثبات الملكية، أو قد يتم تحويل الطلب للطريقة المعتمدة وفق السياسة والمتطلبات.",
+      ],
+    },
+    {
+      titleAr: "مدة السحب",
+      paragraphsAr: [
+        "مدة السحب عادة تمر بمرحلتين واضحتين:",
+        "المرحلة 1: المعالجة والمراجعة داخل نمايا - غالباً تتم خلال 24–48 ساعة عمل إذا كانت البيانات مكتملة ولا توجد ملاحظات.",
+        "المرحلة 2: وصول المبلغ من البنك/مزود الدفع - تحويل بنكي: غالباً 1–5 أيام عمل حسب البنك. استرجاع إلى البطاقة (Refund): قد يستغرق عدة أيام وقد يصل إلى 14 يوم عمل حسب سياسة البنك وشبكة البطاقة.",
+        "إذا تخللت العملية عطلة/ويكند أو كان هناك ضغط لدى البنك، من الطبيعي أن تزيد المدة قليلاً.",
+      ],
+    },
+    {
+      titleAr: "الإثباتات: ماذا تحصل عليه؟",
+      paragraphsAr: [
+        "عادة ستحصل داخل حسابك على: رقم العملية/رقم الطلب (مرجع داخلي)، حالة الطلب (مثل: قيد المعالجة / مكتمل / مرفوض)، سجل عمليات يوضح: التاريخ، المبلغ، طريقة الدفع، وأي رسوم إن وُجدت.",
+        "بالنسبة للتحويل البنكي: احتفظ بإيصال التحويل والمرجع البنكي إن توفر.",
+      ],
+    },
+    {
+      titleAr: "إثباتات قد تُطلب منك",
+      paragraphsAr: [
+        "غالباً تُطلب عند: فتح الحساب/أول سحب/تغيير وسيلة السحب/وجود اختلاف بالبيانات أو عملية غير معتادة.",
+        "(أ) إثبات الهوية: هوية وطنية / إقامة / جواز سفر (ساري وواضح).",
+        "(ب) إثبات العنوان: فاتورة خدمات أو كشف حساب بنكي يظهر فيه الاسم والعنوان (ويُفضّل أن يكون حديثاً).",
+        "(ج) إثبات ملكية وسيلة الدفع: للتحويل البنكي: كشف حساب أو شهادة IBAN يظهر اسم صاحب الحساب ورقم الآيبان. للبطاقة: قد يُطلب أحياناً صورة للبطاقة مع إخفاء الأرقام الوسطى (والاحتفاظ بآخر 4 أرقام فقط).",
+        "(د) مستندات إضافية عند الحاجة: إذا كان هناك اختلاف اسم، أو إيداع غير معتاد، أو طلب سحب لطريقة مختلفة: قد يُطلب توضيح أو مستند داعم بحسب الحالة.",
+      ],
+    },
+    {
+      titleAr: "حالات قد تسبب تأخيراً",
+      paragraphsAr: [
+        "قد تتأخر العملية إذا وُجد أحد التالي:",
+        "الحساب غير مكتمل التوثيق.",
+        "اسم المودع/صاحب وسيلة الدفع مختلف عن اسم صاحب الحساب.",
+        "بيانات التحويل ناقصة (مثل مرجع التحويل/IBAN/اسم…).",
+        "تم تقديم طلب السحب خلال عطلة أو خارج أيام العمل.",
+        "وجود مراجعات أو تأخير داخلي لدى البنك/مزود الدفع.",
+      ],
+    },
+    {
+      titleAr: "كيف تتتبع طلبك بطريقة صحيحة؟",
+      paragraphsAr: [
+        "احتفظ دائماً برقم العملية/رقم الطلب داخل بوابة العميل.",
+        "في التحويل البنكي تحديداً: احتفظ بإيصال التحويل والمرجع البنكي (إن وجد).",
+        "إذا تأخر التنفيذ عن المدة المتوقعة، غالباً أفضل خطوة هي تزويد الدعم بـ: رقم الطلب، تاريخ العملية، طريقة الدفع، صورة/إيصال التحويل أو المرجع البنكي.",
+      ],
+    },
+  ];
+
+  for (let i = 0; i < depositWithdrawalSections.length; i++) {
+    const sec = depositWithdrawalSections[i];
+    await prisma.legalSection.create({
+      data: {
+        pageType: "deposit-withdrawal",
+        titleEn: sec.titleAr, // Arabic-only content, use same for both
+        titleAr: sec.titleAr,
+        paragraphsEn: JSON.stringify(sec.paragraphsAr),
+        paragraphsAr: JSON.stringify(sec.paragraphsAr),
+        sortOrder: i,
+      },
+    });
+  }
+
+  // ── 11c. LegalSection — Website Verification ──────────────────────────────────
+  console.log("Seeding LegalSection (website-verification)...");
+
+  const websiteVerificationSections = [
+    {
+      titleAr: "تأكد من عنوان الموقع (الدومين)",
+      paragraphsAr: [
+        "هذا دليل معلوماتي سريع يساعدك تتحقق من الرابط قبل ما تعبي بياناتك أو تسجل دخول.",
+        "الموقع الرسمي يكون على نطاق: namaya.ar",
+        "الأفضل تكتب الرابط بنفسك في المتصفح بدل ما تضغط من إعلان/رسالة.",
+        "انتبه من الروابط اللي فيها: حرف زايد/ناقص (مثل: namayaa / namaaya)، نطاق مختلف (مثل .com / .net)، كلمات إضافية (مثل: namaya-invest… / namaya-official…).",
+      ],
+    },
+    {
+      titleAr: "تأكد من القفل و HTTPS",
+      paragraphsAr: [
+        "قبل تسجيل الدخول أو تعبئة أي نموذج:",
+        "لازم تشوف علامة القفل جنب الرابط.",
+        "لازم يبدأ الرابط بـ https://",
+        "إذا طلع تحذير \"الموقع غير آمن\" أو \"الشهادة فيها مشكلة\" → اطلع ولا تكمل.",
+      ],
+    },
+    {
+      titleAr: "طابق قنوات التواصل الرسمية داخل الموقع",
+      paragraphsAr: [
+        "من داخل الموقع الرسمي راح تلقى وسائل التواصل (مثل الإيميل/نماذج التواصل). قاعدة عامة للتحقق:",
+        "الإيميل الرسمي غالباً يكون على نفس النطاق مثل: …@namaya.ar",
+        "إذا أحد يتواصل معك من إيميل مجاني (Gmail / Hotmail) أو رقم مجهول ويطلب بيانات حساسة → تعامل بحذر.",
+      ],
+    },
+    {
+      titleAr: "انتبه للروابط المختصرة والرسائل المجهولة",
+      paragraphsAr: [
+        "الروابط المختصرة (مثل bit.ly) ما تبين لك الوجهة الحقيقية بسهولة.",
+        "الرسائل اللي تقول \"حسابك بيتوقف\" أو \"فعل الآن بسرعة\" غالباً هدفها استعجالك.",
+        "أي رابط يطلب منك \"تسجيل دخول\" مباشرة من داخل رسالة → الأفضل تتجاهله والدخول من namaya.ar يدوياً.",
+      ],
+    },
+    {
+      titleAr: "علامات واضحة إن الرابط غير موثوق",
+      paragraphsAr: [
+        "لا تكمل إذا لاحظت أي شيء من التالي:",
+        "يطلب منك رمز التحقق (OTP) أو كلمة المرور عبر واتساب/اتصال.",
+        "يطلب منك تثبيت ملف APK أو برنامج غير معروف.",
+        "يطلب منك تشغيل \"مشاركة شاشة\" أو \"تحكم عن بُعد\".",
+        "يطلب تحويل مالي \"بشكل عاجل\" إلى حساب شخصي.",
+      ],
+    },
+    {
+      titleAr: "أفضل طريقة تثبيت \"التحقق\" يومياً",
+      paragraphsAr: [
+        "بعد ما تتأكد من الرابط الصحيح: احفظ الموقع في المفضلة (Bookmark) وادخل عليه دائماً من المفضلة بدل البحث كل مرة.",
+      ],
+    },
+    {
+      titleAr: "قائمة تحقق سريعة",
+      paragraphsAr: [
+        "الرابط: namaya.ar",
+        "يوجد قفل و https",
+        "لا توجد تحذيرات أمان من المتصفح",
+        "بيانات التواصل داخل الموقع على نفس النطاق",
+        "لا تضغط روابط مختصرة/غريبة",
+        "لا تعطي OTP أو كلمة المرور لأي شخص",
+      ],
+    },
+  ];
+
+  for (let i = 0; i < websiteVerificationSections.length; i++) {
+    const sec = websiteVerificationSections[i];
+    await prisma.legalSection.create({
+      data: {
+        pageType: "website-verification",
+        titleEn: sec.titleAr,
+        titleAr: sec.titleAr,
+        paragraphsEn: JSON.stringify(sec.paragraphsAr),
+        paragraphsAr: JSON.stringify(sec.paragraphsAr),
+        sortOrder: i,
+      },
+    });
+  }
+
+  // ── 11d. LegalSection — Security & Reliability ────────────────────────────────
+  console.log("Seeding LegalSection (security-reliability)...");
+
+  const securityReliabilitySections = [
+    {
+      titleAr: "الأمان والموثوقية في نمايا",
+      paragraphsAr: [
+        "نضع حماية أصولك وبياناتك على رأس أولوياتنا. اكتشف لماذا يثق بنا المستثمرون.",
+        "تشفير SSL - حماية بيانات 256-bit.",
+        "حسابات مفصولة - أموالك في أمان تام.",
+      ],
+    },
+    {
+      titleAr: "التزامنا بالأنظمة واللوائح",
+      paragraphsAr: [
+        "تلتزم منصة نمايا بكافة المعايير التنظيمية المعمول بها لضمان بيئة استثمارية شفافة وعادلة. نحن نعمل وفق بروتوكولات صارمة لمكافحة غسيل الأموال (AML) وتعرف على عميلك (KYC).",
+      ],
+    },
+    {
+      titleAr: "كيف نحمي حسابك؟",
+      paragraphsAr: [
+        "المصادقة الثنائية (2FA) - طبقة حماية إضافية لضمان أنك الوحيد القادر على الوصول لحسابك.",
+        "مراقبة مستمرة - أنظمة ذكية لرصد أي نشاط مشبوه على مدار الساعة.",
+        "حماية البيانات - لا نشارك بياناتك مع أي طرف ثالث دون موافقتك الصريحة.",
+      ],
+    },
+    {
+      titleAr: "توضيح هام",
+      paragraphsAr: [
+        "نحرص في نمايا على الشفافية التامة. جميع عملياتنا الاستثمارية واضحة وموثقة. في حال وجود أي استفسار حول التراخيص أو الأمان، يرجى التواصل معنا مباشرة عبر القنوات الرسمية.",
+      ],
+    },
+  ];
+
+  for (let i = 0; i < securityReliabilitySections.length; i++) {
+    const sec = securityReliabilitySections[i];
+    await prisma.legalSection.create({
+      data: {
+        pageType: "security-reliability",
+        titleEn: sec.titleAr,
+        titleAr: sec.titleAr,
+        paragraphsEn: JSON.stringify(sec.paragraphsAr),
+        paragraphsAr: JSON.stringify(sec.paragraphsAr),
         sortOrder: i,
       },
     });

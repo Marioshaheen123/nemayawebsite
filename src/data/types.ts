@@ -49,6 +49,7 @@ export interface Plan {
   period: string;
   description: string;
   cta: string;
+  ctaUrl: string;
   featuresLabel: string;
   ctaStyle: string;
   bg: string;

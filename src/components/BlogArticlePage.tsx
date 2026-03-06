@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/context/LanguageContext";
 import PageHeroBanner from "@/components/shared/PageHeroBanner";
+import RichContent from "@/components/RichContent";
 
 const labels = {
   en: {
@@ -39,14 +40,27 @@ export default function BlogArticlePage({
   const article = allArticles.find((a: any) => a.id === slug) || allArticles[0];
   const suggested = suggestedArticles[lang];
   const moreCards = moreArticlesCards[lang];
-  const breakAfter = article.suggestedBreakAfter ?? 2;
-
-  const bodyBefore = article.body.slice(0, breakAfter);
-  const bodyAfter = article.body.slice(breakAfter);
+  // Split HTML body at a paragraph boundary for the suggested-topics card insertion
+  const splitBody = (html: string) => {
+    const breakIdx = article.suggestedBreakAfter ?? 2;
+    const parts = html.split(/<\/p>/i);
+    if (parts.length <= breakIdx) return { before: html, after: "" };
+    const before = parts.slice(0, breakIdx).join("</p>") + "</p>";
+    const after = parts.slice(breakIdx).join("</p>");
+    return { before, after };
+  };
+  const { before: bodyBefore, after: bodyAfter } = splitBody(article.body);
 
   return (
     <>
-      <PageHeroBanner title={article.title} />
+      <PageHeroBanner
+        title={article.title}
+        breadcrumbs={[
+          { label: isAr ? "الرئيسية" : "Home", href: "/" },
+          { label: isAr ? "المدونة" : "Blog", href: "/blog" },
+          { label: article.title },
+        ]}
+      />
 
       {/* Article Content */}
       <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px]">
@@ -58,7 +72,7 @@ export default function BlogArticlePage({
           <div className="flex items-start justify-between mb-[30px] md:mb-[40px]">
             {/* Date badge + read time (right side in RTL) */}
             <div className="flex items-end gap-4">
-              <div className="bg-[#12953d] rounded-[15px] overflow-hidden w-[94px]">
+              <div className="bg-site-gradient rounded-[15px] overflow-hidden w-[94px]">
                 <div className="flex flex-col items-center p-[10px]">
                   <span className="text-white text-[40px] font-bold leading-[40px]">
                     {article.day}
@@ -116,22 +130,26 @@ export default function BlogArticlePage({
           <div className="relative aspect-[840/470] rounded-[25px] overflow-hidden mb-[40px]">
             <Image
               src={article.image}
-              alt={article.title}
+              alt={article.imageAlt || article.title}
               fill
               className="object-cover"
             />
           </div>
 
+          {/* Tags */}
+          {article.tags && (
+            <div className="flex flex-wrap gap-2 mb-[24px]">
+              {article.tags.split(",").map((tag: string, i: number) => (
+                <span key={i} className="px-3 py-1 bg-[#f0fdf4] text-primary text-[12px] font-medium rounded-full">
+                  {tag.trim()}
+                </span>
+              ))}
+            </div>
+          )}
+
           {/* Body text - before suggested */}
-          <div className="flex flex-col gap-[16px] mb-[40px]">
-            {bodyBefore.map((p: string, i: number) => (
-              <p
-                key={i}
-                className="text-[#6084a4] text-[15px] md:text-[16px] leading-[1.4] text-start"
-              >
-                {p}
-              </p>
-            ))}
+          <div className="mb-[40px]">
+            <RichContent html={bodyBefore} dir={isAr ? "rtl" : "ltr"} className="text-[#6084a4] text-[15px] md:text-[16px] leading-[1.4] [&_p]:mb-4" />
           </div>
 
           {/* Suggested Topics */}
@@ -163,16 +181,11 @@ export default function BlogArticlePage({
           </div>
 
           {/* Body text - after suggested */}
-          <div className="flex flex-col gap-[16px]">
-            {bodyAfter.map((p: string, i: number) => (
-              <p
-                key={i}
-                className="text-[#6084a4] text-[15px] md:text-[16px] leading-[1.4] text-start"
-              >
-                {p}
-              </p>
-            ))}
-          </div>
+          {bodyAfter && (
+            <div>
+              <RichContent html={bodyAfter} dir={isAr ? "rtl" : "ltr"} className="text-[#6084a4] text-[15px] md:text-[16px] leading-[1.4] [&_p]:mb-4" />
+            </div>
+          )}
         </div>
       </section>
 
@@ -217,7 +230,7 @@ export default function BlogArticlePage({
                     }`}
                   >
                     <div className="relative -mt-[62px]">
-                      <div className="bg-[#12953d] rounded-[15px] overflow-hidden w-[94px]">
+                      <div className="bg-site-gradient rounded-[15px] overflow-hidden w-[94px]">
                         <div className="flex flex-col items-center p-[10px]">
                           <span className="text-white text-[40px] font-bold leading-[40px]">
                             {card.day}
@@ -248,7 +261,7 @@ export default function BlogArticlePage({
                   {/* Read More */}
                   <Link
                     href={`/blog/${card.slug}`}
-                    className="inline-flex items-center justify-center px-[36px] py-[15px] border border-[#12953d] rounded-[5px] text-[#0e314c] text-[14px] font-semibold leading-[21px] hover:bg-[#12953d] hover:text-white transition-all"
+                    className="cta-gradient inline-flex items-center justify-center px-[36px] py-[15px] rounded-[5px] text-white text-[14px] font-semibold leading-[21px]"
                   >
                     {t.readMore}
                   </Link>

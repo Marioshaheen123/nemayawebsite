@@ -1,114 +1,106 @@
-import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { validateBody } from "@/lib/validation";
+import { videoSchema } from "@/lib/schemas/video";
+import { requireAdmin } from "@/lib/admin-guard";
+import { logAuditEvent } from "@/lib/audit-log";
+import { getClientIp } from "@/lib/rate-limit";
 
 export async function GET(
-  _req: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
   const { id } = await params;
-
   const video = await prisma.video.findUnique({ where: { id } });
-  if (!video) return NextResponse.json({ error: "Not found" }, { status: 404 });
-
+  if (!video) {
+    return NextResponse.json({ error: "Video not found" }, { status: 404 });
+  }
   return NextResponse.json(video);
 }
 
-export async function PUT(
-  req: NextRequest,
+export async function PATCH(
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { admin, error: authError } = await requireAdmin(request);
+  if (authError) return authError;
 
   const { id } = await params;
-  const body = await req.json();
-
-  const {
-    videoId,
-    titleEn,
-    titleAr,
-    descEn,
-    descAr,
-    fullDescEn,
-    fullDescAr,
-    takeawaysEn,
-    takeawaysAr,
-    linkTextEn,
-    linkTextAr,
-    day,
-    monthEn,
-    monthAr,
-    durationEn,
-    durationAr,
-    videoUrl,
-    labelEn,
-    labelAr,
-    sortOrder,
-  } = body;
-
-  // Validate takeaways if provided
-  const parseTakeaways = (raw: string, field: string) => {
-    if (!raw || raw.trim() === "") return "[]";
-    try {
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) throw new Error(`${field} must be a JSON array`);
-      return raw;
-    } catch {
-      throw new Error(`${field} is not valid JSON`);
-    }
-  };
-
-  let parsedTakeawaysEn: string | undefined;
-  let parsedTakeawaysAr: string | undefined;
-  try {
-    if (takeawaysEn !== undefined) parsedTakeawaysEn = parseTakeaways(takeawaysEn, "takeawaysEn");
-    if (takeawaysAr !== undefined) parsedTakeawaysAr = parseTakeaways(takeawaysAr, "takeawaysAr");
-  } catch (e: unknown) {
-    return NextResponse.json({ error: (e as Error).message }, { status: 400 });
-  }
-
+  const { data, error } = await validateBody(request, videoSchema);
+  if (error) return error;
   const video = await prisma.video.update({
     where: { id },
     data: {
-      ...(videoId !== undefined && { videoId }),
-      ...(titleEn !== undefined && { titleEn }),
-      ...(titleAr !== undefined && { titleAr }),
-      ...(descEn !== undefined && { descEn }),
-      ...(descAr !== undefined && { descAr }),
-      ...(fullDescEn !== undefined && { fullDescEn }),
-      ...(fullDescAr !== undefined && { fullDescAr }),
-      ...(parsedTakeawaysEn !== undefined && { takeawaysEn: parsedTakeawaysEn }),
-      ...(parsedTakeawaysAr !== undefined && { takeawaysAr: parsedTakeawaysAr }),
-      ...(linkTextEn !== undefined && { linkTextEn }),
-      ...(linkTextAr !== undefined && { linkTextAr }),
-      ...(day !== undefined && { day }),
-      ...(monthEn !== undefined && { monthEn }),
-      ...(monthAr !== undefined && { monthAr }),
-      ...(durationEn !== undefined && { durationEn }),
-      ...(durationAr !== undefined && { durationAr }),
-      ...(videoUrl !== undefined && { videoUrl }),
-      ...(labelEn !== undefined && { labelEn }),
-      ...(labelAr !== undefined && { labelAr }),
-      ...(sortOrder !== undefined && { sortOrder }),
+      videoId: data.videoId,
+      titleEn: data.titleEn,
+      titleAr: data.titleAr,
+      descEn: data.descEn,
+      descAr: data.descAr,
+      fullDescEn: data.fullDescEn,
+      fullDescAr: data.fullDescAr,
+      takeawaysEn: data.takeawaysEn,
+      takeawaysAr: data.takeawaysAr,
+      linkTextEn: data.linkTextEn,
+      linkTextAr: data.linkTextAr,
+      day: data.day,
+      monthEn: data.monthEn,
+      monthAr: data.monthAr,
+      durationEn: data.durationEn,
+      durationAr: data.durationAr,
+      videoUrl: data.videoUrl,
+      labelEn: data.labelEn ?? "",
+      labelAr: data.labelAr ?? "",
+      sortOrder: data.sortOrder ?? 0,
+      // SEO
+      metaTitleEn: data.metaTitleEn || null,
+      metaTitleAr: data.metaTitleAr || null,
+      metaDescriptionEn: data.metaDescriptionEn || null,
+      metaDescriptionAr: data.metaDescriptionAr || null,
+      ogImageUrl: data.ogImageUrl || null,
+      keywords: data.keywords || null,
     },
   });
+  await logAuditEvent({
+    adminId: admin.sub,
+    adminEmail: admin.email,
+    action: "update",
+    resource: "Video",
+    resourceId: video.id,
+    details: JSON.stringify({ videoId: data.videoId, titleEn: data.titleEn }),
+    ip: getClientIp(request),
+  });
 
+  revalidatePath("/");
+  revalidatePath("/videos");
+  revalidateTag("content-blocks", "default");
+  revalidateTag("admin-videos-list", "default");
   return NextResponse.json(video);
 }
 
 export async function DELETE(
-  _req: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { admin, error: authError } = await requireAdmin(request);
+  if (authError) return authError;
 
   const { id } = await params;
-  await prisma.video.delete({ where: { id } });
 
+  await logAuditEvent({
+    adminId: admin.sub,
+    adminEmail: admin.email,
+    action: "delete",
+    resource: "Video",
+    resourceId: id,
+    details: JSON.stringify({ id }),
+    ip: getClientIp(request),
+  });
+
+  await prisma.video.delete({ where: { id } });
+  revalidatePath("/");
+  revalidatePath("/videos");
+  revalidateTag("content-blocks", "default");
+  revalidateTag("admin-videos-list", "default");
   return NextResponse.json({ success: true });
 }

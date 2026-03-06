@@ -1,0 +1,49 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { adminFetch } from "@/lib/admin-fetch";
+import VideoForm from "@/components/admin/editors/VideoForm";
+
+export default function EditVideoPage() {
+  const params = useParams();
+  const id = params.id as string;
+  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    adminFetch(`/api/admin/videos/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Not found");
+        return res.json();
+      })
+      .then(setData)
+      .catch(() => setError(true));
+  }, [id]);
+
+  if (error) {
+    return (
+      <div className="bg-white rounded-xl border border-[#e8ecf1] p-8 text-center">
+        <p className="text-[14px] text-red-500">Video not found. It may have been deleted.</p>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="bg-white rounded-xl border border-[#e8ecf1] p-8 flex items-center justify-center gap-2">
+        <svg className="animate-spin h-5 w-5 text-accent" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
+        <span className="text-[13px] text-[#6b7280]">Loading...</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-xl border border-[#e8ecf1] shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-6">
+      <VideoForm initialData={data} dbId={data.id} />
+    </div>
+  );
+}

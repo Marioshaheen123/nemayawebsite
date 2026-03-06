@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import SectionBadge from "./SectionBadge";
+
 import { useState, useRef } from "react";
 import { useLang } from "@/context/LanguageContext";
 
@@ -72,7 +72,7 @@ export default function Blog({ blogSectionData, blogArticles }: BlogProps) {
           }`}
         >
           <div className="relative -mt-[62px]">
-            <div className="bg-[#12953d] rounded-[12px] md:rounded-[13px] overflow-hidden w-[80px] md:w-[82px]">
+            <div className="bg-site-gradient rounded-[12px] md:rounded-[13px] overflow-hidden w-[80px] md:w-[82px]">
               <div className="flex flex-col items-center p-[8px] md:p-[9px]">
                 <span className="text-white text-[34px] md:text-[32px] font-bold leading-[34px] md:leading-[32px]">
                   {article.day}
@@ -102,7 +102,7 @@ export default function Blog({ blogSectionData, blogArticles }: BlogProps) {
 
         {/* Read More */}
         <div className="mt-auto pt-[16px]">
-          <Link href={`/blog/${article.id}`} className="cta-glass-solid">
+          <Link href={`/blog/${article.id}`} className="cta-gradient inline-flex items-center gap-[10px] rounded-[12px] px-[36px] py-[16px] text-[14px] font-semibold">
             {blogSectionData.readMoreLabel[lang]}
             <span className="cta-arrow">→</span>
           </Link>
@@ -116,7 +116,6 @@ export default function Blog({ blogSectionData, blogArticles }: BlogProps) {
       <div className="w-full max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[40px]">
-          <SectionBadge label={blogSectionData.badge.label} labelAr={blogSectionData.badge.labelAr} />
           <h2 className="section-heading-mobile text-[25px] leading-[32.5px] md:text-[32px] md:leading-[40px] xl:text-[40px] xl:leading-[48px] text-[#0e314c] mt-[10px]">
             {h.before}
             <span className="font-bold">{h.bold}</span>
@@ -161,7 +160,7 @@ export default function Blog({ blogSectionData, blogArticles }: BlogProps) {
               key={i}
               onClick={() => setMobileSlide(i)}
               className={`w-3 h-3 rounded-full transition-colors ${
-                i === mobileSlide ? "bg-[#12953d]" : "bg-[#cacceb]"
+                i === mobileSlide ? "bg-site-gradient" : "bg-[#cacceb]"
               }`}
             />
           ))}
@@ -171,7 +170,7 @@ export default function Blog({ blogSectionData, blogArticles }: BlogProps) {
         <div className="flex justify-center mt-[32px] md:mt-[48px]">
           <Link
             href="/blog"
-            className="bg-[#12953d] hover:bg-[#0e7a32] transition-colors rounded-full px-[28px] py-[12px] text-white text-[14px] font-semibold inline-flex items-center gap-2"
+            className="cta-gradient rounded-full px-[28px] py-[12px] text-white text-[14px] font-semibold inline-flex items-center gap-2"
           >
             {blogSectionData.viewAllLabel[lang]}
             <span className="text-[16px]">→</span>

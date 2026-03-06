@@ -1,9 +1,10 @@
 "use client";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLang } from "@/context/LanguageContext";
 import { useUserAuth } from "@/context/UserAuthContext";
 import type { Bilingual } from "@/data/types";
@@ -23,28 +24,39 @@ interface LoginPageProps {
 }
 
 export default function LoginPage({ loginText: t }: LoginPageProps) {
+  const { mainLogo } = useSiteSettings();
   const { lang, toggleLang } = useLang();
   const { login } = useUserAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const registeredId = searchParams.get("registered");
   const isAr = lang === "ar";
   const content = t[lang];
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [form, setForm] = useState({ accountNumber: "", password: "" });
+  const [form, setForm] = useState({ accountNumber: registeredId || "", password: "" });
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     if (!form.accountNumber || !form.password) {
       setError(isAr ? "يرجى ملء جميع الحقول" : "Please fill in all fields");
       return;
     }
-    const success = login(form.accountNumber, form.password);
-    if (success) {
-      router.push("/personal-area");
-    } else {
-      setError(isAr ? "بيانات الدخول غير صحيحة" : "Invalid credentials");
+    setSubmitting(true);
+    try {
+      const result = await login(form.accountNumber, form.password);
+      if (result.success) {
+        router.push("/personal-area");
+      } else {
+        setError(isAr ? "بيانات الدخول غير صحيحة" : (result.error || "Invalid credentials"));
+      }
+    } catch {
+      setError(isAr ? "حدث خطأ، يرجى المحاولة لاحقاً" : "An error occurred, please try again");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -70,7 +82,7 @@ export default function LoginPage({ loginText: t }: LoginPageProps) {
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <Image
-            src="/images/nemayalogo.png"
+            src={mainLogo}
             alt="Namaya for Investment"
             width={233}
             height={64}
@@ -87,6 +99,17 @@ export default function LoginPage({ loginText: t }: LoginPageProps) {
             {content.subtitle}
           </p>
         </div>
+
+        {/* Registration success banner */}
+        {registeredId && (
+          <div className="mb-4 p-3 rounded-[6px] bg-emerald-50 border border-emerald-200 text-emerald-700 text-[14px] text-center">
+            {isAr ? (
+              <>تم إنشاء حسابك بنجاح! رقم حسابك هو <strong className="font-semibold">{registeredId}</strong>. يرجى تسجيل الدخول.</>
+            ) : (
+              <>Account created successfully! Your account number is <strong className="font-semibold">{registeredId}</strong>. Please log in.</>
+            )}
+          </div>
+        )}
 
         {/* Error message */}
         {error && (
@@ -105,7 +128,7 @@ export default function LoginPage({ loginText: t }: LoginPageProps) {
               placeholder={content.accountNumber}
               value={form.accountNumber}
               onChange={(e) => setForm((f) => ({ ...f, accountNumber: e.target.value }))}
-              className="w-full border border-[rgba(46,38,61,0.22)] rounded-[6px] px-[14px] py-[16px] text-[15px] text-[rgba(46,38,61,0.9)] placeholder:text-[rgba(46,38,61,0.7)] focus:outline-none focus:border-[#057e33] transition-colors"
+              className="w-full border border-[rgba(46,38,61,0.22)] rounded-[6px] px-[14px] py-[16px] text-[15px] text-[rgba(46,38,61,0.9)] placeholder:text-[rgba(46,38,61,0.7)] focus:outline-none focus:border-accent transition-colors"
             />
             {form.accountNumber && (
               <label className={`absolute -top-[10px] bg-white px-1 text-[13px] text-[rgba(46,38,61,0.7)] ${isAr ? "right-[13px]" : "left-[13px]"}`}>
@@ -121,7 +144,7 @@ export default function LoginPage({ loginText: t }: LoginPageProps) {
               placeholder={content.password}
               value={form.password}
               onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-              className="w-full border border-[rgba(46,38,61,0.22)] rounded-[6px] px-[14px] py-[16px] text-[15px] text-[rgba(46,38,61,0.9)] placeholder:text-[rgba(46,38,61,0.7)] focus:outline-none focus:border-[#057e33] transition-colors"
+              className="w-full border border-[rgba(46,38,61,0.22)] rounded-[6px] px-[14px] py-[16px] text-[15px] text-[rgba(46,38,61,0.9)] placeholder:text-[rgba(46,38,61,0.7)] focus:outline-none focus:border-accent transition-colors"
             />
             {form.password && (
               <label className={`absolute -top-[10px] bg-white px-1 text-[13px] text-[rgba(46,38,61,0.7)] ${isAr ? "right-[13px]" : "left-[13px]"}`}>
@@ -156,7 +179,7 @@ export default function LoginPage({ loginText: t }: LoginPageProps) {
               type="checkbox"
               checked={rememberMe}
               onChange={() => setRememberMe(!rememberMe)}
-              className="w-[20px] h-[20px] rounded-[4px] border-[rgba(46,38,61,0.22)] accent-[#057e33] cursor-pointer"
+              className="w-[20px] h-[20px] rounded-[4px] border-[rgba(46,38,61,0.22)] accent-accent cursor-pointer"
             />
             <span className="text-[rgba(46,38,61,0.9)] text-[15px]">
               {content.rememberMe}
@@ -164,15 +187,15 @@ export default function LoginPage({ loginText: t }: LoginPageProps) {
           </label>
           <Link
             href="/forgot-password"
-            className="text-[#057e33] text-[15px] hover:underline"
+            className="text-accent text-[15px] hover:underline"
           >
             {content.forgotPassword}
           </Link>
         </div>
 
         {/* Log In Button */}
-        <button type="submit" className="w-full bg-[#057e33] rounded-[6px] px-[18px] py-[10px] text-white text-[15px] font-medium shadow-[0px_2px_4px_0px_rgba(46,38,61,0.16)] hover:bg-[#046b2b] transition-all cursor-pointer">
-          {content.loginBtn}
+        <button type="submit" disabled={submitting} className="cta-gradient w-full rounded-[6px] px-[18px] py-[10px] text-white text-[15px] font-medium shadow-[0px_2px_4px_0px_rgba(46,38,61,0.16)] cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
+          {submitting ? (isAr ? "جارٍ الدخول..." : "Logging in...") : content.loginBtn}
         </button>
         </form>
 
@@ -181,7 +204,7 @@ export default function LoginPage({ loginText: t }: LoginPageProps) {
           <span className="text-[rgba(46,38,61,0.7)] text-[15px]">
             {content.newHere}{" "}
           </span>
-          <Link href="/register" className="text-[#057e33] text-[15px] hover:underline">
+          <Link href="/register" className="text-accent text-[15px] hover:underline">
             {content.createAccount}
           </Link>
         </div>

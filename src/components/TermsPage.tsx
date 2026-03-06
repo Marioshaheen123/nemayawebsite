@@ -16,7 +16,13 @@ export default function TermsPage({ heroTitle, sections }: TermsPageProps) {
 
   return (
     <>
-      <PageHeroBanner title={heroTitle[lang]} />
+      <PageHeroBanner
+        title={heroTitle[lang]}
+        breadcrumbs={[
+          { label: isAr ? "الرئيسية" : "Home", href: "/" },
+          { label: heroTitle[lang] },
+        ]}
+      />
 
       {/* Content */}
       <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px]">

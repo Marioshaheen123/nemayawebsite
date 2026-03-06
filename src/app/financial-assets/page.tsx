@@ -1,15 +1,24 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import FinancialAssetsPage from "@/components/FinancialAssetsPage";
 import Footer from "@/components/Footer";
-import { getContentBlock, getFinancialAssetCards, getHeaderData, getFooterData } from "@/lib/content";
+import { getContentBlock, getFinancialAssetCards, getLayoutData } from "@/lib/content";
+import { buildMetadata } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMetadata({
+    titleAr: "الأصول المالية",
+    descriptionAr: "استكشف مجموعة واسعة من الأصول المالية المتاحة للتداول",
+    path: "/financial-assets",
+  });
+}
 
 export default async function FinancialAssets() {
-  const [headerData, footerData, heroTitle, heroSubtitle, exploreLabel, cardImages, dbCards] =
+  const { headerData, footerData } = await getLayoutData();
+  const [heroTitle, heroSubtitle, exploreLabel, cardImages, dbCards] =
     await Promise.all([
-      getHeaderData(),
-      getFooterData(),
       getContentBlock<any>("financialAssets.heroTitle"),
       getContentBlock<any>("financialAssets.heroSubtitle"),
       getContentBlock<any>("financialAssets.exploreLabel"),

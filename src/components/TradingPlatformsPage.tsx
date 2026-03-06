@@ -13,6 +13,7 @@ interface TradingPlatformsPageProps {
     features: string[];
     closingBold: string;
     cta: string;
+    ctaUrl?: string;
   }>;
   mockupImage: string;
   checkIcon: string;
@@ -76,8 +77,8 @@ export default function TradingPlatformsPage({
 
       <div>
         <a
-          href="#"
-          className="inline-flex items-center justify-center px-[36px] py-[15.5px] bg-[#12953d] border border-[#b0f127] rounded-[5px] text-white text-[14px] font-semibold leading-[21px] hover:bg-[#0e7a31] transition-all"
+          href={t.ctaUrl || "#"}
+          className="cta-gradient inline-flex items-center justify-center px-[36px] py-[15.5px] rounded-[12px] text-[14px] font-semibold leading-[21px]"
         >
           {t.cta}
         </a>

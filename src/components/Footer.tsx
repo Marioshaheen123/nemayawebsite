@@ -1,4 +1,5 @@
 "use client";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 import Image from "next/image";
 import { useLang } from "@/context/LanguageContext";
@@ -12,6 +13,7 @@ interface FooterProps {
 }
 
 export default function Footer({ footerQuickLinks, footerSupportLinks, footerSocialIcons, footerLabels, footerContactInfo }: FooterProps) {
+  const { mainLogo } = useSiteSettings();
   const { lang } = useLang();
   const t = footerLabels[lang];
   const qLinks = footerQuickLinks[lang];
@@ -39,7 +41,7 @@ export default function Footer({ footerQuickLinks, footerSupportLinks, footerSoc
               className="flex items-center gap-[7px] mb-[19px]"
             >
               <Image
-                src="/images/nemayalogo.png"
+                src={mainLogo}
                 alt="Namaya for Investment"
                 width={225}
                 height={52}
@@ -54,7 +56,7 @@ export default function Footer({ footerQuickLinks, footerSupportLinks, footerSoc
                 <a
                   key={i}
                   href={icon.href}
-                  className="w-[52px] h-[52px] md:w-[35px] md:h-[35px] rounded-full bg-[rgba(18,149,61,0.4)] flex items-center justify-center hover:bg-[rgba(18,149,61,0.7)] transition-colors"
+                  className="w-[52px] h-[52px] md:w-[35px] md:h-[35px] rounded-full bg-primary/40 flex items-center justify-center hover:bg-primary/70 transition-colors"
                 >
                   <Image
                     src={icon.src}
@@ -146,8 +148,21 @@ export default function Footer({ footerQuickLinks, footerSupportLinks, footerSoc
           </div>
         </div>
 
+        {/* Disclaimer */}
+        {t.disclaimer && (
+          <div
+            dir={lang === "ar" ? "rtl" : undefined}
+            className="border-t border-[rgba(74,111,138,0.3)] py-[20px] md:py-[25px]"
+          >
+            <p className="text-white text-[11px] md:text-[12px] leading-[1.6] text-center">
+              {t.disclaimer}
+            </p>
+          </div>
+        )}
+
         {/* Bottom bar */}
-        <div className="border-t border-[rgba(74,111,138,0.3)] py-[25px]">
+        <div className="border-t border-[rgba(74,111,138,0.3)] py-[25px] flex flex-col items-center gap-[16px]">
+          <Image src="/payments.svg" alt="Payment methods" width={400} height={40} className="h-[30px] w-auto opacity-80" unoptimized />
           <p className="text-white text-[14px] leading-[25.2px] text-center">
             {t.copyright}
           </p>

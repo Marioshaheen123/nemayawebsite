@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import SectionBadge from "./SectionBadge";
+
 import { useLang } from "@/context/LanguageContext";
 
 interface HowItWorksProps {
   howItWorksContent: any;
-  howItWorksBadge: any;
+
   howItWorksImage: any;
 }
 
@@ -25,7 +25,7 @@ const StarIcon = () => (
   </svg>
 );
 
-export default function HowItWorks({ howItWorksContent, howItWorksBadge, howItWorksImage }: HowItWorksProps) {
+export default function HowItWorks({ howItWorksContent, howItWorksImage }: HowItWorksProps) {
   const { lang } = useLang();
   const isAr = lang === "ar";
   const t = howItWorksContent[lang];
@@ -46,7 +46,7 @@ export default function HowItWorks({ howItWorksContent, howItWorksBadge, howItWo
           <div className="hidden md:flex items-center gap-[60px] xl:gap-[80px]">
             {/* Person image */}
             <div className="shrink-0">
-              <div className="w-[500px] h-[500px] xl:w-[580px] xl:h-[580px] rounded-full overflow-hidden border-[4px] border-[#12953d]/30">
+              <div className="w-[500px] h-[500px] xl:w-[580px] xl:h-[580px] rounded-full overflow-hidden border-[4px] border-primary/30">
                 <Image
                   src={howItWorksImage}
                   alt="How it works"
@@ -59,9 +59,8 @@ export default function HowItWorks({ howItWorksContent, howItWorksBadge, howItWo
 
             {/* Content */}
             <div className="flex-1">
-              <SectionBadge label={howItWorksBadge.label} labelAr={howItWorksBadge.labelAr} />
               <h2
-                className={`text-white text-[40px] leading-[48px] xl:text-[48px] xl:leading-[56px] mt-[16px] mb-[32px] max-w-[600px] xl:max-w-[700px]`}
+                className={`text-white text-[32px] leading-[40px] xl:text-[36px] xl:leading-[44px] mt-[16px] mb-[32px] max-w-[600px] xl:max-w-[700px]`}
               >
                 {t.heading}
               </h2>
@@ -95,7 +94,7 @@ export default function HowItWorks({ howItWorksContent, howItWorksBadge, howItWo
           {/* Mobile layout */}
           <div className="md:hidden flex flex-col items-center">
             {/* Person image */}
-            <div className="w-[200px] h-[200px] rounded-full overflow-hidden border-[3px] border-[#12953d]/30 mb-[24px]">
+            <div className="w-[200px] h-[200px] rounded-full overflow-hidden border-[3px] border-primary/30 mb-[24px]">
               <Image
                 src={howItWorksImage}
                 alt="How it works"
@@ -103,11 +102,6 @@ export default function HowItWorks({ howItWorksContent, howItWorksBadge, howItWo
                 height={200}
                 className="object-cover w-full h-full"
               />
-            </div>
-
-            {/* Badge */}
-            <div className="mb-[12px]">
-              <SectionBadge label={howItWorksBadge.label} labelAr={howItWorksBadge.labelAr} />
             </div>
 
             {/* Heading */}

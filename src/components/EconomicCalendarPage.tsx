@@ -30,24 +30,16 @@ interface EconomicCalendarPageProps {
   currencyToCountry: Record<string, string>;
 }
 
-// ─── API fetch function (ready to wire up) ───────────────────────────────────
-/**
- * Replace this function body with your actual API call.
- * Expected to return CalendarDay[] for the given filter and language.
- *
- * Example API integration:
- *   const res = await fetch(`/api/economic-calendar?filter=${filter}&lang=${lang}`);
- *   return res.json();
- */
 async function fetchCalendarEvents(
   filter: FilterKey,
   lang: "en" | "ar",
   sampleData: { en: CalendarDay[]; ar: CalendarDay[] }
 ): Promise<CalendarDay[]> {
-  // TODO: Replace with real API call
-  // Simulate network delay
-  await new Promise((r) => setTimeout(r, 300));
-  return sampleData[lang];
+  const res = await fetch(`/api/economic-calendar?filter=${filter}&lang=${lang}`);
+  if (!res.ok) throw new Error("Failed to fetch");
+  const data: CalendarDay[] = await res.json();
+  // If API returns empty (no provider configured yet), fall back to sample data
+  return data.length > 0 ? data : sampleData[lang];
 }
 
 function CurrencyFlag({ currency, currencyToCountry }: { currency: string; currencyToCountry: Record<string, string> }) {
@@ -67,7 +59,7 @@ function CurrencyFlag({ currency, currencyToCountry }: { currency: string; curre
 // ─── Impact star component ───────────────────────────────────────────────────
 function ImpactStars({ level }: { level: 1 | 2 | 3 }) {
   const colors: Record<1 | 2 | 3, { filled: string; border: string; bg: string }> = {
-    1: { filled: "#12953d", border: "#12953d", bg: "#dff7df" },
+    1: { filled: "var(--color-primary)", border: "var(--color-primary)", bg: "#dff7df" },
     2: { filled: "#e6a817", border: "#e6a817", bg: "#fef9e7" },
     3: { filled: "#e53e3e", border: "#e53e3e", bg: "#fde8e8" },
   };
@@ -135,7 +127,13 @@ export default function EconomicCalendarPage({
 
   return (
     <>
-      <PageHeroBanner title={i18n.heroTitle[lang]} />
+      <PageHeroBanner
+        title={i18n.heroTitle[lang]}
+        breadcrumbs={[
+          { label: isAr ? "الرئيسية" : "Home", href: "/" },
+          { label: i18n.heroTitle[lang] },
+        ]}
+      />
 
       {/* Calendar Content */}
       <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px]">
@@ -149,7 +147,7 @@ export default function EconomicCalendarPage({
                   onClick={() => setActiveFilter(f.key)}
                   className={`flex items-center gap-[8px] px-[24px] py-[15px] rounded-[8px] text-[14px] font-medium transition-all cursor-pointer ${
                     activeFilter === f.key
-                      ? "bg-[#12953d] text-white"
+                      ? "bg-site-gradient text-white"
                       : "bg-white text-[#0e314c] border border-[#e5e7eb] hover:bg-[#f0f0f0]"
                   }`}
                 >
@@ -176,7 +174,7 @@ export default function EconomicCalendarPage({
           {loading && (
             <div className="flex items-center justify-center py-[80px]">
               <div className="flex items-center gap-[12px] text-[#6084a4] text-[16px]">
-                <div className="w-[24px] h-[24px] border-[3px] border-[#12953d] border-t-transparent rounded-full animate-spin" />
+                <div className="w-[24px] h-[24px] border-[3px] border-primary border-t-transparent rounded-full animate-spin" />
                 {i18n.loading[lang]}
               </div>
             </div>

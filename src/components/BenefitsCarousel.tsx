@@ -1,19 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import SectionBadge from "./SectionBadge";
+
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useLang } from "@/context/LanguageContext";
 
 interface BenefitsCarouselProps {
   carouselCards: any;
   carouselHeading: any;
-  carouselBadge: any;
+
 }
 
 const GAP = 22;
 
-export default function BenefitsCarousel({ carouselCards, carouselHeading, carouselBadge }: BenefitsCarouselProps) {
+export default function BenefitsCarousel({ carouselCards, carouselHeading }: BenefitsCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(1);
   const { lang } = useLang();
   const isAr = lang === "ar";
@@ -85,8 +85,7 @@ export default function BenefitsCarousel({ carouselCards, carouselHeading, carou
       {/* Header */}
       <div className="max-w-7xl mx-auto px-6">
         <div className={`mb-[16px] md:mb-[40px] text-center ${isAr ? "md:text-right" : "md:text-left"}`}>
-          <SectionBadge label={carouselBadge.label} labelAr={carouselBadge.labelAr} />
-          <h2 className="text-[18px] leading-[24px] md:text-[40px] md:leading-[48px] xl:text-[48px] xl:leading-[56px] text-[#0e314c] mt-[8px] md:mt-[10px]">
+          <h2 className="text-[18px] leading-[24px] md:text-[32px] md:leading-[40px] xl:text-[36px] xl:leading-[44px] text-[#0e314c] mt-[8px] md:mt-[10px]">
             <span className="font-bold">{h.bold}</span>
             {h.rest}
           </h2>
@@ -134,20 +133,6 @@ export default function BenefitsCarousel({ carouselCards, carouselHeading, carou
         </div>
       </div>
 
-      {/* Dots */}
-      {maxIndex > 0 && (
-        <div className="flex justify-center gap-2 mt-[16px] md:mt-[40px]">
-          {Array.from({ length: maxIndex + 1 }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setActiveIndex(i)}
-              className={`w-3 h-3 rounded-full transition-colors ${
-                i === activeIndex ? "bg-[#12953d]" : "bg-[#cacceb]"
-              }`}
-            />
-          ))}
-        </div>
-      )}
     </section>
   );
 }

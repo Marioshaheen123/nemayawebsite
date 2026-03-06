@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import RegisterPage from "@/components/RegisterPage";
 import { getContentBlock } from "@/lib/content";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export const dynamic = "force-dynamic";
 

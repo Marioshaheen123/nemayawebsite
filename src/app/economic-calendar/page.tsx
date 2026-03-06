@@ -1,14 +1,23 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import EconomicCalendarPage from "@/components/EconomicCalendarPage";
 import Footer from "@/components/Footer";
-import { getContentBlock, getHeaderData, getFooterData } from "@/lib/content";
+import { getContentBlock, getLayoutData } from "@/lib/content";
+import { buildMetadata } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMetadata({
+    titleAr: "التقويم الاقتصادي",
+    descriptionAr: "تابع الأحداث الاقتصادية المهمة والمؤثرة على الأسواق المالية",
+    path: "/economic-calendar",
+  });
+}
 
 export default async function EconomicCalendar() {
-  const [headerData, footerData, sampleData, i18n, currencyToCountry] = await Promise.all([
-    getHeaderData(),
-    getFooterData(),
+  const { headerData, footerData } = await getLayoutData();
+  const [sampleData, i18n, currencyToCountry] = await Promise.all([
     getContentBlock<any>("economicCalendar.sampleData"),
     getContentBlock<any>("economicCalendar.i18n"),
     getContentBlock<any>("economicCalendar.currencyToCountry"),

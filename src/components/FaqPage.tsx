@@ -27,7 +27,13 @@ export default function FaqPage({
 
   return (
     <>
-      <PageHeroBanner title={faqPageHeroTitle[lang]} />
+      <PageHeroBanner
+        title={faqPageHeroTitle[lang]}
+        breadcrumbs={[
+          { label: isAr ? "الرئيسية" : "Home", href: "/" },
+          { label: faqPageHeroTitle[lang] },
+        ]}
+      />
 
       {/* Intro */}
       <section className="bg-white pt-[40px] md:pt-[50px]">
@@ -35,14 +41,9 @@ export default function FaqPage({
           dir={isAr ? "rtl" : undefined}
           className="max-w-7xl mx-auto px-6"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-[20px] md:gap-[40px]">
-            <p className="text-[#12953d] text-[14px] md:text-[15px] leading-[1.5]">
-              {intro.left}
-            </p>
-            <p className="text-[#6084a4] text-[14px] md:text-[15px] leading-[1.5]">
-              {intro.right}
-            </p>
-          </div>
+          <p className="text-[#0e314c] text-[16px] md:text-[18px] leading-[1.6] font-medium">
+            {intro.right}
+          </p>
         </div>
       </section>
 
@@ -65,7 +66,7 @@ export default function FaqPage({
                     }}
                     className={`px-[24px] py-[14px] rounded-[10px] text-[14px] md:text-[15px] font-medium whitespace-nowrap md:whitespace-normal text-start transition-all cursor-pointer ${
                       activeCategory === i
-                        ? "bg-[#12953d] text-white"
+                        ? "bg-site-gradient text-white"
                         : "bg-[#f9f9f9] text-[#0e314c] border border-[#e5e7eb] hover:bg-[#f0f0f0]"
                     }`}
                   >
@@ -91,7 +92,7 @@ export default function FaqPage({
                       key={i}
                       className={`rounded-[12px] border transition-colors ${
                         isOpen
-                          ? "border-[#12953d] bg-[rgba(18,149,61,0.03)]"
+                          ? "border-primary bg-primary/[0.03]"
                           : "border-[#e5e7eb] bg-white"
                       }`}
                     >
@@ -107,8 +108,8 @@ export default function FaqPage({
                         <div
                           className={`w-[36px] h-[36px] rounded-full flex items-center justify-center shrink-0 transition-colors ${
                             isOpen
-                              ? "bg-[#12953d]"
-                              : "bg-[#12953d]"
+                              ? "bg-site-gradient"
+                              : "bg-site-gradient"
                           }`}
                         >
                           <svg

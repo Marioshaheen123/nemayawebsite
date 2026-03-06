@@ -81,7 +81,7 @@ export default function BlogPage({
           }`}
         >
           <div className="relative -mt-[62px]">
-            <div className="bg-[#12953d] rounded-[15px] overflow-hidden w-[94px]">
+            <div className="bg-site-gradient rounded-[15px] overflow-hidden w-[94px]">
               <div className="flex flex-col items-center p-[10px]">
                 <span className="text-white text-[40px] font-bold leading-[40px]">
                   {article.day}
@@ -112,7 +112,7 @@ export default function BlogPage({
         {/* Watch Now */}
         <Link
           href={`/blog/${article.id}`}
-          className="group/btn inline-flex items-center gap-[10px] px-[28px] py-[12px] bg-[#12953d] rounded-full text-white text-[14px] font-semibold hover:bg-[#0e7a31] hover:shadow-[0_4px_16px_rgba(18,149,61,0.35)] transition-all duration-300"
+          className="cta-gradient group/btn inline-flex items-center gap-[10px] px-[28px] py-[12px] rounded-full text-white text-[14px] font-semibold hover:shadow-lg"
         >
           {watchNowLabel[lang]}
           <svg
@@ -136,7 +136,13 @@ export default function BlogPage({
 
   return (
     <>
-      <PageHeroBanner title={blogPageHeroTitle[lang]} />
+      <PageHeroBanner
+        title={blogPageHeroTitle[lang]}
+        breadcrumbs={[
+          { label: isAr ? "الرئيسية" : "Home", href: "/" },
+          { label: blogPageHeroTitle[lang] },
+        ]}
+      />
 
       {/* Blog Grid */}
       <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px]">
@@ -169,7 +175,7 @@ export default function BlogPage({
                   key={i}
                   onClick={() => setMobileSlide(i)}
                   className={`w-3 h-3 rounded-full transition-colors ${
-                    i === mobileSlide ? "bg-[#12953d]" : "bg-[#cacceb]"
+                    i === mobileSlide ? "bg-site-gradient" : "bg-[#cacceb]"
                   }`}
                 />
               ))}

@@ -1,105 +1,108 @@
-import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { validateBody } from "@/lib/validation";
+import { blogArticleSchema } from "@/lib/schemas/blog";
+import { requireAdmin } from "@/lib/admin-guard";
+import { logAuditEvent } from "@/lib/audit-log";
+import { getClientIp } from "@/lib/rate-limit";
 
-type RouteContext = { params: Promise<{ id: string }> };
-
-export async function GET(_request: NextRequest, { params }: RouteContext) {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { id } = await params;
-
   const article = await prisma.blogArticle.findUnique({ where: { id } });
-  if (!article) return NextResponse.json({ error: "Not found" }, { status: 404 });
-
+  if (!article) {
+    return NextResponse.json({ error: "Article not found" }, { status: 404 });
+  }
   return NextResponse.json(article);
 }
 
-export async function PUT(request: NextRequest, { params }: RouteContext) {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { admin, error: authError } = await requireAdmin(request);
+  if (authError) return authError;
 
   const { id } = await params;
+  const { data, error } = await validateBody(request, blogArticleSchema);
+  if (error) return error;
+  const article = await prisma.blogArticle.update({
+    where: { id },
+    data: {
+      slug: data.slug,
+      imageUrl: data.imageUrl,
+      imageAltEn: data.imageAltEn || null,
+      imageAltAr: data.imageAltAr || null,
+      category: data.category || null,
+      tags: data.tags || null,
+      day: data.day,
+      monthEn: data.monthEn,
+      monthAr: data.monthAr,
+      readTimeEn: data.readTimeEn,
+      readTimeAr: data.readTimeAr,
+      titleEn: data.titleEn,
+      titleAr: data.titleAr,
+      excerptEn: data.excerptEn,
+      excerptAr: data.excerptAr,
+      bodyEn: data.bodyEn,
+      bodyAr: data.bodyAr,
+      suggestedBreakAfter: data.suggestedBreakAfter ?? null,
+      published: data.published ?? true,
+      sortOrder: data.sortOrder ?? 0,
+      // SEO
+      metaTitleEn: data.metaTitleEn || null,
+      metaTitleAr: data.metaTitleAr || null,
+      metaDescriptionEn: data.metaDescriptionEn || null,
+      metaDescriptionAr: data.metaDescriptionAr || null,
+      ogImageUrl: data.ogImageUrl || null,
+      keywords: data.keywords || null,
+    },
+  });
+  await logAuditEvent({
+    adminId: admin.sub,
+    adminEmail: admin.email,
+    action: "update",
+    resource: "BlogArticle",
+    resourceId: article.id,
+    details: JSON.stringify({ slug: data.slug, titleEn: data.titleEn }),
+    ip: getClientIp(request),
+  });
 
-  try {
-    const body = await request.json();
-
-    const {
-      slug,
-      imageUrl,
-      day,
-      monthEn,
-      monthAr,
-      readTimeEn,
-      readTimeAr,
-      titleEn,
-      titleAr,
-      excerptEn,
-      excerptAr,
-      bodyEn,
-      bodyAr,
-      suggestedBreakAfter,
-      published,
-      sortOrder,
-    } = body;
-
-    // Check slug uniqueness if slug is being changed
-    if (slug) {
-      const existing = await prisma.blogArticle.findFirst({
-        where: { slug, NOT: { id } },
-      });
-      if (existing) {
-        return NextResponse.json({ error: "Slug already exists" }, { status: 409 });
-      }
-    }
-
-    const article = await prisma.blogArticle.update({
-      where: { id },
-      data: {
-        ...(slug !== undefined && { slug }),
-        ...(imageUrl !== undefined && { imageUrl }),
-        ...(day !== undefined && { day }),
-        ...(monthEn !== undefined && { monthEn }),
-        ...(monthAr !== undefined && { monthAr }),
-        ...(readTimeEn !== undefined && { readTimeEn }),
-        ...(readTimeAr !== undefined && { readTimeAr }),
-        ...(titleEn !== undefined && { titleEn }),
-        ...(titleAr !== undefined && { titleAr }),
-        ...(excerptEn !== undefined && { excerptEn }),
-        ...(excerptAr !== undefined && { excerptAr }),
-        ...(bodyEn !== undefined && {
-          bodyEn: typeof bodyEn === "string" ? bodyEn : JSON.stringify(bodyEn),
-        }),
-        ...(bodyAr !== undefined && {
-          bodyAr: typeof bodyAr === "string" ? bodyAr : JSON.stringify(bodyAr),
-        }),
-        ...(suggestedBreakAfter !== undefined && {
-          suggestedBreakAfter: suggestedBreakAfter != null ? Number(suggestedBreakAfter) : null,
-        }),
-        ...(published !== undefined && { published }),
-        ...(sortOrder !== undefined && { sortOrder: Number(sortOrder) }),
-      },
-    });
-
-    return NextResponse.json(article);
-  } catch (error) {
-    console.error("[PUT /api/admin/blog/:id]", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
+  revalidatePath("/");
+  revalidatePath("/blog");
+  revalidateTag("content-blocks", "default");
+  revalidateTag("admin-blog-list", "default");
+  revalidateTag("admin-homepage-blog", "default");
+  return NextResponse.json(article);
 }
 
-export async function DELETE(_request: NextRequest, { params }: RouteContext) {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { admin, error: authError } = await requireAdmin(request);
+  if (authError) return authError;
 
   const { id } = await params;
 
-  try {
-    await prisma.blogArticle.delete({ where: { id } });
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("[DELETE /api/admin/blog/:id]", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
+  await logAuditEvent({
+    adminId: admin.sub,
+    adminEmail: admin.email,
+    action: "delete",
+    resource: "BlogArticle",
+    resourceId: id,
+    details: JSON.stringify({ id }),
+    ip: getClientIp(request),
+  });
+
+  await prisma.blogArticle.delete({ where: { id } });
+  revalidatePath("/");
+  revalidatePath("/blog");
+  revalidateTag("content-blocks", "default");
+  revalidateTag("admin-blog-list", "default");
+  revalidateTag("admin-homepage-blog", "default");
+  return NextResponse.json({ success: true });
 }

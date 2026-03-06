@@ -1,9 +1,33 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import FinancialAssetDetailPage from "@/components/FinancialAssetDetailPage";
 import Footer from "@/components/Footer";
-import { getContentBlock, getFinancialAssetDetail, getHeaderData, getFooterData } from "@/lib/content";
+import { getContentBlock, getFinancialAssetDetail, getLayoutData } from "@/lib/content";
+import { buildMetadata, financialProductJsonLd, breadcrumbJsonLd, SITE_URL } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const assets = await prisma.financialAsset.findMany({
+    select: { slug: true },
+  });
+  return assets.map((a) => ({ slug: a.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const asset = await prisma.financialAsset.findFirst({ where: { slug } });
+  if (!asset) return { title: "Not Found" };
+  return buildMetadata({
+    titleAr: asset.metaTitleAr || asset.nameAr,
+    descriptionAr: asset.metaDescriptionAr || asset.descriptionAr,
+    path: `/financial-assets/${slug}`,
+    ogImageUrl: asset.ogImageUrl || asset.imageUrl,
+    keywords: asset.keywords || undefined,
+  });
+}
 
 export default async function FinancialAssetDetailRoute({
   params,
@@ -12,10 +36,9 @@ export default async function FinancialAssetDetailRoute({
 }) {
   const { slug } = await params;
 
-  const [headerData, footerData, backLabel, ctaSection, tableHeaders, sectionTitles, howToStartSteps, dbAsset] =
+  const { headerData, footerData } = await getLayoutData();
+  const [backLabel, ctaSection, tableHeaders, sectionTitles, howToStartSteps, dbAsset] =
     await Promise.all([
-      getHeaderData(),
-      getFooterData(),
       getContentBlock<any>("financialAssets.backLabel"),
       getContentBlock<any>("financialAssets.ctaSection"),
       getContentBlock<any>("financialAssets.tableHeaders"),
@@ -59,6 +82,20 @@ export default async function FinancialAssetDetailRoute({
 
   return (
     <main className="bg-white">
+      {dbAsset && (
+        <>
+          <JsonLd data={financialProductJsonLd({
+            name: dbAsset.nameAr,
+            description: dbAsset.descriptionAr,
+            url: `${SITE_URL}/financial-assets/${slug}`,
+          })} />
+          <JsonLd data={breadcrumbJsonLd([
+            { name: "الرئيسية", url: SITE_URL },
+            { name: "الأصول المالية", url: `${SITE_URL}/financial-assets` },
+            { name: dbAsset.nameAr, url: `${SITE_URL}/financial-assets/${slug}` },
+          ])} />
+        </>
+      )}
       <Header {...headerData} />
       <FinancialAssetDetailPage
         slug={slug}

@@ -1,15 +1,24 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import VideosPage from "@/components/VideosPage";
 import Footer from "@/components/Footer";
-import { getHeaderData, getFooterData, getContentBlock, getVideosBilingual } from "@/lib/content";
+import { getLayoutData, getContentBlock, getVideosBilingual } from "@/lib/content";
+import { buildMetadata } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMetadata({
+    titleAr: "فيديوهات تعليمية",
+    descriptionAr: "شاهد فيديوهات تعليمية حول التداول والاستثمار",
+    path: "/videos",
+  });
+}
 
 export default async function Videos() {
-  const [headerData, footerData, heroTitle, watchNowLabel, moreVideoLabel, keyTakeawaysLabel, directLinkLabel, videos] =
+  const { headerData, footerData } = await getLayoutData();
+  const [heroTitle, watchNowLabel, moreVideoLabel, keyTakeawaysLabel, directLinkLabel, videos] =
     await Promise.all([
-      getHeaderData(),
-      getFooterData(),
       getContentBlock("videos.heroTitle"),
       getContentBlock("videos.watchNowLabel"),
       getContentBlock("videos.moreVideoLabel"),

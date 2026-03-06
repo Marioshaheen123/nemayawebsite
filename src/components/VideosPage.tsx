@@ -1,4 +1,5 @@
 "use client";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 import Image from "next/image";
 import { useState } from "react";
@@ -22,6 +23,7 @@ export default function VideosPage({
   keyTakeawaysLabel,
   directLinkLabel,
 }: VideosPageProps) {
+  const { mainLogo } = useSiteSettings();
   const { lang } = useLang();
   const isAr = lang === "ar";
   const items = videos[lang];
@@ -36,7 +38,14 @@ export default function VideosPage({
 
     return (
       <>
-        <PageHeroBanner title={video.title} />
+        <PageHeroBanner
+          title={video.title}
+          breadcrumbs={[
+            { label: isAr ? "الرئيسية" : "Home", href: "/" },
+            { label: heroTitle[lang], href: "/videos" },
+            { label: video.title },
+          ]}
+        />
 
         {/* Video Detail Content */}
         <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px]">
@@ -92,7 +101,7 @@ export default function VideosPage({
               <div className="flex lg:flex-col items-center lg:items-start gap-[16px]">
                 {/* Date badge */}
                 <div className="flex items-end gap-[16px]">
-                  <div className="bg-[#12953d] rounded-[15px] overflow-hidden w-[94px]">
+                  <div className="bg-site-gradient rounded-[15px] overflow-hidden w-[94px]">
                     <div className="flex flex-col items-center p-[10px]">
                       <span className="text-white text-[40px] font-bold leading-[40px]">
                         {video.day}
@@ -228,7 +237,7 @@ export default function VideosPage({
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-[80px] h-[80px] rounded-full bg-white border border-[#cacceb] flex items-center justify-center">
                           <Image
-                            src="/images/nemayalogo.png"
+                            src={mainLogo}
                             alt=""
                             width={30}
                             height={30}
@@ -245,7 +254,7 @@ export default function VideosPage({
                           isAr ? "right-[29px]" : "left-[29px]"
                         }`}
                       >
-                        <div className="bg-[#12953d] rounded-[15px] overflow-hidden w-[94px] -mt-[62px]">
+                        <div className="bg-site-gradient rounded-[15px] overflow-hidden w-[94px] -mt-[62px]">
                           <div className="flex flex-col items-center p-[10px]">
                             <span className="text-white text-[40px] font-bold leading-[40px]">
                               {v.day}
@@ -273,7 +282,7 @@ export default function VideosPage({
                       </div>
 
                       {/* Watch Now */}
-                      <span className="inline-flex items-center justify-center self-start px-[36px] py-[15px] rounded-[5px] border border-[#12953d] text-[#0e314c] text-[14px] font-semibold hover:bg-[#12953d] hover:text-white transition-all">
+                      <span className="cta-gradient inline-flex items-center justify-center self-start px-[36px] py-[15px] rounded-[5px] text-white text-[14px] font-semibold">
                         {watchNowLabel[lang]}
                       </span>
                     </div>
@@ -290,7 +299,13 @@ export default function VideosPage({
   // Grid listing view
   return (
     <>
-      <PageHeroBanner title={heroTitle[lang]} />
+      <PageHeroBanner
+        title={heroTitle[lang]}
+        breadcrumbs={[
+          { label: isAr ? "الرئيسية" : "Home", href: "/" },
+          { label: heroTitle[lang] },
+        ]}
+      />
 
       {/* Video Grid */}
       <section className="bg-white py-[40px] md:py-[60px] xl:py-[80px]">
@@ -322,7 +337,7 @@ export default function VideosPage({
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-[80px] h-[80px] rounded-full bg-white border border-[#cacceb] flex items-center justify-center">
                       <Image
-                        src="/images/nemayalogo.png"
+                        src={mainLogo}
                         alt=""
                         width={30}
                         height={30}
@@ -339,7 +354,7 @@ export default function VideosPage({
                       isAr ? "right-[29px]" : "left-[29px]"
                     }`}
                   >
-                    <div className="bg-[#12953d] rounded-[15px] overflow-hidden w-[94px] -mt-[62px]">
+                    <div className="bg-site-gradient rounded-[15px] overflow-hidden w-[94px] -mt-[62px]">
                       <div className="flex flex-col items-center p-[10px]">
                         <span className="text-white text-[40px] font-bold leading-[40px]">
                           {video.day}
@@ -367,7 +382,7 @@ export default function VideosPage({
                   </div>
 
                   {/* Watch Now */}
-                  <span className="inline-flex items-center justify-center self-start px-[36px] py-[15px] rounded-[5px] border border-[#12953d] text-[#0e314c] text-[14px] font-semibold hover:bg-[#12953d] hover:text-white transition-all">
+                  <span className="inline-flex items-center justify-center self-start px-[36px] py-[15px] rounded-[5px] border border-primary text-[#0e314c] text-[14px] font-semibold hover:bg-primary hover:text-white transition-all">
                     {watchNowLabel[lang]}
                   </span>
                 </div>

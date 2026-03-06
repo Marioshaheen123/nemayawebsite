@@ -1,8 +1,10 @@
 "use client";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLang } from "@/context/LanguageContext";
 import type { Bilingual } from "@/data/types";
 
@@ -18,12 +20,58 @@ interface ResetPasswordPageProps {
 }
 
 export default function ResetPasswordPage({ resetPasswordText: t }: ResetPasswordPageProps) {
+  const { mainLogo } = useSiteSettings();
   const { lang, toggleLang } = useLang();
   const isAr = lang === "ar";
   const content = t[lang];
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const resetToken = searchParams.get("token") || "";
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [form, setForm] = useState({ password: "", confirm: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  const handleReset = async () => {
+    setError("");
+    if (!form.password || !form.confirm) {
+      setError(isAr ? "يرجى ملء جميع الحقول" : "Please fill in all fields");
+      return;
+    }
+    if (form.password !== form.confirm) {
+      setError(isAr ? "كلمات المرور غير متطابقة" : "Passwords do not match");
+      return;
+    }
+    if (form.password.length < 8) {
+      setError(isAr ? "كلمة المرور يجب أن تكون 8 أحرف على الأقل" : "Password must be at least 8 characters");
+      return;
+    }
+    if (!resetToken) {
+      setError(isAr ? "رابط إعادة التعيين غير صالح" : "Invalid reset link");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/user/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: resetToken, password: form.password }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setSuccess(true);
+        setTimeout(() => router.push("/login"), 2000);
+      } else {
+        setError(data.error || (isAr ? "فشل إعادة التعيين" : "Reset failed"));
+      }
+    } catch {
+      setError(isAr ? "حدث خطأ" : "An error occurred");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#f4f5fa] flex items-center justify-center px-4 py-20 relative">
@@ -47,7 +95,7 @@ export default function ResetPasswordPage({ resetPasswordText: t }: ResetPasswor
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <Image
-            src="/images/nemayalogo.png"
+            src={mainLogo}
             alt="Namaya for Investment"
             width={233}
             height={64}
@@ -74,7 +122,7 @@ export default function ResetPasswordPage({ resetPasswordText: t }: ResetPasswor
               placeholder={content.passwordLabel}
               value={form.password}
               onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-              className="w-full border border-[rgba(46,38,61,0.22)] rounded-[6px] px-[14px] py-[16px] text-[15px] text-[rgba(46,38,61,0.9)] placeholder:text-[rgba(46,38,61,0.7)] focus:outline-none focus:border-[#057e33] transition-colors"
+              className="w-full border border-[rgba(46,38,61,0.22)] rounded-[6px] px-[14px] py-[16px] text-[15px] text-[rgba(46,38,61,0.9)] placeholder:text-[rgba(46,38,61,0.7)] focus:outline-none focus:border-accent transition-colors"
             />
             <button
               type="button"
@@ -103,7 +151,7 @@ export default function ResetPasswordPage({ resetPasswordText: t }: ResetPasswor
               placeholder={content.confirmLabel}
               value={form.confirm}
               onChange={(e) => setForm((f) => ({ ...f, confirm: e.target.value }))}
-              className="w-full border border-[rgba(46,38,61,0.22)] rounded-[6px] px-[14px] py-[16px] text-[15px] text-[rgba(46,38,61,0.9)] placeholder:text-[rgba(46,38,61,0.7)] focus:outline-none focus:border-[#057e33] transition-colors"
+              className="w-full border border-[rgba(46,38,61,0.22)] rounded-[6px] px-[14px] py-[16px] text-[15px] text-[rgba(46,38,61,0.9)] placeholder:text-[rgba(46,38,61,0.7)] focus:outline-none focus:border-accent transition-colors"
             />
             <button
               type="button"
@@ -126,9 +174,25 @@ export default function ResetPasswordPage({ resetPasswordText: t }: ResetPasswor
           </div>
         </div>
 
+        {/* Error / Success */}
+        {error && (
+          <div className="mb-4 p-3 rounded-[6px] bg-[#ff4c51]/10 border border-[#ff4c51]/30 text-[#ff4c51] text-[14px] text-center">
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="mb-4 p-3 rounded-[6px] bg-accent/10 border border-accent/30 text-accent text-[14px] text-center">
+            {isAr ? "تم إعادة تعيين كلمة المرور بنجاح! جارٍ التوجيه..." : "Password reset successful! Redirecting..."}
+          </div>
+        )}
+
         {/* Reset Button */}
-        <button className="w-full bg-[#057e33] rounded-[6px] px-[18px] py-[10px] text-white text-[15px] font-medium shadow-[0px_2px_4px_0px_rgba(46,38,61,0.16)] hover:bg-[#046b2b] transition-all cursor-pointer mb-5">
-          {content.resetBtn}
+        <button
+          onClick={handleReset}
+          disabled={submitting || success}
+          className="cta-gradient w-full rounded-[6px] px-[18px] py-[10px] text-white text-[15px] font-medium shadow-[0px_2px_4px_0px_rgba(46,38,61,0.16)] cursor-pointer mb-5 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {submitting ? (isAr ? "جارٍ إعادة التعيين..." : "Resetting...") : content.resetBtn}
         </button>
 
         {/* Back to Login */}
@@ -138,16 +202,16 @@ export default function ResetPasswordPage({ resetPasswordText: t }: ResetPasswor
             height="20"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#057e33"
+            stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={isAr ? "rotate-180" : ""}
+            className={`text-accent ${isAr ? "rotate-180" : ""}`}
           >
             <path d="M19 12H5" />
             <path d="M12 19l-7-7 7-7" />
           </svg>
-          <Link href="/login" className="text-[#057e33] text-[15px] hover:underline">
+          <Link href="/login" className="text-accent text-[15px] hover:underline">
             {content.backToLogin}
           </Link>
         </div>

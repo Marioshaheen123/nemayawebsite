@@ -1,4 +1,5 @@
 "use client";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 import { useState } from "react";
 import Image from "next/image";
@@ -17,10 +18,40 @@ interface ForgotPasswordPageProps {
 }
 
 export default function ForgotPasswordPage({ forgotPasswordText: t }: ForgotPasswordPageProps) {
+  const { mainLogo } = useSiteSettings();
   const { lang, toggleLang } = useLang();
   const isAr = lang === "ar";
   const content = t[lang];
   const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async () => {
+    setError("");
+    if (!email) {
+      setError(isAr ? "يرجى إدخال البريد الإلكتروني" : "Please enter your email");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/user/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        setSent(true);
+      } else {
+        const data = await res.json();
+        setError(data.error || (isAr ? "فشل الإرسال" : "Failed to send"));
+      }
+    } catch {
+      setError(isAr ? "حدث خطأ" : "An error occurred");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#f4f5fa] flex items-center justify-center px-4 py-20 relative">
@@ -44,7 +75,7 @@ export default function ForgotPasswordPage({ forgotPasswordText: t }: ForgotPass
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <Image
-            src="/images/nemayalogo.png"
+            src={mainLogo}
             alt="Namaya for Investment"
             width={233}
             height={64}
@@ -68,12 +99,28 @@ export default function ForgotPasswordPage({ forgotPasswordText: t }: ForgotPass
           placeholder={content.emailLabel}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full border border-[rgba(46,38,61,0.22)] rounded-[6px] px-[14px] py-[16px] text-[15px] text-[rgba(46,38,61,0.9)] placeholder:text-[rgba(46,38,61,0.7)] focus:outline-none focus:border-[#057e33] transition-colors mb-5"
+          className="w-full border border-[rgba(46,38,61,0.22)] rounded-[6px] px-[14px] py-[16px] text-[15px] text-[rgba(46,38,61,0.9)] placeholder:text-[rgba(46,38,61,0.7)] focus:outline-none focus:border-accent transition-colors mb-5"
         />
 
+        {/* Error / Success */}
+        {error && (
+          <div className="mb-4 p-3 rounded-[6px] bg-[#ff4c51]/10 border border-[#ff4c51]/30 text-[#ff4c51] text-[14px] text-center">
+            {error}
+          </div>
+        )}
+        {sent && (
+          <div className="mb-4 p-3 rounded-[6px] bg-accent/10 border border-accent/30 text-accent text-[14px] text-center">
+            {isAr ? "تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني" : "A reset link has been sent to your email"}
+          </div>
+        )}
+
         {/* Send Button */}
-        <button className="w-full bg-[#057e33] rounded-[6px] px-[18px] py-[10px] text-white text-[15px] font-medium shadow-[0px_2px_4px_0px_rgba(46,38,61,0.16)] hover:bg-[#046b2b] transition-all cursor-pointer mb-5">
-          {content.sendBtn}
+        <button
+          onClick={handleSubmit}
+          disabled={submitting || sent}
+          className="cta-gradient w-full rounded-[6px] px-[18px] py-[10px] text-white text-[15px] font-medium shadow-[0px_2px_4px_0px_rgba(46,38,61,0.16)] cursor-pointer mb-5 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {submitting ? (isAr ? "جارٍ الإرسال..." : "Sending...") : sent ? (isAr ? "تم الإرسال ✓" : "Sent ✓") : content.sendBtn}
         </button>
 
         {/* Back to Login */}
@@ -83,16 +130,16 @@ export default function ForgotPasswordPage({ forgotPasswordText: t }: ForgotPass
             height="20"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#057e33"
+            stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={isAr ? "rotate-180" : ""}
+            className={`text-accent ${isAr ? "rotate-180" : ""}`}
           >
             <path d="M19 12H5" />
             <path d="M12 19l-7-7 7-7" />
           </svg>
-          <Link href="/login" className="text-[#057e33] text-[15px] hover:underline">
+          <Link href="/login" className="text-accent text-[15px] hover:underline">
             {content.backToLogin}
           </Link>
         </div>

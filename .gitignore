@@ -34,5 +34,8 @@ next-env.d.ts
 # SQLite database
 *.db
 
+# Cookie/token files
+cookies*.txt
+
 # Claude Code
 .claude/

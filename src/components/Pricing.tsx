@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import SectionBadge from "./SectionBadge";
+
 import { useState, useRef } from "react";
 import { useLang } from "@/context/LanguageContext";
 
 interface PricingProps {
   pricingSectionHeading: any;
-  pricingSectionBadge: any;
+
   pricingViewAllLabel: any;
   plans: any;
   features: any;
@@ -16,7 +16,7 @@ interface PricingProps {
 // Rotation classes with md: prefix so they only apply on desktop
 const rotationClasses = ["md:rotate-2", "", "md:-rotate-2"];
 
-export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pricingViewAllLabel, plans, features }: PricingProps) {
+export default function Pricing({ pricingSectionHeading, pricingViewAllLabel, plans, features }: PricingProps) {
   const { lang } = useLang();
   const isAr = lang === "ar";
   const planItems = plans[lang];
@@ -60,7 +60,7 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
         plan.gradient
           ? {
               backgroundImage:
-                "linear-gradient(180deg, rgba(18, 149, 61, 0.08) 0%, rgba(255, 255, 255, 1) 60%)",
+                "linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 8%, transparent) 0%, rgba(255, 255, 255, 1) 60%)",
             }
           : undefined
       }
@@ -116,13 +116,13 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
         <h4 className="text-[#0e314c] text-[16px] md:text-[13px] xl:text-[14px] font-bold leading-[1.4] mb-[4px]">
           {plan.featuresLabel}
         </h4>
-        {featureItems.map((feature: any, j: number) => (
+        {(plan.benefits?.length > 0 ? plan.benefits : featureItems).map((feature: any, j: number) => (
           <div key={j} className="flex items-center gap-[8px]">
-            <div className="w-[22px] h-[22px] md:w-[16px] md:h-[16px] xl:w-[18px] xl:h-[18px] rounded-full bg-[rgba(18,149,61,0.1)] flex items-center justify-center shrink-0">
+            <div className="w-[22px] h-[22px] md:w-[16px] md:h-[16px] xl:w-[18px] xl:h-[18px] rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path
                   d="M2.5 6L5 8.5L9.5 3.5"
-                  stroke="#12953d"
+                  stroke="currentColor"
                   strokeWidth="1.8"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -139,10 +139,10 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
       {/* CTA */}
       <div className={isAr ? "text-right" : ""}>
         <Link
-          href="/account-types"
-          className={`inline-block border rounded-[5px] px-[36px] py-[12px] md:px-[28px] md:py-[9px] xl:py-[12px] text-[14px] md:text-[12px] xl:text-[13px] font-semibold leading-[21px] hover:opacity-90 transition-opacity ${
+          href={plan.ctaUrl || "/register"}
+          className={`cta-gradient inline-block rounded-[12px] px-[36px] py-[12px] md:px-[28px] md:py-[9px] xl:py-[12px] text-[14px] md:text-[12px] xl:text-[13px] font-semibold leading-[21px] hover:opacity-90 transition-opacity ${
             isMobile ? "w-full text-center" : "w-fit"
-          } ${plan.ctaStyle}`}
+          }`}
         >
           {plan.cta}
         </Link>
@@ -155,7 +155,6 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
       <div className="w-full max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-[24px] md:mb-[20px] xl:mb-[28px]">
-          <SectionBadge label={pricingSectionBadge.label} labelAr={pricingSectionBadge.labelAr} />
           <h2 className="section-heading-mobile text-[25px] leading-[32.5px] md:text-[32px] md:leading-[40px] xl:text-[40px] xl:leading-[48px] text-[#0e314c] mt-[10px] max-w-[600px] xl:max-w-[680px] mx-auto">
             {h.before}
             <span className="font-bold">{h.bold}</span>
@@ -193,14 +192,14 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
           ))}
         </div>
 
-        {/* Dots */}
-        <div className="flex justify-center gap-2 mt-3 md:mt-2">
+        {/* Mobile dots */}
+        <div className="flex md:hidden justify-center gap-2 mt-3">
           {planItems.map((_: any, i: number) => (
             <button
               key={i}
               onClick={() => setMobileSlide(i)}
-              className={`w-3 h-3 rounded-full transition-colors md:pointer-events-none ${
-                i === mobileSlide ? "bg-[#12953d]" : "bg-[#cacceb]"
+              className={`w-3 h-3 rounded-full transition-colors ${
+                i === mobileSlide ? "bg-site-gradient" : "bg-[#cacceb]"
               }`}
             />
           ))}
@@ -210,7 +209,7 @@ export default function Pricing({ pricingSectionHeading, pricingSectionBadge, pr
         <div className="flex justify-center mt-[32px] md:mt-[48px]">
           <Link
             href="/account-types"
-            className="bg-[#12953d] hover:bg-[#0e7a32] transition-colors rounded-full px-[28px] py-[12px] text-white text-[14px] font-semibold inline-flex items-center gap-2"
+            className="cta-gradient rounded-full px-[28px] py-[12px] text-white text-[14px] font-semibold inline-flex items-center gap-2"
           >
             {pricingViewAllLabel[lang]}
             <span className="text-[16px]">→</span>

@@ -70,7 +70,7 @@ export default function AboutPage({
   return (
     <>
       {/* ===== HERO ===== */}
-      <section className="relative bg-[#001005] pt-[69px] md:pt-[100px] xl:pt-[110px]">
+      <section className="relative bg-[#001005] pt-[40px] md:pt-[50px] xl:pt-[55px]">
         <div className="absolute inset-0 overflow-hidden">
           <Image
             src="/images/blog-hero-bg.png"
@@ -81,9 +81,9 @@ export default function AboutPage({
         </div>
         <div
           dir={isAr ? "rtl" : undefined}
-          className="relative max-w-7xl mx-auto px-6 py-[30px] md:py-[50px] xl:py-[60px]"
+          className="relative max-w-7xl mx-auto px-6 py-[20px] md:py-[30px] xl:py-[35px]"
         >
-          <h1 className="text-white text-[32px] md:text-[48px] xl:text-[60px] font-extrabold leading-[1.15] max-w-[600px]">
+          <h1 className="text-white text-[30px] md:text-[40px] xl:text-[48px] font-extrabold leading-[1.15] max-w-[600px]">
             {hero.title1}
             <br />
             <span className="italic text-[#b0f127]">{hero.title2}</span>
@@ -292,7 +292,7 @@ export default function AboutPage({
               <div>
                 <a
                   href="/trading-platforms"
-                  className="inline-flex items-center justify-center px-[36px] py-[15.5px] bg-[#12953d] border border-[#b0f127] rounded-[5px] text-white text-[14px] font-semibold leading-[21px] hover:bg-[#0e7a31] transition-all"
+                  className="cta-gradient inline-flex items-center justify-center px-[36px] py-[15.5px] rounded-[12px] text-[14px] font-semibold leading-[21px]"
                 >
                   {bridging.cta}
                 </a>
@@ -355,7 +355,7 @@ export default function AboutPage({
                     }`}
                   >
                     <div className="relative -mt-[62px]">
-                      <div className="bg-[#12953d] rounded-[15px] overflow-hidden w-[94px]">
+                      <div className="bg-site-gradient rounded-[15px] overflow-hidden w-[94px]">
                         <div className="flex flex-col items-center p-[10px]">
                           <span className="text-white text-[40px] font-bold leading-[40px]">
                             {article.day}
@@ -378,7 +378,7 @@ export default function AboutPage({
                   <p className="text-[#6084a4] text-[14px] leading-[25.2px] mb-[26px] line-clamp-2">
                     {article.excerpt}
                   </p>
-                  <a href="/blog" className="cta-glass-solid">
+                  <a href="/blog" className="cta-gradient inline-flex items-center gap-[10px] rounded-[12px] px-[36px] py-[16px] text-[14px] font-semibold">
                     {blogReadMoreLabel[lang]}
                     <span className="cta-arrow">{isAr ? "\u2190" : "\u2192"}</span>
                   </a>

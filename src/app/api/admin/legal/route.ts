@@ -1,57 +1,126 @@
-import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { updateContentBlock, getContentBlocks } from "@/lib/content";
+import { prisma } from "@/lib/prisma";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { validateBody } from "@/lib/validation";
+import { legalSchema } from "@/lib/schemas/content-block";
+import { requireAdmin } from "@/lib/admin-guard";
+import { logAuditEvent } from "@/lib/audit-log";
+import { getClientIp } from "@/lib/rate-limit";
+
+const HERO_KEYS: Record<string, string> = {
+  privacy: "legal.privacyPolicyHeroTitle",
+  terms: "legal.termsHeroTitle",
+  "deposit-withdrawal": "legal.depositWithdrawalHeroTitle",
+  "website-verification": "legal.websiteVerificationHeroTitle",
+  "security-reliability": "legal.securityReliabilityHeroTitle",
+};
 
 export async function GET(request: NextRequest) {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const pageType = request.nextUrl.searchParams.get("pageType");
+  if (!pageType || !HERO_KEYS[pageType]) {
+    return NextResponse.json({ error: "Invalid pageType" }, { status: 400 });
+  }
 
-  const { searchParams } = new URL(request.url);
-  const pageType = searchParams.get("pageType");
+  const heroKey = HERO_KEYS[pageType];
+  const [blocks, sections] = await Promise.all([
+    getContentBlocks([heroKey]),
+    prisma.legalSection.findMany({
+      where: { pageType },
+      orderBy: { sortOrder: "asc" },
+    }),
+  ]);
 
-  const sections = await prisma.legalSection.findMany({
-    where: pageType ? { pageType } : undefined,
-    orderBy: { sortOrder: "asc" },
+  return NextResponse.json({
+    heroTitle: blocks[heroKey] ?? { en: "", ar: "" },
+    sections,
   });
-
-  return NextResponse.json(sections);
 }
 
-export async function POST(request: NextRequest) {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+export async function PATCH(request: NextRequest) {
+  const { admin, error: authError } = await requireAdmin(request);
+  if (authError) return authError;
 
-  try {
-    const body = await request.json();
-    const { pageType, titleEn, titleAr, paragraphsEn, paragraphsAr, sortOrder } = body;
+  const { data, error } = await validateBody(request, legalSchema);
+  if (error) return error;
+  const { pageType, heroTitle, sections } = data;
 
-    if (!pageType || !titleEn || !titleAr) {
-      return NextResponse.json(
-        { error: "pageType, titleEn, and titleAr are required" },
-        { status: 400 }
-      );
-    }
-
-    let resolvedSortOrder = sortOrder;
-    if (resolvedSortOrder == null) {
-      const max = await prisma.legalSection.aggregate({ _max: { sortOrder: true } });
-      resolvedSortOrder = (max._max.sortOrder ?? 0) + 1;
-    }
-
-    const section = await prisma.legalSection.create({
-      data: {
-        pageType,
-        titleEn,
-        titleAr,
-        paragraphsEn: typeof paragraphsEn === "string" ? paragraphsEn : JSON.stringify(paragraphsEn ?? []),
-        paragraphsAr: typeof paragraphsAr === "string" ? paragraphsAr : JSON.stringify(paragraphsAr ?? []),
-        sortOrder: resolvedSortOrder,
-      },
-    });
-
-    return NextResponse.json(section, { status: 201 });
-  } catch (error) {
-    console.error("[POST /api/admin/legal]", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  if (!pageType || !HERO_KEYS[pageType]) {
+    return NextResponse.json({ error: "Invalid pageType" }, { status: 400 });
   }
+
+  // Update hero title content block
+  await updateContentBlock(HERO_KEYS[pageType], heroTitle);
+
+  // Sync sections
+  if (sections) {
+    const existing = await prisma.legalSection.findMany({
+      where: { pageType },
+      select: { id: true },
+    });
+    const existingIds = new Set(existing.map((s) => s.id));
+    const incomingIds = new Set(
+      sections
+        .filter((s: any) => s.id && !s.id.startsWith("new_"))
+        .map((s: any) => s.id)
+    );
+
+    // Delete removed sections
+    const toDelete = [...existingIds].filter((id) => !incomingIds.has(id));
+    if (toDelete.length > 0) {
+      await prisma.legalSection.deleteMany({
+        where: { id: { in: toDelete } },
+      });
+    }
+
+    // Upsert sections
+    for (let i = 0; i < sections.length; i++) {
+      const sec = sections[i];
+      const isNew = !sec.id || sec.id.startsWith("new_");
+
+      const data = {
+        pageType,
+        titleEn: sec.titleEn || "",
+        titleAr: sec.titleAr || "",
+        paragraphsEn:
+          typeof sec.paragraphsEn === "string"
+            ? sec.paragraphsEn
+            : JSON.stringify(sec.paragraphsEn ?? []),
+        paragraphsAr:
+          typeof sec.paragraphsAr === "string"
+            ? sec.paragraphsAr
+            : JSON.stringify(sec.paragraphsAr ?? []),
+        sortOrder: i,
+      };
+
+      if (isNew) {
+        await prisma.legalSection.create({ data });
+      } else {
+        await prisma.legalSection.update({ where: { id: sec.id! }, data });
+      }
+    }
+  }
+
+  await logAuditEvent({
+    adminId: admin.sub,
+    adminEmail: admin.email,
+    action: "update",
+    resource: "LegalPage",
+    details: JSON.stringify({ pageType: data.pageType }),
+    ip: getClientIp(request),
+  });
+
+  revalidatePath("/");
+  revalidatePath("/privacy-policy");
+  revalidatePath("/terms");
+  revalidatePath("/deposit-withdrawal-policy");
+  revalidatePath("/website-verification");
+  revalidatePath("/security-reliability");
+  revalidateTag("content-blocks", "default");
+  revalidateTag("admin-privacy", "default");
+  revalidateTag("admin-terms", "default");
+  revalidateTag("admin-deposit-withdrawal", "default");
+  revalidateTag("admin-website-verification", "default");
+  revalidateTag("admin-security-reliability", "default");
+  return NextResponse.json({ success: true });
 }

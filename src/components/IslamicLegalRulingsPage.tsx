@@ -35,7 +35,13 @@ export default function IslamicLegalRulingsPage({
 
   return (
     <>
-      <PageHeroBanner title={heroTitle[lang]} />
+      <PageHeroBanner
+        title={heroTitle[lang]}
+        breadcrumbs={[
+          { label: isAr ? "الرئيسية" : "Home", href: "/" },
+          { label: heroTitle[lang] },
+        ]}
+      />
 
       {/* Rulings Content */}
       <section className="bg-white py-[40px] md:py-[60px] xl:py-[64px]">
@@ -62,7 +68,7 @@ export default function IslamicLegalRulingsPage({
                       key={iIdx}
                       className={`bg-white rounded-[25px] border transition-colors ${
                         isOpen
-                          ? "border-[#12953d]"
+                          ? "border-primary"
                           : "border-[#cacceb]"
                       }`}
                     >
@@ -72,7 +78,7 @@ export default function IslamicLegalRulingsPage({
                         className="w-full flex items-center gap-[16px] p-[20px] md:p-[25px] cursor-pointer"
                       >
                         {/* Chevron Circle */}
-                        <div className="w-[40px] h-[40px] md:w-[44px] md:h-[44px] rounded-full bg-[#12953d] flex items-center justify-center shrink-0">
+                        <div className="w-[40px] h-[40px] md:w-[44px] md:h-[44px] rounded-full bg-site-gradient flex items-center justify-center shrink-0">
                           <svg
                             width="12"
                             height="12"

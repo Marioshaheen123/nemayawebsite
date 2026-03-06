@@ -1,4 +1,6 @@
 import { prisma } from "./prisma";
+import { unstable_cache } from "next/cache";
+import { bodyToHtml } from "./body-utils";
 
 // ─── ContentBlock helpers ────────────────────────────────────────────
 
@@ -27,6 +29,29 @@ export async function updateContentBlock(key: string, value: unknown) {
     update: { valueJson: JSON.stringify(value) },
     create: { key, valueJson: JSON.stringify(value) },
   });
+}
+
+/** Batch-fetch multiple content blocks — cached on the server for 120s */
+export async function getContentBlocks(keys: string[]): Promise<Record<string, any>> {
+  const sortedKeys = [...keys].sort().join(",");
+  return unstable_cache(
+    async () => {
+      const blocks = await prisma.contentBlock.findMany({
+        where: { key: { in: keys } },
+      });
+      const map: Record<string, any> = {};
+      for (const block of blocks) {
+        try {
+          map[block.key] = JSON.parse(block.valueJson);
+        } catch {
+          map[block.key] = null;
+        }
+      }
+      return map;
+    },
+    [`content-blocks-${sortedKeys}`],
+    { tags: ["content-blocks"], revalidate: 120 }
+  )();
 }
 
 // ─── Blog ────────────────────────────────────────────────────────────
@@ -177,24 +202,30 @@ export async function getBlogArticlesBilingual() {
       en: articles.map((a) => ({
         id: a.slug,
         image: a.imageUrl,
+        imageAlt: (a as any).imageAltEn || a.titleEn,
         day: a.day,
         month: a.monthEn,
         readTime: a.readTimeEn,
         title: a.titleEn,
         excerpt: a.excerptEn,
-        body: JSON.parse(a.bodyEn) as string[],
+        body: bodyToHtml(a.bodyEn),
         suggestedBreakAfter: a.suggestedBreakAfter,
+        category: (a as any).category || undefined,
+        tags: (a as any).tags || undefined,
       })),
       ar: articles.map((a) => ({
         id: a.slug,
         image: a.imageUrl,
+        imageAlt: (a as any).imageAltAr || a.titleAr,
         day: a.day,
         month: a.monthAr,
         readTime: a.readTimeAr,
         title: a.titleAr,
         excerpt: a.excerptAr,
-        body: JSON.parse(a.bodyAr) as string[],
+        body: bodyToHtml(a.bodyAr),
         suggestedBreakAfter: a.suggestedBreakAfter,
+        category: (a as any).category || undefined,
+        tags: (a as any).tags || undefined,
       })),
     },
     suggested: {
@@ -270,6 +301,15 @@ export async function getVideosBilingual() {
 
 // ─── Plans Bilingual ────────────────────────────────────────────
 
+function parseBenefitsJson(json: string): string[] {
+  try {
+    const arr = JSON.parse(json);
+    return Array.isArray(arr) ? arr : [];
+  } catch {
+    return [];
+  }
+}
+
 export async function getPlansBilingual() {
   const plans = await getPlans();
   const features = await getPlanFeatures();
@@ -281,10 +321,12 @@ export async function getPlansBilingual() {
         period: p.periodEn,
         description: p.descriptionEn,
         cta: p.ctaEn,
+        ctaUrl: p.ctaUrl || "/register",
         featuresLabel: p.featuresLabelEn,
         ctaStyle: p.ctaStyle,
         bg: p.bg,
         gradient: p.gradient || undefined,
+        benefits: parseBenefitsJson(p.benefitsEn),
       })),
       ar: plans.map((p) => ({
         name: p.nameAr,
@@ -292,10 +334,12 @@ export async function getPlansBilingual() {
         period: p.periodAr,
         description: p.descriptionAr,
         cta: p.ctaAr,
+        ctaUrl: p.ctaUrl || "/register",
         featuresLabel: p.featuresLabelAr,
         ctaStyle: p.ctaStyle,
         bg: p.bg,
         gradient: p.gradient || undefined,
+        benefits: parseBenefitsJson(p.benefitsAr),
       })),
     },
     features: {
@@ -347,6 +391,70 @@ export async function getIslamicRulingSectionsBilingual() {
   };
 }
 
+// ─── Economic Developments ──────────────────────────────────────────
+
+export async function getEconomicDevelopments() {
+  return prisma.economicDevelopment.findMany({
+    where: { published: true },
+    orderBy: { sortOrder: "asc" },
+  });
+}
+
+export async function getEconomicDevelopmentsBilingual() {
+  const articles = await getEconomicDevelopments();
+
+  // Auto-generate suggested: latest 4 non-featured articles
+  const featured = articles.find((a) => a.featured) || articles[0];
+  const suggestedRaw = articles
+    .filter((a) => a !== featured)
+    .slice(0, 4);
+
+  return {
+    articles: {
+      en: articles.map((a) => ({
+        id: a.slug,
+        image: a.imageUrl,
+        imageAlt: (a as any).imageAltEn || a.titleEn,
+        day: a.day,
+        month: a.monthEn,
+        readTime: a.readTimeEn,
+        title: a.titleEn,
+        excerpt: a.excerptEn,
+        body: bodyToHtml(a.bodyEn),
+        featured: a.featured,
+        category: (a as any).category || undefined,
+        tags: (a as any).tags || undefined,
+      })),
+      ar: articles.map((a) => ({
+        id: a.slug,
+        image: a.imageUrl,
+        imageAlt: (a as any).imageAltAr || a.titleAr,
+        day: a.day,
+        month: a.monthAr,
+        readTime: a.readTimeAr,
+        title: a.titleAr,
+        excerpt: a.excerptAr,
+        body: bodyToHtml(a.bodyAr),
+        featured: a.featured,
+        category: (a as any).category || undefined,
+        tags: (a as any).tags || undefined,
+      })),
+    },
+    suggested: {
+      en: suggestedRaw.map((a) => ({
+        image: a.imageUrl,
+        title: a.titleEn,
+        slug: a.slug,
+      })),
+      ar: suggestedRaw.map((a) => ({
+        image: a.imageUrl,
+        title: a.titleAr,
+        slug: a.slug,
+      })),
+    },
+  };
+}
+
 // ─── Images ──────────────────────────────────────────────────────────
 
 export async function getSiteImages(category?: string) {
@@ -356,119 +464,113 @@ export async function getSiteImages(category?: string) {
   });
 }
 
-// ─── Dashboard Stats ─────────────────────────────────────────────────
-
-export async function getDashboardStats() {
-  const [
-    blogCount,
-    videoCount,
-    faqCount,
-    planCount,
-    assetCount,
-    imageCount,
-  ] = await Promise.all([
-    prisma.blogArticle.count(),
-    prisma.video.count(),
-    prisma.faqItem.count(),
-    prisma.plan.count(),
-    prisma.financialAsset.count(),
-    prisma.siteImage.count(),
-  ]);
-
-  return { blogCount, videoCount, faqCount, planCount, assetCount, imageCount };
-}
-
 // ─── Shared Layout Data ─────────────────────────────────────────────
-export async function getHeaderData() {
-  const [navItems, cta] = await Promise.all([
-    getHeaderNavItems(),
-    getContentBlockSafe('navigation.headerCta', { en: { signup: 'Sign up', login: 'Log in' }, ar: { signup: 'سجل', login: 'تسجيل الدخول' } }),
-  ]);
-  // Transform DB NavItems to bilingual format matching the existing { en: NavItem[], ar: NavItem[] } shape
-  const headerNavItems = {
-    en: navItems.map((item: any) => ({
-      label: item.labelEn,
-      href: item.href,
-      children: item.children?.length > 0
-        ? item.children.map((c: any) => ({ label: c.labelEn, href: c.href }))
-        : undefined,
-    })),
-    ar: navItems.map((item: any) => ({
-      label: item.labelAr,
-      href: item.href,
-      children: item.children?.length > 0
-        ? item.children.map((c: any) => ({ label: c.labelAr, href: c.href }))
-        : undefined,
-    })),
-  };
-  return { headerNavItems, headerCta: cta };
-}
 
-export async function getFooterData() {
-  const [quickLinks, supportLinks, socialIcons, labels, contactInfo] = await Promise.all([
+// Combined header + footer fetch: 2 DB round-trips instead of 6
+export async function getLayoutData() {
+  // 1) Batch all content blocks in ONE query
+  const blocks = await getContentBlocks([
+    'navigation.headerCta',
+    'navigation.footerLabels',
+    'navigation.footerContactInfo',
+  ]);
+
+  // 2) Run all nav/social queries in parallel (simple findMany — safe for Turso)
+  const [navItems, quickLinks, supportLinks, socialIcons] = await Promise.all([
+    getHeaderNavItems(),
     getFooterQuickLinks(),
     getFooterSupportLinks(),
     getSocialIcons(),
-    getContentBlockSafe('navigation.footerLabels', { en: {}, ar: {} }),
-    getContentBlockSafe('navigation.footerContactInfo', {}),
   ]);
+
+  const cta = blocks['navigation.headerCta'] || { en: { signup: 'Sign up', login: 'Log in' }, ar: { signup: 'سجل', login: 'تسجيل الدخول' } };
+  const labels = blocks['navigation.footerLabels'] || { en: {}, ar: {} };
+  const contactInfo = blocks['navigation.footerContactInfo'] || {};
+
   return {
-    footerQuickLinks: {
-      en: quickLinks.map((l: any) => ({ label: l.labelEn, href: l.href })),
-      ar: quickLinks.map((l: any) => ({ label: l.labelAr, href: l.href })),
+    headerData: {
+      headerNavItems: {
+        en: navItems.map((item: any) => ({
+          label: item.labelEn,
+          href: item.href,
+          children: item.children?.length > 0
+            ? item.children.map((c: any) => ({ label: c.labelEn, href: c.href }))
+            : undefined,
+        })),
+        ar: navItems.map((item: any) => ({
+          label: item.labelAr,
+          href: item.href,
+          children: item.children?.length > 0
+            ? item.children.map((c: any) => ({ label: c.labelAr, href: c.href }))
+            : undefined,
+        })),
+      },
+      headerCta: cta,
     },
-    footerSupportLinks: {
-      en: supportLinks.map((l: any) => ({ label: l.labelEn, href: l.href })),
-      ar: supportLinks.map((l: any) => ({ label: l.labelAr, href: l.href })),
+    footerData: {
+      footerQuickLinks: {
+        en: quickLinks.map((l: any) => ({ label: l.labelEn, href: l.href })),
+        ar: quickLinks.map((l: any) => ({ label: l.labelAr, href: l.href })),
+      },
+      footerSupportLinks: {
+        en: supportLinks.map((l: any) => ({ label: l.labelEn, href: l.href })),
+        ar: supportLinks.map((l: any) => ({ label: l.labelAr, href: l.href })),
+      },
+      footerSocialIcons: socialIcons,
+      footerLabels: labels,
+      footerContactInfo: contactInfo,
     },
-    footerSocialIcons: socialIcons,
-    footerLabels: labels,
-    footerContactInfo: contactInfo,
   };
+}
+
+// Keep individual functions for backward compatibility
+export async function getHeaderData() {
+  const { headerData } = await getLayoutData();
+  return headerData;
+}
+
+export async function getFooterData() {
+  const { footerData } = await getLayoutData();
+  return footerData;
 }
 
 // ─── Homepage Data ──────────────────────────────────────────────────
 export async function getHomepageData() {
-  const [
-    heroContent, heroImages,
-    benefitsFeatures, benefitsHeading, benefitsCtaText, benefitsBadge, benefitsImages,
-    carouselCards, carouselHeading, carouselBadge,
-    howItWorksContent, howItWorksBadge, howItWorksImage,
-    pricingSectionHeading, pricingSectionBadge, pricingViewAllLabel,
-    blogSectionData,
-    faqHeading, faqBadge,
-    homepagePlans, planFeatures, homepageFaqItems,
-  ] = await Promise.all([
-    getContentBlock('homepage.heroContent'),
-    getContentBlock('homepage.heroImages'),
-    getContentBlock('homepage.benefitsFeatures'),
-    getContentBlock('homepage.benefitsHeading'),
-    getContentBlock('homepage.benefitsCtaText'),
-    getContentBlock('homepage.benefitsBadge'),
-    getContentBlock('homepage.benefitsImages'),
-    getContentBlock('homepage.carouselCards'),
-    getContentBlock('homepage.carouselHeading'),
-    getContentBlock('homepage.carouselBadge'),
-    getContentBlock('homepage.howItWorksContent'),
-    getContentBlock('homepage.howItWorksBadge'),
-    getContentBlock('homepage.howItWorksImage'),
-    getContentBlock('pricing.sectionHeading'),
-    getContentBlock('pricing.sectionBadge'),
-    getContentBlock('pricing.viewAllLabel'),
-    getContentBlock('blog.sectionData'),
-    getContentBlock('faq.homepageFaqHeading'),
-    getContentBlock('faq.homepageFaqBadge'),
-    getHomepagePlans(),
-    getPlanFeatures(),
-    getHomepageFaqItems(),
+  // Batch-fetch all content blocks in a single query to avoid Turso P2028 transaction timeouts
+  const blocks = await getContentBlocks([
+    'homepage.heroContent', 'homepage.heroImages',
+    'homepage.benefitsFeatures', 'homepage.benefitsHeading', 'homepage.benefitsCtaText', 'homepage.benefitsBadge', 'homepage.benefitsImages',
+    'homepage.carouselCards', 'homepage.carouselHeading', 'homepage.carouselBadge',
+    'homepage.howItWorksContent', 'homepage.howItWorksBadge', 'homepage.howItWorksImage',
+    'pricing.sectionHeading', 'pricing.sectionBadge', 'pricing.viewAllLabel',
+    'blog.sectionData',
+    'faq.homepageFaqHeading', 'faq.homepageFaqBadge',
   ]);
+
+  // Sequential DB queries for non-content-block data
+  const homepagePlans = await getHomepagePlans();
+  const planFeatures = await getPlanFeatures();
+  const homepageFaqItems = await getHomepageFaqItems();
+
   return {
-    hero: { heroContent, heroImages },
-    benefits: { features: benefitsFeatures, heading: benefitsHeading, ctaText: benefitsCtaText, badge: benefitsBadge, images: benefitsImages },
-    carousel: { cards: carouselCards, heading: carouselHeading, badge: carouselBadge },
-    howItWorks: { content: howItWorksContent, badge: howItWorksBadge, image: howItWorksImage },
-    pricing: { sectionHeading: pricingSectionHeading, sectionBadge: pricingSectionBadge, viewAllLabel: pricingViewAllLabel, plans: homepagePlans, features: planFeatures },
-    blog: { sectionData: blogSectionData },
-    faq: { heading: faqHeading, badge: faqBadge, items: homepageFaqItems },
+    hero: { heroContent: blocks['homepage.heroContent'], heroImages: blocks['homepage.heroImages'] },
+    benefits: {
+      features: blocks['homepage.benefitsFeatures'],
+      heading: blocks['homepage.benefitsHeading'],
+      ctaText: blocks['homepage.benefitsCtaText'],
+      badge: blocks['homepage.benefitsBadge'],
+      images: blocks['homepage.benefitsImages'],
+    },
+    carousel: { cards: blocks['homepage.carouselCards'], heading: blocks['homepage.carouselHeading'], badge: blocks['homepage.carouselBadge'] },
+    howItWorks: { content: blocks['homepage.howItWorksContent'], badge: blocks['homepage.howItWorksBadge'], image: blocks['homepage.howItWorksImage'] },
+    pricing: {
+      sectionHeading: blocks['pricing.sectionHeading'],
+      sectionBadge: blocks['pricing.sectionBadge'],
+      viewAllLabel: blocks['pricing.viewAllLabel'],
+      plans: homepagePlans,
+      features: planFeatures,
+    },
+    blog: { sectionData: blocks['blog.sectionData'] },
+    faq: { heading: blocks['faq.homepageFaqHeading'], badge: blocks['faq.homepageFaqBadge'], items: homepageFaqItems },
   };
 }

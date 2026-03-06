@@ -14,7 +14,15 @@ export const headerNavItems: Bilingual<NavItem[]> = {
     },
     { label: "About", hasDropdown: false, href: "/about" },
     { label: "Trading Platforms", hasDropdown: true, href: "/trading-platforms" },
-    { label: "Blog", hasDropdown: false, href: "/blog" },
+    {
+      label: "Blog",
+      hasDropdown: true,
+      href: "#",
+      children: [
+        { label: "Blog", href: "/blog" },
+        { label: "Economic Developments", href: "/economic-developments" },
+      ],
+    },
   ],
   ar: [
     { label: "الرئيسية", hasDropdown: false, href: "/" },
@@ -29,7 +37,15 @@ export const headerNavItems: Bilingual<NavItem[]> = {
     },
     { label: "عن نمايا", hasDropdown: false, href: "/about" },
     { label: "منصات التداول", hasDropdown: true, href: "/trading-platforms" },
-    { label: "مدونة", hasDropdown: false, href: "/blog" },
+    {
+      label: "مدونة",
+      hasDropdown: true,
+      href: "#",
+      children: [
+        { label: "مدونة", href: "/blog" },
+        { label: "التطورات الاقتصادية", href: "/economic-developments" },
+      ],
+    },
   ],
 };
 
@@ -62,14 +78,24 @@ export const footerSupportLinks: Bilingual<FooterLink[]> = {
     { label: "Islamic Legal Rulings", href: "/islamic-legal-rulings" },
     { label: "Privacy Policy", href: "/privacy-policy" },
     { label: "Terms & Conditions", href: "/terms" },
+    { label: "Deposit & Withdrawal Policy", href: "/deposit-withdrawal-policy" },
+    { label: "Website Verification", href: "/website-verification" },
+    { label: "Security & Reliability", href: "/security-reliability" },
     { label: "FAQ", href: "/faq" },
+    { label: "Social Media", href: "/social-media" },
+    { label: "Customer Reviews", href: "/customer-reviews" },
     { label: "Contact Us", href: "/contact" },
   ],
   ar: [
     { label: "الأحكام القانونية الإسلامية", href: "/islamic-legal-rulings" },
     { label: "سياسة الخصوصية", href: "/privacy-policy" },
     { label: "الشروط والأحكام", href: "/terms" },
+    { label: "سياسة الإيداع والسحب", href: "/deposit-withdrawal-policy" },
+    { label: "التحقق من الموقع الرسمي", href: "/website-verification" },
+    { label: "الأمان والموثوقية", href: "/security-reliability" },
     { label: "الأسئلة المتكررة", href: "/faq" },
+    { label: "مواقع التواصل الاجتماعي", href: "/social-media" },
+    { label: "تقييمات العملاء", href: "/customer-reviews" },
     { label: "تواصل معنا", href: "/contact" },
   ],
 };
