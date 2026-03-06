@@ -155,7 +155,7 @@ export default function Header({ headerNavItems, headerCta }: HeaderProps) {
           ) : (
             <a
               href="/login"
-              className="cta-gradient rounded-[5px] px-3 py-[6px] text-white text-[10px] font-semibold leading-[15px] capitalize"
+              className="cta-gradient rounded-[5px] px-3.5 py-[7px] text-white text-[11px] font-semibold leading-[15px] capitalize"
             >
               {buttons.login}
             </a>

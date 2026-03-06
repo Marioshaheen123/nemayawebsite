@@ -91,7 +91,7 @@ export default function Blog({ blogSectionData, blogArticles }: BlogProps) {
         </div>
 
         {/* Title */}
-        <h3 className="text-[#0e314c] text-[20px] md:text-[17px] xl:text-[19px] leading-[26px] md:leading-[23px] xl:leading-[25px] mt-[12px] line-clamp-3">
+        <h3 className="text-[#0e314c] text-[17px] md:text-[17px] xl:text-[19px] leading-[23px] md:leading-[23px] xl:leading-[25px] mt-[12px] line-clamp-3">
           {article.title}
         </h3>
 

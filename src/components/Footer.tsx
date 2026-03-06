@@ -32,7 +32,7 @@ export default function Footer({ footerQuickLinks, footerSupportLinks, footerSoc
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         {/* Main footer content */}
         <div
-          className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 pt-[50px] md:pt-[80px] pb-[50px] md:pb-[80px]"
+          className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-8 pt-[50px] md:pt-[80px] pb-[50px] md:pb-[80px]"
         >
           {/* Brand */}
           <div>
@@ -56,14 +56,14 @@ export default function Footer({ footerQuickLinks, footerSupportLinks, footerSoc
                 <a
                   key={i}
                   href={icon.href}
-                  className="w-[52px] h-[52px] md:w-[35px] md:h-[35px] rounded-full bg-primary/40 flex items-center justify-center hover:bg-primary/70 transition-colors"
+                  className="w-[44px] h-[44px] md:w-[35px] md:h-[35px] rounded-full bg-primary/40 flex items-center justify-center hover:bg-primary/70 transition-colors"
                 >
                   <Image
                     src={icon.src}
                     alt={icon.alt}
                     width={16}
                     height={16}
-                    className="w-[24px] h-[24px] md:w-[16px] md:h-[16px]"
+                    className="w-[20px] h-[20px] md:w-[16px] md:h-[16px]"
                   />
                 </a>
               ))}
@@ -72,7 +72,7 @@ export default function Footer({ footerQuickLinks, footerSupportLinks, footerSoc
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-white text-[24px] xl:text-[28px] leading-[28.8px] mb-[30px]">
+            <h3 className="text-white text-[20px] md:text-[24px] xl:text-[28px] leading-[28.8px] mb-[30px]">
               {t.quickLinks}
             </h3>
             <ul className="flex flex-col gap-[10px]">
@@ -91,7 +91,7 @@ export default function Footer({ footerQuickLinks, footerSupportLinks, footerSoc
 
           {/* Support */}
           <div>
-            <h3 className="text-white text-[24px] xl:text-[28px] leading-[28.8px] mb-[30px]">
+            <h3 className="text-white text-[20px] md:text-[24px] xl:text-[28px] leading-[28.8px] mb-[30px]">
               {t.support}
             </h3>
             <ul className="flex flex-col gap-[10px]">
@@ -110,7 +110,7 @@ export default function Footer({ footerQuickLinks, footerSupportLinks, footerSoc
 
           {/* Contact */}
           <div>
-            <h3 className="text-white text-[24px] xl:text-[28px] leading-[28.8px] mb-[30px]">
+            <h3 className="text-white text-[20px] md:text-[24px] xl:text-[28px] leading-[28.8px] mb-[30px]">
               {t.contact}
             </h3>
             <div className="flex flex-col gap-[15px] mb-[20px]">

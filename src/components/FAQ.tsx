@@ -98,7 +98,7 @@ function FAQItem({
         onClick={onClick}
         className="w-full flex items-center gap-4 text-left rtl:text-right"
       >
-        <span className="flex-1 text-[#0e314c] text-[20px] md:text-[16px] xl:text-[18px] font-semibold leading-[24px] md:leading-[22px] xl:leading-[24px]">
+        <span className="flex-1 text-[#0e314c] text-[17px] md:text-[16px] xl:text-[18px] font-semibold leading-[22px] md:leading-[22px] xl:leading-[24px]">
           {question}
         </span>
         <div

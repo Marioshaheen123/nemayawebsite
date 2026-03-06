@@ -219,7 +219,7 @@ export default function RegisterPage({
 
       <div
         dir={isAr ? "rtl" : undefined}
-        className="bg-white rounded-[6px] shadow-[0px_4px_10px_0px_rgba(46,38,61,0.2)] w-full max-w-[700px] p-8 md:p-12"
+        className="bg-white rounded-[6px] shadow-[0px_4px_10px_0px_rgba(46,38,61,0.2)] w-full max-w-[700px] p-5 md:p-12"
       >
         {/* Logo */}
         <div className="flex justify-center mb-6">

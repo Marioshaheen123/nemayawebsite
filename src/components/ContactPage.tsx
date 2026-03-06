@@ -265,11 +265,11 @@ export default function ContactPage({ i18n, totalSteps }: ContactPageProps) {
                 )}
 
                 {/* Navigation Buttons */}
-                <div className="flex items-center justify-center gap-[16px]">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-[16px]">
                   {step > 0 && (
                     <button
                       onClick={() => setStep((s) => s - 1)}
-                      className="flex items-center gap-[8px] bg-white border border-primary rounded-[5px] px-[36px] py-[15px] text-[#0e314c] text-[14px] font-semibold hover:bg-[#f0f0f0] transition-colors cursor-pointer w-[160px] justify-center"
+                      className="flex items-center gap-[8px] bg-white border border-primary rounded-[5px] px-[36px] py-[15px] text-[#0e314c] text-[14px] font-semibold hover:bg-[#f0f0f0] transition-colors cursor-pointer w-full sm:w-[160px] justify-center"
                     >
                       <svg
                         width="20"
@@ -294,7 +294,7 @@ export default function ContactPage({ i18n, totalSteps }: ContactPageProps) {
                         if (step === 1 && !validatePhone()) return;
                         setStep((s) => s + 1);
                       }}
-                      className="cta-gradient flex items-center gap-[8px] rounded-[12px] px-[36px] py-[15px] text-[14px] font-semibold cursor-pointer w-[160px] justify-center"
+                      className="cta-gradient flex items-center gap-[8px] rounded-[12px] px-[36px] py-[15px] text-[14px] font-semibold cursor-pointer w-full sm:w-[160px] justify-center"
                     >
                       {i18n.next[lang]}
                       <svg
@@ -316,7 +316,7 @@ export default function ContactPage({ i18n, totalSteps }: ContactPageProps) {
                     <button
                       onClick={handleSubmit}
                       disabled={submitting}
-                      className="cta-gradient flex items-center gap-[8px] rounded-[12px] px-[36px] py-[15px] text-[14px] font-semibold cursor-pointer w-[160px] justify-center disabled:opacity-60"
+                      className="cta-gradient flex items-center gap-[8px] rounded-[12px] px-[36px] py-[15px] text-[14px] font-semibold cursor-pointer w-full sm:w-[160px] justify-center disabled:opacity-60"
                     >
                       {submitting ? (
                         <div className="w-[20px] h-[20px] border-[2px] border-white border-t-transparent rounded-full animate-spin" />

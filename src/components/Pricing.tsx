@@ -67,7 +67,7 @@ export default function Pricing({ pricingSectionHeading, pricingViewAllLabel, pl
     >
       {/* Price section */}
       <div className={isMobile ? "" : "h-[140px] xl:h-[155px]"}>
-        <h3 className="text-[#0e314c] text-[24px] md:text-[18px] xl:text-[20px] font-bold leading-[28.8px] md:leading-[24px] xl:leading-[26px] mb-[8px] md:mb-[6px]">
+        <h3 className="text-[#0e314c] text-[20px] md:text-[18px] xl:text-[20px] font-bold leading-[26px] md:leading-[24px] xl:leading-[26px] mb-[8px] md:mb-[6px]">
           {plan.name}
         </h3>
         <div className="flex items-end gap-0 mb-[8px] md:mb-[6px]">

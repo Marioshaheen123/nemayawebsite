@@ -100,7 +100,7 @@ export default function BlogPage({
         </div>
 
         {/* Title */}
-        <h3 className="text-[#0e314c] text-[20px] md:text-[24px] leading-[26px] md:leading-[28.8px] font-semibold mb-[10px]">
+        <h3 className="text-[#0e314c] text-[17px] md:text-[24px] leading-[23px] md:leading-[28.8px] font-semibold mb-[10px]">
           {article.title}
         </h3>
 

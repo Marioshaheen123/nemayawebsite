@@ -124,7 +124,7 @@ export default function BenefitsCarousel({ carouselCards, carouselHeading }: Ben
                 <h3 className="text-[#0e314c] text-[15px] md:text-[16px] xl:text-[18px] font-bold leading-[1.3] mb-[4px] md:mb-[9px]">
                   {card.title}
                 </h3>
-                <p className="text-[#6084a4] text-[13px] md:text-[16px] xl:text-[18px] leading-[1.4]">
+                <p className="text-[#6084a4] text-[14px] md:text-[16px] xl:text-[18px] leading-[1.4]">
                   {card.description}
                 </p>
               </div>

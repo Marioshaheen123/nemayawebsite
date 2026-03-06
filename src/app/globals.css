@@ -42,9 +42,7 @@ html, body {
 }
 
 /* Large mobile phones (Android 6"+, 400px+ viewport) */
-@custom-media --mobile-lg (min-width: 400px);
-
-@media (--mobile-lg) and (max-width: 767px) {
+@media (min-width: 400px) and (max-width: 767px) {
   .hero-headline {
     font-size: 42px !important;
     line-height: 46px !important;
